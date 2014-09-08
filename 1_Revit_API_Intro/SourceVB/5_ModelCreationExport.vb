@@ -251,7 +251,7 @@ Public Class ModelCreationExport
     ' Loop through list of points and define four walls. 
     For i As Integer = 0 To 3
       ' define a base curve from two points. 
-      'Dim baseCurve As Line = rvtDoc.Application.Create.NewLineBound(pts(i), pts(i + 1)) ' 2013
+      'Dim baseCurve As Line = rvtDoc.Application.Create.NewLineBound(pts(i), pts(i + 1)) ' since 2013
       Dim baseCurve As Line = Line.CreateBound(pts(i), pts(i + 1)) ' 2014
       ' create a wall using the one of overloaded methods. 
       Dim aWall As Wall = Wall.Create(rvtDoc, baseCurve, level1.Id, isStructural)

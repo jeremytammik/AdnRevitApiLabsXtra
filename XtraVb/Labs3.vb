@@ -1,7 +1,7 @@
 #Region "Header"
 'Revit API .NET Labs
 
-'Copyright (C) 2006-2014 by Autodesk, Inc.
+'Copyright (C) 2006-2013 by Autodesk, Inc.
 
 'Permission to use, copy, modify, and distribute this software
 'for any purpose and without fee is hereby granted, provided
@@ -399,7 +399,11 @@ Namespace XtraVb
       Dim msg As String = "All wall types and families in the model:"
       Dim content As String = String.Empty
 
-      For Each wt As WallType In doc.WallTypes
+      'For Each wt As WallType In doc.WallTypes ' 2014
+
+      Dim wallTypes As FilteredElementCollector = New FilteredElementCollector(doc).OfClass(GetType(WallType)) '2015
+
+      For Each wt As WallType In wallTypes ' 2015
         content += vbCrLf + "Type=" + wt.Name + " Family=" + wt.Kind.ToString()
         newWallType = wt
       Next
@@ -415,7 +419,11 @@ Namespace XtraVb
       msg = "All floor types in the model:"
       content = String.Empty
 
-      For Each ft As FloorType In doc.FloorTypes
+      'For Each ft As FloorType In doc.FloorTypes ' 2014
+
+      Dim floorTypes As FilteredElementCollector = New FilteredElementCollector(doc).OfClass(GetType(FloorType)) '2015
+
+      For Each ft As FloorType In floorTypes ' 2015
         content += vbCrLf + "Type=" + ft.Name + ", Id=" + ft.Id.IntegerValue.ToString()
 
         ' In 9.0, the "Foundation Slab" system family from "Structural

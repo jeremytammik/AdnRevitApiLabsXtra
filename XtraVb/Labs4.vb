@@ -1,7 +1,7 @@
 #Region "Header"
 'Revit API .NET Labs
 
-'Copyright (C) 2006-2014 by Autodesk, Inc.
+'Copyright (C) 2006-2013 by Autodesk, Inc.
 
 'Permission to use, copy, modify, and distribute this software
 'for any purpose and without fee is hereby granted, provided

@@ -1,7 +1,7 @@
 #region Header
 // Revit API .NET Labs
 //
-// Copyright (C) 2007-2014 by Autodesk, Inc.
+// Copyright (C) 2007-2013 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software
 // for any purpose and without fee is hereby granted, provided
@@ -206,14 +206,15 @@ namespace XtraCs
         {
           // access the divided surface data from the form:
 
-          DividedSurfaceData dsData = form.GetDividedSurfaceData();
+          //DividedSurfaceData dsData = form.GetDividedSurfaceData(); // before 2014
 
-          if( null != dsData )
+          //if( null != dsData )
           {
             // get the references associated with the divided surfaces
-            foreach( Reference reference in dsData.GetReferencesWithDividedSurfaces() )
+            //foreach( Reference reference in dsData.GetReferencesWithDividedSurfaces() )
+            foreach( Reference reference in DividedSurface.GetReferencesWithDividedSurfaces( form ) )
             {
-              DividedSurface divSurface = dsData.GetDividedSurfaceForReference( reference );
+              DividedSurface divSurface = DividedSurface.GetDividedSurfaceForReference( doc, reference );
 
               int count = 0;
               TilePatterns tilepatterns = doc.Settings.TilePatterns;

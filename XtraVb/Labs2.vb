@@ -1,7 +1,7 @@
 #Region "Header"
 'Revit API .NET Labs
 
-'Copyright (C) 2006-2014 by Autodesk, Inc.
+'Copyright (C) 2006-2013 by Autodesk, Inc.
 
 'Permission to use, copy, modify, and distribute this software
 'for any purpose and without fee is hereby granted, provided
@@ -180,7 +180,7 @@ Namespace XtraVb
           roof.SlopeAngle(curve) = slope
         Next
         Dim room As Room = createDoc.NewRoom(levelBottom, New UV(0.5 * width, 0.5 * depth))
-        Dim roomTag As RoomTag = createDoc.NewRoomTag(room, New UV(0.5 * width, 0.7 * depth), Nothing)
+        Dim roomTag As RoomTag = createDoc.NewRoomTag(New LinkElementId(room.Id), New UV(0.5 * width, 0.7 * depth), Nothing)
         'LabUtils.InfoMsg( "Little house was created successfully." );
         Return Result.Succeeded
       Catch ex As Exception

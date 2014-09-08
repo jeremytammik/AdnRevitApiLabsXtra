@@ -215,8 +215,8 @@ namespace UiCs
 
       foreach (ElementId id in idsModified)
       {
-        //  Wall aWall = rvtDoc.get_Element(id) as Wall; // For 2012
-        Wall aWall = rvtDoc.GetElement(id) as Wall; // For 2013
+        //  Wall aWall = rvtDoc.get_Element(id) as Wall; // until 2012
+        Wall aWall = rvtDoc.GetElement(id) as Wall; // since 2013
         CenterWindowDoor(rvtDoc, aWall);
       }
     }

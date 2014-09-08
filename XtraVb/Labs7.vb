@@ -1,7 +1,7 @@
 #Region "Header"
 'Revit API .NET Labs
 
-'Copyright (C) 2006-2014 by Autodesk, Inc.
+'Copyright (C) 2006-2013 by Autodesk, Inc.
 
 'Permission to use, copy, modify, and distribute this software
 'for any purpose and without fee is hereby granted, provided
@@ -205,30 +205,34 @@ Namespace XtraVb
         For Each form As Form In forms
           ' access the divided surface data from the form:
 
-          Dim dsData As DividedSurfaceData = form.GetDividedSurfaceData()
+          'Dim dsData As DividedSurfaceData = form.GetDividedSurfaceData() ' 2014
+          'If dsData IsNot Nothing Then ' 2014
 
-          If dsData IsNot Nothing Then
-            ' get the references associated with the divided surfaces
-            For Each reference As Reference In dsData.GetReferencesWithDividedSurfaces()
-              Dim divSurface As DividedSurface = dsData.GetDividedSurfaceForReference(reference)
+          ' get the references associated with the divided surfaces
 
-              Dim count As Integer = 0
-              Dim tilepatterns As TilePatterns = doc.Settings.TilePatterns
-              For Each i As TilePatternsBuiltIn In System.Enum.GetValues(GetType(TilePatternsBuiltIn))
-                If count.Equals(3) Then
-                  ' Warning: 'Autodesk.Revit.DB.Element.ObjectType' is obsolete:
-                  ' 'Use Element.GetTypeId() and Element.ChangeTypeId() instead.'
-                  '
-                  'divSurface.ObjectType = tilepatterns.GetTilePattern(i)
+          'For Each reference As Reference In dsData.GetReferencesWithDividedSurfaces() ' 2014
+          For Each reference As Reference In DividedSurface.GetReferencesWithDividedSurfaces(form) ' 2015
 
-                  divSurface.ChangeTypeId(tilepatterns.GetTilePattern(i).Id)
+            'Dim divSurface As DividedSurface = dsData.GetDividedSurfaceForReference(reference) ' 2014
+            Dim divSurface As DividedSurface = DividedSurface.GetDividedSurfaceForReference(doc, reference) ' 2015
 
-                  Exit For
-                End If
-                count += 1
-              Next
+            Dim count As Integer = 0
+            Dim tilepatterns As TilePatterns = doc.Settings.TilePatterns
+            For Each i As TilePatternsBuiltIn In System.Enum.GetValues(GetType(TilePatternsBuiltIn))
+              If count.Equals(3) Then
+                ' Warning: 'Autodesk.Revit.DB.Element.ObjectType' is obsolete:
+                ' 'Use Element.GetTypeId() and Element.ChangeTypeId() instead.'
+                '
+                'divSurface.ObjectType = tilepatterns.GetTilePattern(i)
+
+                divSurface.ChangeTypeId(tilepatterns.GetTilePattern(i).Id)
+
+                Exit For
+              End If
+              count += 1
             Next
-          End If
+          Next
+          'End If ' 2014
         Next
       Catch ex As Exception
         message = ex.Message

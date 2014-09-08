@@ -1,7 +1,7 @@
 #region Header
 // Revit API .NET Labs
 //
-// Copyright (C) 2007-2014 by Autodesk, Inc.
+// Copyright (C) 2007-2013 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software
 // for any purpose and without fee is hereby granted, provided
@@ -455,7 +455,13 @@ namespace XtraCs
       msg = "All floor types in the model:";
       content = string.Empty;
 
-      foreach( FloorType ft in doc.FloorTypes )
+      //foreach( FloorType ft in doc.FloorTypes ) // 2014
+
+      FilteredElementCollector floorTypes // 2015
+        = new FilteredElementCollector( doc )
+          .OfClass( typeof( FloorType ) );
+
+      foreach( FloorType ft in floorTypes ) // 2015
       {
         content += "\nType=" + ft.Name + ", Id=" + ft.Id.IntegerValue.ToString();
 

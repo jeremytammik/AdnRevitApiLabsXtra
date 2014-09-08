@@ -1,7 +1,7 @@
 #region Header
 // Revit API .NET Labs
 //
-// Copyright (C) 2007-2014 by Autodesk, Inc.
+// Copyright (C) 2007-2013 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software
 // for any purpose and without fee is hereby granted, provided
@@ -352,7 +352,10 @@ namespace XtraCs
         // Add a room and a room tag:
 
         Room room = createDoc.NewRoom( levelBottom, new UV( 0.5 * width, 0.5 * depth ) );
-        RoomTag roomTag = createDoc.NewRoomTag( room, new UV( 0.5 * width, 0.7 * depth ), null );
+        
+        //RoomTag roomTag = createDoc.NewRoomTag( room, new UV( 0.5 * width, 0.7 * depth ), null ); // 2014
+
+        RoomTag roomTag = createDoc.NewRoomTag( new LinkElementId( room.Id ), new UV( 0.5 * width, 0.7 * depth ), null ); // 2015
 
         //doc.AutoJoinElements(); // todo: remove this, the transaction should perform this automatically
 

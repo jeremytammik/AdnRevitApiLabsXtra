@@ -257,8 +257,7 @@ namespace IntroCs
       for (int i = 0; i <= 3; i++)
       {
         // define a base curve from two points. 
-        //Line baseCurve = rvtDoc.Application.Create.NewLineBound( pts[i], pts[i + 1] ); // 2013
-        Line baseCurve = Line.CreateBound( pts[i], pts[i + 1] ); // 2014
+        Line baseCurve = Line.CreateBound(pts[i], pts[i + 1]);
         // create a wall using the one of overloaded methods. 
         //Wall aWall = rvtDoc.Create.NewWall(baseCurve, level1, isStructural); // 2012
         Wall aWall = Wall.Create(rvtDoc, baseCurve, level1.Id, isStructural); // since 2013
@@ -412,8 +411,7 @@ namespace IntroCs
         LocationCurve locCurve = (LocationCurve)walls[i].Location;
         XYZ pt1 = locCurve.Curve.GetEndPoint(0) + dts[i];
         XYZ pt2 = locCurve.Curve.GetEndPoint(1) + dts[i + 1];
-        //Line line = rvtDoc.Application.Create.NewLineBound( pt1, pt2 ); // 2013
-        Line line = Line.CreateBound( pt1, pt2 ); // 2014
+        Line line = Line.CreateBound(pt1, pt2);
         footPrint.Append(line);
       }
 
