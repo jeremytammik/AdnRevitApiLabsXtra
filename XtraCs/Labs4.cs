@@ -128,9 +128,10 @@ namespace XtraCs
 
       // Loop through all pre-selected elements:
 
-      foreach( Element e in uidoc.Selection.Elements )
+      foreach( ElementId id in uidoc.Selection.GetElementIds() )
       {
-        Element e2 = e; // enable us to assign to e2 in case analyseTypeParameters == true
+        Element e = doc.GetElement( id );
+
         string s = string.Empty;
 
         // set this variable to false to analyse the element's own parameters,
@@ -141,21 +142,21 @@ namespace XtraCs
 
         if( analyseTypeParameters )
         {
-          if( e2 is FamilyInstance )
+          if( e is FamilyInstance )
           {
-            FamilyInstance inst = e2 as FamilyInstance;
+            FamilyInstance inst = e as FamilyInstance;
             if( null != inst.Symbol )
             {
-              e2 = inst.Symbol;
+              e = inst.Symbol;
               s = " type";
             }
           }
-          else if( e2 is Wall )
+          else if( e is Wall )
           {
-            Wall wall = e2 as Wall;
+            Wall wall = e as Wall;
             if( null != wall.WallType )
             {
-              e2 = wall.WallType;
+              e = wall.WallType;
               s = " type";
             }
           }
@@ -168,7 +169,7 @@ namespace XtraCs
 
         #region 4.1.a Iterate over element parameters and retrieve their name, type and value:
 
-        foreach( Parameter p in e2.Parameters )
+        foreach( Parameter p in e.Parameters )
         {
           string name = p.Definition.Name;
           string type = p.StorageType.ToString();
@@ -183,8 +184,8 @@ namespace XtraCs
 
         #endregion // 4.1.a
 
-        string what = e2.Category.Name
-          + " (" + e2.Id.IntegerValue.ToString() + ")";
+        string what = e.Category.Name
+          + " (" + e.Id.IntegerValue.ToString() + ")";
 
         LabUtils.InfoMsg( what + " has {0} parameter{1}{2}", a );
 
@@ -245,7 +246,7 @@ namespace XtraCs
 
         #region TEST_2
 #if TEST_2
-        List<string> a = GetParameters( doc, e2 );
+        List<string> a = GetParameters( doc, e );
         foreach( string s2 in a )
         {
           Debug.WriteLine( s2 );

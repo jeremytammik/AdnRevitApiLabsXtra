@@ -569,25 +569,28 @@ Namespace XtraVb
       Dim app As UIApplication = commandData.Application
       Dim uidoc As UIDocument = app.ActiveUIDocument
       Dim doc As Document = app.ActiveUIDocument.Document
-      Dim ss As ElementSet = uidoc.Selection.Elements
+      'Dim ss As ElementSet = uidoc.Selection.Elements ' 2014
+      Dim ids As ICollection(Of ElementId) = uidoc.Selection.GetElementIds() ' 2015
 
       Dim wall As Wall = Nothing
 
-      If 0 < ss.Size Then
+      If 0 < ids.Count Then
         ' old pre-selection handling:
 
         ' must be one single element only:
 
-        If 1 <> ss.Size Then
+        If 1 <> ids.Count Then
           message = "Please pre-select a single wall element."
           Return Result.Failed
         End If
 
         ' must be a wall:
 
-        Dim it As ElementSetIterator = ss.ForwardIterator()
-        it.MoveNext()
-        Dim e As Element = TryCast(it.Current, Element)
+        'Dim it As ElementSetIterator = ss.ForwardIterator()
+        'it.MoveNext()
+        'Dim e As Element = TryCast(it.Current, Element)
+
+        Dim e As Element = doc.GetElement(ids(0))
 
         If Not (TypeOf e Is Wall) Then
           message = "Selected element is NOT a wall."

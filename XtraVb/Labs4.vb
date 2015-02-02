@@ -63,9 +63,9 @@ Namespace XtraVb
 
       ' Loop through all pre-selected elements:
 
-      For Each e As Element In uidoc.Selection.Elements
-        Dim e2 As Element = e
-        ' enable us to assign to e2 in case analyseTypeParameters == true
+      For Each id As ElementId In uidoc.Selection.GetElementIds()
+        Dim e As Element = doc.GetElement(id)
+        ' enable us to assign to e in case analyseTypeParameters == true
         Dim s As String = String.Empty
 
         ' set this variable to false to analyse the element's own parameters,
@@ -75,16 +75,16 @@ Namespace XtraVb
         Dim analyseTypeParameters As Boolean = False
 
         If analyseTypeParameters Then
-          If TypeOf e2 Is FamilyInstance Then
-            Dim inst As FamilyInstance = TryCast(e2, FamilyInstance)
+          If TypeOf e Is FamilyInstance Then
+            Dim inst As FamilyInstance = TryCast(e, FamilyInstance)
             If inst.Symbol IsNot Nothing Then
-              e2 = inst.Symbol
+              e = inst.Symbol
               s = " type"
             End If
-          ElseIf TypeOf e2 Is Wall Then
-            Dim wall As Wall = TryCast(e2, Wall)
+          ElseIf TypeOf e Is Wall Then
+            Dim wall As Wall = TryCast(e, Wall)
             If wall.WallType IsNot Nothing Then
-              e2 = wall.WallType
+              e = wall.WallType
               s = " type"
             End If
             ' ... add support for other types if desired ...
@@ -97,7 +97,7 @@ Namespace XtraVb
 
         '#region 4.1.a Iterate over element parameters and retrieve their name, type and value:
 
-        For Each p As Parameter In e2.Parameters
+        For Each p As Parameter In e.Parameters
           Dim name As String = p.Definition.Name
           Dim type As String = p.StorageType.ToString()
           Dim value As String = LabUtils.GetParameterValue2(p, uidoc.Document)
@@ -107,7 +107,7 @@ Namespace XtraVb
 
         '#endregion 4.1.a
 
-        Dim what As String = e2.Category.Name + " (" + e2.Id.IntegerValue.ToString() + ")"
+        Dim what As String = e.Category.Name + " (" + e.Id.IntegerValue.ToString() + ")"
 
         LabUtils.InfoMsg(what + " has {0} parameter{1}{2}", a)
 

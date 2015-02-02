@@ -94,8 +94,11 @@ namespace XtraCs
 
         // Loop all contained symbols (types):
 
-        foreach( FamilySymbol s in f.Symbols )
+        //foreach( FamilySymbol s in f.Symbols ) // 2014
+        foreach( ElementId id in f.GetFamilySymbolIds() ) // 2015
         {
+          FamilySymbol s = doc.GetElement( id ) as FamilySymbol;
+
           // you can determine the family category from its first symbol.
 
           if( first )
@@ -254,9 +257,12 @@ namespace XtraCs
 
       int iBic = (int) bic;
       string msg, content;
+      ICollection<ElementId> ids = uidoc.Selection.GetElementIds();
 
-      foreach( Element e in uidoc.Selection.Elements )
+      foreach( ElementId id in ids )
       {
+        Element e = doc.GetElement( id );
+
         if( e is FamilyInstance
           && null != e.Category
           && e.Category.Id.IntegerValue.Equals( iBic ) )
@@ -354,13 +360,19 @@ namespace XtraCs
         {
           bool categoryMatches = false;
 
+          ISet<ElementId> ids = f.GetFamilySymbolIds(); // 2015
+
           // we cannot trust f.Category or
           // f.FamilyCategory, so grab the category
           // from first family symbol instead:
 
-          foreach( FamilySymbol sym in f.Symbols )
+          //foreach( FamilySymbol sym in f.Symbols ) // 2014
+
+          foreach( ElementId id in ids ) // 2015
           {
-            categoryMatches = sym.Category.Id.Equals(
+            Element symbol = doc.GetElement( id );
+
+            categoryMatches = symbol.Category.Id.Equals(
               instCat.Id );
 
             break;
@@ -371,9 +383,12 @@ namespace XtraCs
             List<FamilySymbol> symbols
               = new List<FamilySymbol>();
 
-            foreach( FamilySymbol sym in f.Symbols )
+            //foreach( FamilySymbol sym in f.Symbols ) // 2014
+            foreach( ElementId id in ids ) // 2015
             {
-              symbols.Add( sym );
+              FamilySymbol symbol = doc.GetElement( id ) as FamilySymbol;
+
+              symbols.Add( symbol );
             }
 
             mapFamilyToSymbols.Add( f.Name, symbols );
@@ -496,13 +511,16 @@ namespace XtraCs
         + "\r\n  changed from old type={3}; Id={4}"
         + "  to new type={5}; Id={6}.";
 
-      ElementSet sel = uidoc.Selection.Elements;
+      //ElementSet sel = uidoc.Selection.Elements; // 2014
+      ICollection<ElementId> ids = uidoc.Selection.GetElementIds(); // 2015
 
       int iWall = 0;
       int iFloor = 0;
 
-      foreach( Element e in sel )
+      foreach( ElementId id in ids )
       {
+        Element e = doc.GetElement( id );
+
         if( e is Wall )
         {
           ++iWall;
@@ -551,13 +569,15 @@ namespace XtraCs
     {
       UIApplication app = commandData.Application;
       UIDocument uidoc = app.ActiveUIDocument;
-      ElementSet a = uidoc.Selection.Elements;
+      Document doc = uidoc.Document;
+      //ElementSet a = uidoc.Selection.Elements; // 2014
+      ICollection<ElementId> ids = uidoc.Selection.GetElementIds(); // 2015
 
       const string newWallTypeName = "NewWallType_with_Width_doubled";
 
-      foreach( Element e in a )
+      foreach( ElementId id in ids )
       {
-        Wall wall = e as Wall;
+        Wall wall = doc.GetElement( id ) as Wall;
 
         if( null != wall )
         {

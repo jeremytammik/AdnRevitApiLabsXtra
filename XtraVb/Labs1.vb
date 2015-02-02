@@ -23,12 +23,15 @@
 #End Region
 
 #Region "Namespaces"
+Imports Microsoft.VisualBasic.Constants
+Imports System.Collections.Generic
+Imports System.Linq
 Imports Autodesk.Revit.ApplicationServices
 Imports Autodesk.Revit.Attributes
 Imports Autodesk.Revit.DB
 Imports Autodesk.Revit.UI
 Imports Autodesk.Revit.UI.Selection
-Imports Microsoft.VisualBasic.Constants
+
 ' please help remove these stupid workarounds:
 'Imports Element2 = Autodesk.Revit.DB.Element
 'Imports LanguageType2 = Autodesk.Revit.ApplicationServices.LanguageType
@@ -119,12 +122,14 @@ Namespace XtraVb
       ' list the current selection set:
       '
       Dim sel As Selection = uidoc.Selection
+      Dim ids As ICollection(Of ElementId) = sel.GetElementIds()
 
-      s = "There are " + sel.Elements.Size.ToString() + " elements in the selection:"
+      s = "There are " + ids.Count.ToString() + " elements in the selection:"
 
-      For Each elem As Element In sel.Elements
-        s += vbCrLf + "  " + elem.Category.Name
-        s += " Id=" + elem.Id.IntegerValue.ToString()
+      For Each id As ElementId In ids
+        Dim e As Element = doc.GetElement(id)
+        s += vbCrLf + "  " + e.Category.Name
+        s += " Id=" + e.Id.IntegerValue.ToString()
       Next
 
       LabUtils.InfoMsg(s)
@@ -135,10 +140,12 @@ Namespace XtraVb
       ' we pretend that something is wrong with the first element in the selection.
       ' pass a message back to the Revit user and indicate the error result:
       '
-      If Not sel.Elements.IsEmpty Then
-        Dim iter As ElementSetIterator = sel.Elements.ForwardIterator
-        iter.MoveNext()
-        Dim errElem As Element = iter.Current
+      If 0 <> ids.Count Then
+        'Dim iter As ElementSetIterator = sel.Elements.ForwardIterator
+        'iter.MoveNext()
+        'Dim errElem As Element = iter.Current
+        Dim id As ElementId = ids(0)
+        Dim errElem As Element = doc.GetElement(id)
         elements.Clear()
         elements.Insert(errElem)
         message = "We pretend something is wrong with this" _

@@ -99,7 +99,11 @@ Namespace XtraVb
 
         ' Loop all contained symbols (types):
 
-        For Each s As FamilySymbol In f.Symbols
+        'For Each s As FamilySymbol In f.Symbols ' 2014
+        For Each id As ElementId In f.GetFamilySymbolIds() ' 2015
+
+          Dim s As FamilySymbol = doc.GetElement(id)
+
           ' you can determine the family category from its first symbol.
 
           If first Then
@@ -241,7 +245,8 @@ Namespace XtraVb
       Dim iBic As Integer = CInt(bic)
       Dim msg As String, content As String
 
-      For Each e As Element In uidoc.Selection.Elements
+      For Each id As ElementId In uidoc.Selection.GetElementIds()
+        Dim e As Element = doc.GetElement(id)
         If TypeOf e Is FamilyInstance _
             AndAlso e.Category IsNot Nothing _
             AndAlso e.Category.Id.IntegerValue.Equals(iBic) Then
@@ -330,10 +335,14 @@ Namespace XtraVb
         For Each f As Family In families
           Dim categoryMatches As Boolean = False
 
+          Dim ids As ISet(Of ElementId) = f.GetFamilySymbolIds() ' 2015
+
           ' we cannot trust f.Category or f.FamilyCategory,
           ' grab category from first family symbol instead:
 
-          For Each sym As FamilySymbol In f.Symbols
+          'For Each sym As FamilySymbol In f.Symbols ' 2014
+          For Each id As ElementId In ids ' 2015
+            Dim sym As FamilySymbol = doc.GetElement(id)
             categoryMatches = sym.Category.Id.Equals(instCat.Id)
             Exit For
           Next
@@ -341,7 +350,8 @@ Namespace XtraVb
           If categoryMatches Then
             Dim symbols As New List(Of FamilySymbol)()
 
-            For Each sym As FamilySymbol In f.Symbols
+            For Each id As ElementId In ids
+              Dim sym As FamilySymbol = doc.GetElement(id)
               symbols.Add(sym)
             Next
 
@@ -454,12 +464,15 @@ Namespace XtraVb
           + " changed from old type={3}; Id={4}" _
           + " to new type={5}; Id={6}."
 
-      Dim sel As ElementSet = uidoc.Selection.Elements
+      'Dim sel As ElementSet = uidoc.Selection.Elements ' 2014
+
+      Dim ids As ICollection(Of ElementId) = uidoc.Selection.GetElementIds()
 
       Dim iWall As Integer = 0
       Dim iFloor As Integer = 0
 
-      For Each e As Element In sel
+      For Each id As ElementId In ids
+        Dim e As Element = doc.GetElement(id)
         If TypeOf e Is Wall Then
           iWall += 1
           Dim wall As Wall = TryCast(e, Wall)
@@ -506,11 +519,14 @@ Namespace XtraVb
 
       Dim app As UIApplication = commandData.Application
       Dim uidoc As UIDocument = app.ActiveUIDocument
-      Dim a As ElementSet = uidoc.Selection.Elements
+      Dim doc As Document = uidoc.Document
+      'Dim a As ElementSet = uidoc.Selection.Elements ' 2014
+      Dim ids As ICollection(Of ElementId) = uidoc.Selection.GetElementIds()
 
       Const newWallTypeName As String = "NewWallType_with_Width_doubled"
 
-      For Each e As Element In a
+      For Each id As ElementId In ids
+        Dim e As Element = doc.GetElement(id)
         Dim wall As Wall = TryCast(e, Wall)
         If wall IsNot Nothing Then
           Dim wallType As WallType = wall.WallType

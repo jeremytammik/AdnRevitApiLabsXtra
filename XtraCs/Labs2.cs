@@ -866,17 +866,18 @@ namespace XtraCs
       UIDocument uidoc = app.ActiveUIDocument;
       Document doc = uidoc.Document;
 
-      ElementSet ss = uidoc.Selection.Elements;
+      //ElementSet ss = uidoc.Selection.Elements; // 2014
+      ICollection<ElementId> ids = uidoc.Selection.GetElementIds();
 
       Wall wall = null;
 
-      if( 0 < ss.Size )
+      if( 0 < ids.Count )
       {
         // old pre-selection handling:
 
         // must be one single element only:
 
-        if( 1 != ss.Size )
+        if( 1 != ids.Count )
         {
           message = "Please pre-select a single wall element.";
           return Result.Failed;
@@ -884,9 +885,12 @@ namespace XtraCs
 
         // must be a wall:
 
-        ElementSetIterator it = ss.ForwardIterator();
-        it.MoveNext();
-        Element e = it.Current as Element;
+        //ElementSetIterator it = ss.ForwardIterator();
+        //it.MoveNext();
+        //Element e = it.Current as Element;
+
+        ElementId id = ids.First<ElementId>();
+        Element e = doc.GetElement( id );
 
         if( !( e is Wall ) )
         {

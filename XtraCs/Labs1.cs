@@ -24,6 +24,7 @@
 
 #region Namespaces
 using System.Collections.Generic;
+using System.Linq;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
@@ -108,12 +109,21 @@ namespace XtraCs
       //
       Selection sel = uidoc.Selection;
       List<string> a = new List<string>();
-      foreach( Element e in sel.Elements )
+      foreach( ElementId id in sel.GetElementIds() )
       {
-        string name = ( null == e.Category ) ? e.GetType().Name : e.Category.Name;
-        a.Add( name + " Id=" + e.Id.IntegerValue.ToString() );
+        Element e = doc.GetElement( id );
+
+        string name = ( null == e.Category ) 
+          ? e.GetType().Name 
+          : e.Category.Name;
+
+        a.Add( name + " Id=" 
+          + e.Id.IntegerValue.ToString() );
       }
-      LabUtils.InfoMsg( "There are {0} element{1} in the selection set{2}", a );
+      LabUtils.InfoMsg( 
+        "There are {0} element{1} in the selection set{2}", 
+        a );
+
       #endregion // 1.2.b. List selection set content
 
       #region 1.2.c. Populate return arguments:
@@ -122,11 +132,14 @@ namespace XtraCs
       // element in the selection. pass a message back to
       // the user and indicate the error result:
       //
-      if( !sel.Elements.IsEmpty )
+      ICollection<ElementId> ids = sel.GetElementIds();
+
+      if( 0 < ids.Count )
       {
-        ElementSetIterator iter = sel.Elements.ForwardIterator();
-        iter.MoveNext();
-        Element errElem = iter.Current as Element;
+        //ElementSetIterator iter = sel.Elements.ForwardIterator();
+        //iter.MoveNext();
+        //Element errElem = iter.Current as Element;
+        Element errElem = doc.GetElement( ids.First()  );
         elements.Clear();
         elements.Insert( errElem );
         message = "We pretend something is wrong with this element and pass back this message to user";

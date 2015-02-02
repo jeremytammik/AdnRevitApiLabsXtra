@@ -228,12 +228,16 @@ namespace XtraCs
         UIDocument uidoc )
     {
       Element e = null;
-      ElementSet ss = uidoc.Selection.Elements;
-      if( 1 == ss.Size )
+
+      //ElementSet ss = uidoc.Selection.Elements; // 2014
+      ICollection<ElementId> ids = uidoc.Selection.GetElementIds(); // 2015
+
+      if( 1 == ids.Count )
       {
-        ElementSetIterator iter = ss.ForwardIterator();
-        iter.MoveNext();
-        e = iter.Current as Element;
+        //ElementSetIterator iter = ss.ForwardIterator();
+        //iter.MoveNext();
+        //e = iter.Current as Element;
+        e = uidoc.Document.GetElement( ids.First() );
       }
       else
       {
@@ -326,16 +330,18 @@ namespace XtraCs
     {
       Element e = null;
 
-      ElementSet ss = uidoc.Selection.Elements;
+      //ElementSet ss = uidoc.Selection.Elements; // 2014
+      ICollection<ElementId> ids = uidoc.Selection.GetElementIds(); // 2015
 
-      if( 1 == ss.Size )
+      if( 1 == ids.Count )
       {
-        ElementSetIterator iter = ss.ForwardIterator();
-        iter.MoveNext();
-        Type t = iter.Current.GetType();
+        //ElementSetIterator iter = ss.ForwardIterator();
+        //iter.MoveNext();
+        Element e2 = uidoc.Document.GetElement( ids.First() );
+        Type t = e2.GetType();
         if( t.Equals( type ) || t.IsSubclassOf( type ) )
         {
-          e = iter.Current as Element;
+          e = e2 as Element;
         }
       }
       if( null == e )
@@ -440,10 +446,13 @@ namespace XtraCs
     /// </summary>
     static Category FamilyCategory( Family f )
     {
+      Document doc = f.Document;
       Category c = null;
-      foreach( FamilySymbol s in f.Symbols )
+      //foreach( FamilySymbol s in f.Symbols ) // 2014
+      foreach( ElementId id in f.GetFamilySymbolIds() ) // 2015
       {
-        c = s.Category;
+        Element symbol = doc.GetElement( id );
+        c = symbol.Category;
         break;
       }
       return c;

@@ -194,16 +194,29 @@ Namespace XtraVb
 
       Dim e As Element = Nothing
 
-      Dim ss As ElementSet = uidoc.Selection.Elements
+      'Dim ss As ElementSet = uidoc.Selection.Elements ' 2014
+      Dim ids As ICollection(Of ElementId) = uidoc.Selection.GetElementIds() ' 2015
 
-      If 1 = ss.Size Then
-        Dim iter As ElementSetIterator = ss.ForwardIterator()
-        iter.MoveNext()
-        Dim t As Type = iter.Current.[GetType]()
-        If t.Equals(type) OrElse t.IsSubclassOf(type) Then
-          e = TryCast(iter.Current, Element)
+      'If 1 = ss.Size Then
+      '  Dim iter As ElementSetIterator = ss.ForwardIterator()
+      '  iter.MoveNext()
+      '  Dim t As Type = iter.Current.[GetType]()
+      '  If t.Equals(type) OrElse t.IsSubclassOf(type) Then
+      '    e = TryCast(iter.Current, Element)
+      '  End If
+      'End If
+
+      If 1 = ids.Count Then
+        Dim id As ElementId
+        For Each id In ids
+          e = uidoc.Document.GetElement(id)
+        Next
+        Dim t As Type = e.[GetType]()
+        If Not t.Equals(type) And Not t.IsSubclassOf(type) Then
+          e = Nothing
         End If
       End If
+
       If e Is Nothing Then
         Try
           Dim r As Reference = uidoc.Selection.PickObject( _
@@ -267,11 +280,13 @@ Namespace XtraVb
         ByVal uidoc As UIDocument) As Element
 
       Dim e As Element = Nothing
-      Dim ss As ElementSet = uidoc.Selection.Elements
-      If 1 = ss.Size Then
-        Dim iter As ElementSetIterator = ss.ForwardIterator()
-        iter.MoveNext()
-        e = TryCast(iter.Current, Element)
+      'Dim ss As ElementSet = uidoc.Selection.Elements ' 2014
+      Dim ids As ICollection(Of ElementId) = uidoc.Selection.GetElementIds() ' 2015
+      If 1 = ids.Count Then
+        'Dim iter As ElementSetIterator = ss.ForwardIterator()
+        'iter.MoveNext()
+        'e = TryCast(iter.Current, Element) ' 2014
+        e = uidoc.Document.GetElement(ids(0)) ' 2015
       Else
         Try
 
