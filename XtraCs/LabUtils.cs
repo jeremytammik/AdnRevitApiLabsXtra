@@ -857,12 +857,23 @@ namespace XtraCs
       string defName,
       bool visible )
     {
-      Definition definition = defGroup.Definitions.get_Item( defName );
+      Definition definition 
+        = defGroup.Definitions.get_Item( 
+          defName );
+
       if( null == definition )
       {
         try
         {
-          definition = defGroup.Definitions.Create( defName, defType, visible );
+          //definition = defGroup.Definitions.Create( defName, defType, visible ); // 2014
+
+          ExternalDefinitonCreationOptions opt 
+            = new ExternalDefinitonCreationOptions( 
+              defName, defType ); // 2015
+
+          opt.Visible = visible;
+
+          definition = defGroup.Definitions.Create( opt ); // 2015
         }
         catch( Exception )
         {

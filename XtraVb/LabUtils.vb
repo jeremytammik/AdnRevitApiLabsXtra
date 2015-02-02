@@ -575,7 +575,13 @@ Namespace XtraVb
       Dim definition As Definition = defGroup.Definitions.Item(defName)
       If definition Is Nothing Then
         Try
-          definition = defGroup.Definitions.Create(defName, defType, visible)
+          'definition = defGroup.Definitions.Create(defName, defType, visible) ' 2014
+
+          Dim opt As ExternalDefinitonCreationOptions = New ExternalDefinitonCreationOptions(defName, defType) ' 2015
+          opt.Visible = visible
+
+          definition = defGroup.Definitions.Create(opt) ' 2015
+
         Catch generatedExceptionName As Exception
           definition = Nothing
         End Try
