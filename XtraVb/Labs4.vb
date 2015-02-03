@@ -141,17 +141,23 @@ Namespace XtraVb
         ' C) or we can get the parameter by name:
         ' alternatively, loop through all parameters and
         ' search for the name (this works for either
-        ' standard or shared):
+        ' standard or shared). Note that several parameters
+        ' with the same name may exist:
 
         Const paramName As String = "Base Offset"
-        Dim parByName As Parameter = e.Parameter(paramName)
-        If parByName Is Nothing Then
+
+        'Dim parByName As Parameter = e.Parameter(paramName) ' 2014
+        Dim paramsByName As IList(Of Parameter) = e.GetParameters(paramName) ' 2015
+
+        If 0 = paramsByName.Count Then
           LabUtils.InfoMsg(paramName + " is NOT available for this element.")
         Else
-          Dim parByNameName As String = parByName.Definition.Name
-          Dim parByNameType As String = parByName.StorageType.ToString()
-          Dim parByNameValue As String = LabUtils.GetParameterValue2(parByName, doc)
-          LabUtils.InfoMsg(paramName + ": Name=" + parByNameName + "; Type=" + parByNameType + "; Value=" + parByNameValue)
+          For Each p As Parameter In paramsByName
+            Dim parByNameName As String = p.Definition.Name
+            Dim parByNameType As String = p.StorageType.ToString()
+            Dim parByNameValue As String = LabUtils.GetParameterValue2(p, doc)
+            LabUtils.InfoMsg(paramName + ": Name=" + parByNameName + "; Type=" + parByNameType + "; Value=" + parByNameValue)
+          Next
         End If
 
       Next
@@ -286,7 +292,7 @@ Namespace XtraVb
           For Each paramName As String In allParamNamesEncountered
             Dim paramValue As String
             Try
-              paramValue = LabUtils.GetParameterValue(e.Parameter(paramName))
+              paramValue = LabUtils.GetParameterValue(e.LookupParameter(paramName))
             Catch generatedExceptionName As Exception
               paramValue = "*NA*"
             End Try
@@ -636,8 +642,8 @@ Namespace XtraVb
         Return Result.Failed
       End If
       ' for simplicity, access params by name rather than by GUID:
-      projInfoElem.Parameter(LabConstants.ParamNameVisible).Set(55)
-      projInfoElem.Parameter(LabConstants.ParamNameInvisible).Set(0)
+      projInfoElem.LookupParameter(LabConstants.ParamNameVisible).Set(55)
+      projInfoElem.LookupParameter(LabConstants.ParamNameInvisible).Set(0)
       Return Result.Succeeded
     End Function
   End Class
@@ -675,7 +681,7 @@ Namespace XtraVb
       ' For simplicity, access invisible param by name rather than by GUID:
 
       Try
-        Dim param As Parameter = projInfoElem.Parameter(LabConstants.ParamNameInvisible)
+        Dim param As Parameter = projInfoElem.LookupParameter(LabConstants.ParamNameInvisible)
 
         ' report OLD value
 

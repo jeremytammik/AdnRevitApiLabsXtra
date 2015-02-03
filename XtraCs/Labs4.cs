@@ -227,19 +227,24 @@ namespace XtraCs
         // C) or we can get the parameter by name:
         // alternatively, loop through all parameters and
         // search for the name (this works for either
-        // standard or shared):
+        // standard or shared). Note that the same name 
+        // may occur multiple times:
 
         const string paramName = "Base Offset";
-        Parameter parByName = e.get_Parameter( paramName );
-        if( null == parByName )
+        
+        //Parameter parByName = e.get_Parameter( paramName ); // 2014
+
+        IList<Parameter> paramsByName = e.GetParameters( paramName ); // 2015
+
+        if( 0 == paramsByName.Count )
         {
           LabUtils.InfoMsg( paramName + " is NOT available for this element." );
         }
-        else
+        else foreach( Parameter p in paramsByName )
         {
-          string parByNameName = parByName.Definition.Name;
-          string parByNameType = parByName.StorageType.ToString();
-          string parByNameValue = LabUtils.GetParameterValue2( parByName, doc );
+          string parByNameName = p.Definition.Name;
+          string parByNameType = p.StorageType.ToString();
+          string parByNameValue = LabUtils.GetParameterValue2( p, doc );
           LabUtils.InfoMsg( paramName + ": Name=" + parByNameName
             + "; Type=" + parByNameType + "; Value=" + parByNameValue );
         }
@@ -457,7 +462,11 @@ namespace XtraCs
           {
             paramValue = "*NA*";
 
-            Parameter p = e.get_Parameter( paramName );
+            //Parameter p = e.get_Parameter( paramName ); // 2014
+
+            // Careful! This returns the first best param found.
+
+            Parameter p = e.LookupParameter( paramName ); // 2015
 
             if( null != p )
             {
@@ -921,9 +930,13 @@ namespace XtraCs
         message = "No project info element found. Aborting command...";
         return Result.Failed;
       }
-      // for simplicity, access params by name rather than by GUID:
-      projInfoElem.get_Parameter( LabConstants.ParamNameVisible ).Set( 55 );
-      projInfoElem.get_Parameter( LabConstants.ParamNameInvisible ).Set( 0 );
+
+      // For simplicity, access params by name rather than by GUID
+      // and simply the first best one found under that name:
+
+      projInfoElem.LookupParameter( LabConstants.ParamNameVisible ).Set( 55 );
+      projInfoElem.LookupParameter( LabConstants.ParamNameInvisible ).Set( 0 );
+
       return Result.Succeeded;
     }
   }
@@ -962,7 +975,7 @@ namespace XtraCs
 
       try
       {
-        Parameter param = projInfoElem.get_Parameter( LabConstants.ParamNameInvisible );
+        Parameter param = projInfoElem.LookupParameter( LabConstants.ParamNameInvisible );
 
         // report OLD value
 
