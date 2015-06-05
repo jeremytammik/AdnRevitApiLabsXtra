@@ -1,6 +1,6 @@
 ﻿#Region "Copyright"
 '
-' Copyright (C) 2010-2014 by Autodesk, Inc.
+' Copyright (C) 2009-2015 by Autodesk, Inc.
 '
 ' Permission to use, copy, modify, and distribute this software in
 ' object code form for any purpose and without fee is hereby granted,
@@ -47,7 +47,7 @@
 ''' 
 ''' cf. Developer Guide, Section 7: Selection (pp 89) 
 ''' </summary>
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.ReadOnly)> _
 Public Class UISelection
   Implements IExternalCommand
 
@@ -67,7 +67,7 @@ Public Class UISelection
 
     ' (1) pre-selecetd element is under UIDocument.Selection.Elemens. Classic method.  
     ' You can also modify this selection set. 
-    
+
     'Autodesk.Revit.UI.Selection.SelElementSet' is obsolete: 
     'This class is deprecated in Revit 2015. 
     ' Use Selection.SetElementIds() and Selection.GetElementIds() instead.'
@@ -78,7 +78,7 @@ Public Class UISelection
 
     Dim selSet As ICollection(Of ElementId) = _uiDoc.Selection.GetElementIds()
 
-    
+
     ShowElementList(selSet, "Pre-selection: ")
 
     Try
@@ -372,20 +372,16 @@ Public Class UISelection
   ''' Helper function to display info from a list of elements passed onto. 
   ''' (Same as Revit Intro Lab3.) 
   ''' </summary>
-  Sub ShowElementList(ByVal elems As IEnumerable, ByVal header As String)
-
-    Dim s As String = vbCr + vbCr + " - Class - Category - Name (or Family: Type Name) - Id - " + vbCr
-
+  Public Sub ShowElementList(elemIds As IEnumerable, header As String)
+    Dim s As String = vbLf & vbLf & " - Class - Category - Name (or Family: Type Name) - Id - " & vbCrLf
     Dim count As Integer = 0
-    For Each e As Element In elems
+    For Each eId As ElementId In elemIds
       count += 1
-      s += ElementToString(e)
+      Dim e As Element = Me._uiDoc.Document.GetElement(eId)
+      s += Me.ElementToString(e)
     Next
-
     s = header + "(" + count.ToString() + ")" + s
-
     TaskDialog.Show("Revit UI Lab", s)
-
   End Sub
 
   ''' <summary>
@@ -491,8 +487,8 @@ Class SelectionFilterPlanarFace
     'If (TypeOf (r.GeometryObject) Is PlanarFace) Then ' 2011
 
     Dim id As ElementId = r.ElementId
-        'Dim e As Element = _doc.Element(id) 'For 2012
-        Dim e As Element = _doc.GetElement(id) ' For 2013
+    'Dim e As Element = _doc.Element(id) 'For 2012
+    Dim e As Element = _doc.GetElement(id) ' For 2013
 
     If (TypeOf (e.GetGeometryObjectFromReference(r)) Is PlanarFace) Then ' 2012
 
@@ -512,7 +508,7 @@ End Class
 ''' Ask the user to pick two corner points of walls
 ''' then ask to choose a wall to add a front door. 
 ''' </summary>
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.Manual)> _
 Public Class UICreateHouse
   Implements IExternalCommand
 
@@ -532,8 +528,11 @@ Public Class UICreateHouse
     _uiDoc = _uiApp.ActiveUIDocument
     _doc = _uiDoc.Document
 
-    CreateHouseInteractive(_uiDoc)
-
+    Using transaction As Transaction = New Transaction(_doc)
+      transaction.Start("Create House")
+      CreateHouseInteractive(_uiDoc)
+      transaction.Commit()
+    End Using
     Return Result.Succeeded
 
   End Function
@@ -545,35 +544,40 @@ Public Class UICreateHouse
   ''' </summary>
   Public Shared Sub CreateHouseInteractive(ByVal uiDoc As UIDocument)
 
-    ' (1) Walls 
-    ' Pick two corners to place a house with an orthogonal rectangular footprint 
-    Dim pt1 As XYZ = uiDoc.Selection.PickPoint("Pick the first corner of walls")
-    Dim pt2 As XYZ = uiDoc.Selection.PickPoint("Pick the second corner")
+    Using transaction As Transaction = New Transaction(uiDoc.Document)
+      transaction.Start("Create House Interactive")
+      ' (1) Walls 
+      ' Pick two corners to place a house with an orthogonal rectangular footprint 
+      Dim pt1 As XYZ = uiDoc.Selection.PickPoint("Pick the first corner of walls")
+      Dim pt2 As XYZ = uiDoc.Selection.PickPoint("Pick the second corner")
 
-    ' Simply create four walls with orthogonal rectangular profile from the two points picked.  
-    Dim walls As List(Of Wall) = IntroVb.ModelCreationExport.CreateWalls(uiDoc.Document, pt1, pt2)
+      ' Simply create four walls with orthogonal rectangular profile from the two points picked.  
+      Dim walls As List(Of Wall) = IntroVb.ModelCreationExport.CreateWalls(uiDoc.Document, pt1, pt2)
 
-    ' (2) Door 
-    ' Pick a wall to add a front door to
-    Dim selFilterWall As New SelectionFilterWall
-    Dim r As Reference = uiDoc.Selection.PickObject( _
-        ObjectType.Element, selFilterWall, "Select a wall to place a front door")
-    Dim wallFront As Wall = uiDoc.Document.GetElement(r)
+      ' (2) Door 
+      ' Pick a wall to add a front door to
+      Dim selFilterWall As New SelectionFilterWall
+      Dim r As Reference = uiDoc.Selection.PickObject( _
+          ObjectType.Element, selFilterWall, "Select a wall to place a front door")
+      Dim wallFront As Wall = uiDoc.Document.GetElement(r)
 
-    ' Add a door to the selected wall
-    IntroVb.ModelCreationExport.AddDoor(uiDoc.Document, wallFront)
+      ' Add a door to the selected wall
+      IntroVb.ModelCreationExport.AddDoor(uiDoc.Document, wallFront)
 
-    ' (3) Windows 
-    ' Add windows to the rest of the walls. 
-    For i As Integer = 0 To 3
-      If Not (walls(i).Id.IntegerValue = wallFront.Id.IntegerValue) Then
-        IntroVb.ModelCreationExport.AddWindow(uiDoc.Document, walls(i))
-      End If
-    Next
+      ' (3) Windows 
+      ' Add windows to the rest of the walls. 
+      For i As Integer = 0 To 3
+        If Not (walls(i).Id.IntegerValue = wallFront.Id.IntegerValue) Then
+          IntroVb.ModelCreationExport.AddWindow(uiDoc.Document, walls(i))
+        End If
+      Next
 
-    ' (4) Roofs 
-    ' Add a roof over the walls' rectangular profile. 
-    IntroVb.ModelCreationExport.AddRoof(uiDoc.Document, walls)
+      ' (4) Roofs 
+      ' Add a roof over the walls' rectangular profile. 
+      IntroVb.ModelCreationExport.AddRoof(uiDoc.Document, walls)
+      transaction.Commit()
+    End Using
+
 
   End Sub
 

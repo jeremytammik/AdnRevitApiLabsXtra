@@ -1,6 +1,6 @@
 ﻿#region Copyright
 //
-// Copyright (C) 2010-2014 by Autodesk, Inc.
+// Copyright (C) 2009-2015 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -30,7 +30,7 @@ using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
-//using Util;
+using Util;
 #endregion
 
 namespace UiCs
@@ -41,7 +41,7 @@ namespace UiCs
   /// cf. Developer Guide, Section 3.9 Revit-style Task Dialogs (pp55) 
   /// Appexdix G. API User Interface Guidelines (pp381), Task Dialog (pp404) 
   /// </summary>
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.ReadOnly)]
   public class UITaskDialog : IExternalCommand
   {
     // Member variables 
@@ -170,7 +170,7 @@ namespace UiCs
   /// 
   /// Show a task dialog and ask the user if he/she wants to create a house interactively or automatically. 
   /// </summary> 
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.Manual)]
   public class UICreateHouseDialog : IExternalCommand
   {
     // Member variables 

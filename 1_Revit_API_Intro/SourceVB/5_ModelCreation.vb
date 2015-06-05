@@ -1,6 +1,6 @@
 ﻿#Region "Copyright"
 '
-' Copyright (C) 2010-2014 by Autodesk, Inc.
+' Copyright (C) 2009-2015 by Autodesk, Inc.
 '
 ' Permission to use, copy, modify, and distribute this software in
 ' object code form for any purpose and without fee is hereby granted,
@@ -51,7 +51,7 @@ Imports IntroVb.Util.Constant
 ''' <summary>
 ''' Element Creation. 
 ''' </summary> 
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.Manual)> _
 Public Class ModelCreation
   Implements IExternalCommand
 
@@ -71,11 +71,13 @@ Public Class ModelCreation
     Dim uiDoc As UIDocument = rvtUIApp.ActiveUIDocument
     _app = rvtUIApp.Application
     _doc = uiDoc.Document
-
-    ' Let's make a simple "house" composed of four walls, a window 
-    ' and a door. 
-    CreateHouse()
-
+    Using transaction As Transaction = New Transaction(_doc)
+      transaction.Start("Create House")
+      ' Let's make a simple "house" composed of four walls, a window 
+      ' and a door. 
+      CreateHouse()
+      transaction.Commit()
+    End Using
     Return Result.Succeeded
 
   End Function
@@ -147,7 +149,7 @@ Public Class ModelCreation
       ' Define a base curve from two points. 
       Dim baseCurve As Line = Line.CreateBound(pts(i), pts(i + 1))
       ' Create a wall using the one of overloaded methods. 
-            Dim aWall As Wall = Wall.Create(_doc, baseCurve, level1.Id, isStructural)
+      Dim aWall As Wall = Wall.Create(_doc, baseCurve, level1.Id, isStructural)
       ' Set the Top Constraint to Level 2 
       aWall.Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).Set(level2.Id)
       ' Save the wall.
@@ -188,6 +190,9 @@ Public Class ModelCreation
         "). Maybe you use a different template? Try with DefaultMetric.rte.")
     End If
 
+    If Not doorType.IsActive Then
+      doorType.Activate()
+    End If
     ' Get the start and end points of the wall.
 
     Dim locCurve As LocationCurve = hostWall.Location
@@ -200,7 +205,7 @@ Public Class ModelCreation
 
     Dim idLevel1 As ElementId = _
       hostWall.Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId
-        Dim level1 As Level = _doc.GetElement(idLevel1)
+    Dim level1 As Level = _doc.GetElement(idLevel1)
 
     ' Finally, create a door. 
 
@@ -240,6 +245,9 @@ Public Class ModelCreation
         "). Maybe you use a different template? Try with DefaultMetric.rte.")
     End If
 
+    If Not windowType.IsActive Then
+      windowType.Activate()
+    End If
     ' Get the start and end points of the wall. 
 
     Dim locCurve As LocationCurve = hostWall.Location
@@ -250,7 +258,7 @@ Public Class ModelCreation
 
     ' we want to set the reference as a bottom of the wall or level1. 
     Dim idLevel1 As ElementId = hostWall.Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId
-        Dim level1 As Level = _doc.GetElement(idLevel1)
+    Dim level1 As Level = _doc.GetElement(idLevel1)
 
     ' Finally create a window. 
 
@@ -321,15 +329,16 @@ Public Class ModelCreation
 
     Dim idLevel2 As ElementId = _
         walls(0).Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsElementId
-        Dim level2 As Level = _doc.GetElement(idLevel2)
+    Dim level2 As Level = _doc.GetElement(idLevel2)
 
-    ' Footprint to morel curve mapping  
-    Dim mapping As New ModelCurveArray
+    ' Footprint to model curve mapping
+
+    Dim mapping As ModelCurveArray = New ModelCurveArray()
 
     ' Create a roof.
 
     Dim aRoof As FootPrintRoof = _
-    _doc.Create.NewFootPrintRoof(footPrint, level2, roofType, mapping)
+      _doc.Create.NewFootPrintRoof(footPrint, level2, roofType, mapping)
 
     For Each modelCurve As ModelCurve In mapping
       aRoof.DefinesSlope(modelCurve) = True

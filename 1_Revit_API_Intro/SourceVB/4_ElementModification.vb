@@ -1,6 +1,6 @@
 ﻿#Region "Copyright"
 '
-' Copyright (C) 2010-2014 by Autodesk, Inc.
+' Copyright (C) 2009-2015 by Autodesk, Inc.
 '
 ' Permission to use, copy, modify, and distribute this software in
 ' object code form for any purpose and without fee is hereby granted,
@@ -54,7 +54,7 @@ Imports IntroVb.Util.Constant
 ''' <summary>
 ''' Element Modification 
 ''' </summary>  
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.Manual)> _
 Public Class ElementModification
   Implements IExternalCommand
 
@@ -76,26 +76,28 @@ Public Class ElementModification
     _doc = uiDoc.Document
 
     ' Select an object on a screen. (We'll come back to the selection in the UI Lab later.) 
-        Dim ref As Reference = uiDoc.Selection.PickObject(ObjectType.Element, "Pick a wall, please")
+    Dim ref As Reference = uiDoc.Selection.PickObject(ObjectType.Element, "Pick a wall, please")
     ' We have picked something. 
     Dim e As Element = _doc.GetElement(ref)
 
+    Using transaction As Transaction = New Transaction(_doc)
+      transaction.Start("Modify Element")
+      ' (1) element level modification     
+      ' Modify element's properties, parameters, location. 
 
-    ' (1) element level modification     
-    ' Modify element's properties, parameters, location. 
+      ModifyElementPropertiesWall(e)
+      'ModifyElementPropertiesDoor(e)
+      _doc.Regenerate()
 
-    ModifyElementPropertiesWall(e)
-    'ModifyElementPropertiesDoor(e)
-    _doc.Regenerate()
+      ' Select an object on a screen. (We'll come back to the selection in the UI Lab later.) 
+      Dim ref2 As Reference = uiDoc.Selection.PickObject(ObjectType.Element, "Pick another element")
+      ' We have picked something. 
+      Dim elem2 As Element = _doc.GetElement(ref2)
 
-    ' Select an object on a screen. (We'll come back to the selection in the UI Lab later.) 
-    Dim ref2 As Reference = uiDoc.Selection.PickObject(ObjectType.Element, "Pick another element")
-    ' We have picked something. 
-    Dim elem2 As Element = _doc.GetElement(ref2)
-
-    ' (2) you can also use transformation utility to move and rotate.
-    ModifyElementByDocumentMethods(elem2)
-
+      ' (2) you can also use transformation utility to move and rotate.
+      ModifyElementByDocumentMethods(elem2)
+      transaction.Commit()
+    End Using
     Return Result.Succeeded
 
   End Function

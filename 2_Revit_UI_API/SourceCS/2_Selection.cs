@@ -1,6 +1,6 @@
 ﻿#region Copyright
 //
-// Copyright (C) 2010-2014 by Autodesk, Inc.
+// Copyright (C) 2009-2015 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -26,14 +26,14 @@
 
 #region Namespaces
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Autodesk.Revit.ApplicationServices;
 using Autodesk.Revit.Attributes;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
-//using Util;
+using Util;
+using System.Collections;
 #endregion
 
 namespace UiCs
@@ -46,7 +46,7 @@ namespace UiCs
   /// 
   /// cf. Developer Guide, Section 7: Selection (pp 89) 
   /// </summary>
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.ReadOnly)]
   public class UISelection : IExternalCommand
   {
     // Member variables
@@ -88,10 +88,10 @@ namespace UiCs
 
       ShowElementList(selectedElementIds, "Pre-selection: ");
 
-      
+
       /// End of modified code for Revit 2015     
 
-      
+
 
       try
       {
@@ -409,14 +409,14 @@ namespace UiCs
 
     /// Changing this in Revit 2015  
     /// 
-    public void ShowElementList(IEnumerable elems, string header)
+    public void ShowElementList(IEnumerable elemIds, string header)
     {
       string s = "\n\n - Class - Category - Name (or Family: Type Name) - Id - " + "\r\n";
 
       int count = 0;
-      foreach (ElementId eId in elems)
+      foreach (ElementId eId in elemIds)
       {
-        count++;        
+        count++;
         Element e = _uiDoc.Document.GetElement(eId);
         s += ElementToString(e);
       }
@@ -522,10 +522,10 @@ namespace UiCs
       //if( r.GeometryObject is PlanarFace ) // 2011
 
       ElementId id = r.ElementId;
-      //Element e = _doc.get_Element(id); // until 2012
-      Element e = _doc.GetElement(id); // since 2013
+      //Element e = _doc.get_Element(id); // For 2012
+      Element e = _doc.GetElement(id); // For 2013
 
-      if (e.GetGeometryObjectFromReference(r) is PlanarFace) 
+      if (e.GetGeometryObjectFromReference(r) is PlanarFace)
       {
         // Do additional checking here if needed
 
@@ -541,7 +541,7 @@ namespace UiCs
   /// Ask the user to pick two corner points of walls
   /// then ask to choose a wall to add a front door. 
   /// </summary>
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.Manual)]
   public class UICreateHouse : IExternalCommand
   {
     UIApplication _uiApp;
@@ -558,7 +558,12 @@ namespace UiCs
       _uiDoc = _uiApp.ActiveUIDocument;
       _doc = _uiDoc.Document;
 
-      CreateHouseInteractive(_uiDoc);
+      using (Transaction transaction = new Transaction(_doc))
+      {
+        transaction.Start("Create House");
+        CreateHouseInteractive(_uiDoc);
+        transaction.Commit();
+      }
 
       return Result.Succeeded;
     }
@@ -570,37 +575,42 @@ namespace UiCs
     /// </summary>
     public static void CreateHouseInteractive(UIDocument uiDoc)
     {
-      // (1) Walls 
-      // Pick two corners to place a house with an orthogonal rectangular footprint 
-      XYZ pt1 = uiDoc.Selection.PickPoint("Pick the first corner of walls");
-      XYZ pt2 = uiDoc.Selection.PickPoint("Pick the second corner");
-
-      // Simply create four walls with orthogonal rectangular profile from the two points picked. 
-      List<Wall> walls = IntroCs.ModelCreationExport.CreateWalls(uiDoc.Document, pt1, pt2);
-
-      // (2) Door 
-      // Pick a wall to add a front door to
-      SelectionFilterWall selFilterWall = new SelectionFilterWall();
-      Reference r = uiDoc.Selection.PickObject(ObjectType.Element, selFilterWall, "Select a wall to place a front door");
-      Wall wallFront = uiDoc.Document.GetElement(r) as Wall;
-
-      // Add a door to the selected wall 
-      IntroCs.ModelCreationExport.AddDoor(uiDoc.Document, wallFront);
-
-      // (3) Windows 
-      // Add windows to the rest of the walls. 
-      for (int i = 0; i <= 3; i++)
+      using (Transaction transaction = new Transaction(uiDoc.Document))
       {
-        if (!(walls[i].Id.IntegerValue == wallFront.Id.IntegerValue))
+        transaction.Start("Create House interactive");
+        // (1) Walls 
+        // Pick two corners to place a house with an orthogonal rectangular footprint 
+        XYZ pt1 = uiDoc.Selection.PickPoint("Pick the first corner of walls");
+        XYZ pt2 = uiDoc.Selection.PickPoint("Pick the second corner");
+
+        // Simply create four walls with orthogonal rectangular profile from the two points picked. 
+        List<Wall> walls = IntroCs.ModelCreationExport.CreateWalls(uiDoc.Document, pt1, pt2);
+
+        // (2) Door 
+        // Pick a wall to add a front door to
+        SelectionFilterWall selFilterWall = new SelectionFilterWall();
+        Reference r = uiDoc.Selection.PickObject(ObjectType.Element, selFilterWall, "Select a wall to place a front door");
+        Wall wallFront = uiDoc.Document.GetElement(r) as Wall;
+
+        // Add a door to the selected wall 
+        IntroCs.ModelCreationExport.AddDoor(uiDoc.Document, wallFront);
+
+        // (3) Windows 
+        // Add windows to the rest of the walls. 
+        for (int i = 0; i <= 3; i++)
         {
-          IntroCs.ModelCreationExport.AddWindow(uiDoc.Document, walls[i]);
+          if (!(walls[i].Id.IntegerValue == wallFront.Id.IntegerValue))
+          {
+            IntroCs.ModelCreationExport.AddWindow(uiDoc.Document, walls[i]);
+          }
         }
+
+        // (4) Roofs 
+        // Add a roof over the walls' rectangular profile. 
+
+        IntroCs.ModelCreationExport.AddRoof(uiDoc.Document, walls);
+        transaction.Commit();
       }
-
-      // (4) Roofs 
-      // Add a roof over the walls' rectangular profile. 
-
-      IntroCs.ModelCreationExport.AddRoof(uiDoc.Document, walls);
     }
   }
 }

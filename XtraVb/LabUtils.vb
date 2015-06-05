@@ -1,7 +1,7 @@
 #Region "Header"
 ' Revit API .NET Labs
 '
-' Copyright (C) 2006-2013 by Autodesk, Inc.
+' Copyright (C) 2006-2015 by Autodesk, Inc.
 '
 ' Permission to use, copy, modify, and distribute this software
 ' for any purpose and without fee is hereby granted, provided
@@ -577,7 +577,10 @@ Namespace XtraVb
         Try
           'definition = defGroup.Definitions.Create(defName, defType, visible) ' 2014
 
-          Dim opt As ExternalDefinitonCreationOptions = New ExternalDefinitonCreationOptions(defName, defType) ' 2015
+          'Dim opt As ExternalDefinitonCreationOptions = New ExternalDefinitonCreationOptions(defName, defType) ' 2015
+
+          Dim opt As ExternalDefinitionCreationOptions = New ExternalDefinitionCreationOptions(defName, defType) ' 2016
+
           opt.Visible = visible
 
           definition = defGroup.Definitions.Create(opt) ' 2015

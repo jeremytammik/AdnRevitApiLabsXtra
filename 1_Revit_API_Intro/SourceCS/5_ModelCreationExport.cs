@@ -1,6 +1,6 @@
 ﻿#region "Copyright"
 //
-// Copyright (C) 2010-2014 by Autodesk, Inc.
+// Copyright (C) 2009-2015 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -52,7 +52,7 @@ using IntroCs;
 
 namespace IntroCs
 {
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.Manual)]
   public class ModelCreationExport : IExternalCommand
   {
     // Member variables 
@@ -72,7 +72,6 @@ namespace IntroCs
       CreateHouse(_doc);
 
       return Result.Succeeded;
-
     }
 
     public void CreateHouse_v1()
@@ -95,20 +94,25 @@ namespace IntroCs
 
     public static void CreateHouse(Document rvtDoc)
     {
-      // Simply create four walls with rectangular profile. 
-      List<Wall> walls = CreateWalls(rvtDoc);
-
-      // Add a door to the second wall 
-      AddDoor(rvtDoc, walls[0]);
-
-      // Add windows to the rest of the walls. 
-      for (int i = 1; i <= 3; i++)
+      using (Transaction transaction = new Transaction(rvtDoc))
       {
-        AddWindow(rvtDoc, walls[i]);
-      }
+        transaction.Start("Create House");
+        // Simply create four walls with rectangular profile. 
+        List<Wall> walls = CreateWalls(rvtDoc);
 
-      // (optional) add a roof over the walls' rectangular profile. 
-      AddRoof(rvtDoc, walls);
+        // Add a door to the second wall 
+        AddDoor(rvtDoc, walls[0]);
+
+        // Add windows to the rest of the walls. 
+        for (int i = 1; i <= 3; i++)
+        {
+          AddWindow(rvtDoc, walls[i]);
+        }
+
+        // (optional) add a roof over the walls' rectangular profile. 
+        AddRoof(rvtDoc, walls);
+        transaction.Commit();
+      }
     }
 
     /// <summary>
@@ -174,6 +178,7 @@ namespace IntroCs
         // Save the wall.
         walls.Add(aWall);
       }
+
       // This is important. we need these lines to have shrinkwrap working. 
       _doc.Regenerate();
       _doc.AutoJoinElements();
@@ -299,6 +304,8 @@ namespace IntroCs
           "). Maybe you use a different template? Try with DefaultMetric.rte."
         );
       }
+      if (!doorType.IsActive)
+        doorType.Activate();
 
       // Get the start and end points of the wall. 
       LocationCurve locCurve = (LocationCurve)hostWall.Location;
@@ -310,7 +317,7 @@ namespace IntroCs
       // One more thing - we want to set the reference as a bottom of the wall or level1. 
       ElementId idLevel1 = hostWall.get_Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId();
       //Level level1 = (Level)_doc.get_Element(idLevel1); // 2012
-        Level level1 = rvtDoc.GetElement(idLevel1) as Level; // since 2013
+      Level level1 = rvtDoc.GetElement(idLevel1) as Level; // since 2013
 
       // Finally, create a door. 
       FamilyInstance aDoor = rvtDoc.Create.NewFamilyInstance(pt, doorType, hostWall, level1, StructuralType.NonStructural);
@@ -344,6 +351,9 @@ namespace IntroCs
           "). Maybe you use a different template? Try with DefaultMetric.rte.");
       }
 
+      if (!windowType.IsActive)
+        windowType.Activate();
+
       // Get the start and end points of the wall. 
       LocationCurve locCurve = (LocationCurve)hostWall.Location;
       XYZ pt1 = locCurve.Curve.GetEndPoint(0);
@@ -355,7 +365,7 @@ namespace IntroCs
       ElementId idLevel1 = hostWall.get_Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId();
 
       //Level level1 = (Level)_doc.get_Element(idLevel1); // 2012
-        Level level1 = rvtDoc.GetElement(idLevel1) as Level; // since 2013
+      Level level1 = rvtDoc.GetElement(idLevel1) as Level; // since 2013
 
       // Finally create a window. 
       FamilyInstance aWindow = rvtDoc.Create.NewFamilyInstance(pt, windowType, hostWall, level1, StructuralType.NonStructural);
@@ -367,7 +377,6 @@ namespace IntroCs
     /// <summary>
     /// Add a roof over the rectangular profile of the walls we created earlier.
     /// </summary>
-
     public static void AddRoof(Document rvtDoc, List<Wall> walls)
     {
       // Hard coding the roof type we will use. 
@@ -415,28 +424,33 @@ namespace IntroCs
         footPrint.Append(line);
       }
 
-      // Get the level2 from the wall
+      // Get the level2 from the wall.
+
       ElementId idLevel2 = walls[0].get_Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsElementId();
 
       //Level level2 = (Level)_doc.get_Element(idLevel2); // 2012
-        Level level2 = rvtDoc.GetElement(idLevel2) as Level; // since 2013
+      Level level2 = rvtDoc.GetElement(idLevel2) as Level; // since 2013
 
-      // Footprint to morel curve mapping  
+      // Footprint to model curve mapping.
+
       ModelCurveArray mapping = new ModelCurveArray();
 
       // Create a roof.
-      FootPrintRoof aRoof = rvtDoc.Create.NewFootPrintRoof(footPrint, level2, roofType, out mapping);
 
-      //  Set the slope 
+      FootPrintRoof aRoof = rvtDoc.Create.NewFootPrintRoof(
+        footPrint, level2, roofType, out mapping);
+
+      // Set the slope.
+
       foreach (ModelCurve modelCurve in mapping)
       {
         aRoof.set_DefinesSlope(modelCurve, true);
         aRoof.set_SlopeAngle(modelCurve, 0.5);
       }
 
-      // Added. 
-      rvtDoc.Regenerate();
-      rvtDoc.AutoJoinElements();
+      // Performed automatically by transaction commit.
+      //rvtDoc.Regenerate();
+      //rvtDoc.AutoJoinElements();
     }
   }
 }

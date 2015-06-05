@@ -1,6 +1,6 @@
 #region Copyright
 //
-// (C) Copyright 2009-2014 by Autodesk, Inc.
+// (C) Copyright 2009-2015 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -41,6 +41,7 @@ using Autodesk.Revit;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.ApplicationServices;
+using Autodesk.Revit.Attributes;
 
 #endregion // Namespaces
 
@@ -97,7 +98,7 @@ using Autodesk.Revit.ApplicationServices;
 
 namespace FamilyCs
 {
-  [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Automatic)]
+  [Transaction(TransactionMode.Manual)]
   class RvtCmd_FamilyCreateColumnFormulaMaterial : IExternalCommand
   {
     // member variables for top level access to the Revit database
@@ -128,30 +129,52 @@ namespace FamilyCs
         return Result.Failed;
       }
 
-      // (1.1) add reference planes
-      addReferencePlanes();
+      using (Transaction transaction = new Transaction(_doc))
+      {
+          try
+          {
+              if (transaction.Start("CreateFamily") == TransactionStatus.Started)
+              {
+                  // (1.1) add reference planes
+                  addReferencePlanes();
 
-      // (1.2) create a simple extrusion. we create a L-shape extrusion.
-      Extrusion pSolid = createSolid();
-      _doc.Regenerate();
+                  // (1.2) create a simple extrusion. we create a L-shape extrusion.
+                  Extrusion pSolid = createSolid();
+                  _doc.Regenerate();
 
-      // (2) add alignment
-      addAlignments(pSolid);
+                  // (2) add alignment
+                  addAlignments(pSolid);
 
-      // (3.1) add parameters
-      addParameters();
+                  // (3.1) add parameters
+                  addParameters();
 
-      // (3.2) add dimensions
-      addDimensions();
+                  // (3.2) add dimensions
+                  addDimensions();
 
-      // (3.3) add types
-      addTypes();
+                  // (3.3) add types
+                  addTypes();
 
-      // (4.1) add formula
-      addFormulas();
+                  // (4.1) add formula
+                  addFormulas();
 
-      // (4.2) add materials
-      addMaterials(pSolid);
+                  // (4.2) add materials
+                  addMaterials(pSolid); 
+                  transaction.Commit();
+              }
+              else
+              {
+                  TaskDialog.Show("ERROR", "Start transaction failed!");
+                  return Result.Failed;
+              }
+          }
+          catch (Exception ex)
+          {
+              TaskDialog.Show("ERROR", ex.ToString());
+              if (transaction.GetStatus() == TransactionStatus.Started)
+                  transaction.RollBack();
+              return Result.Failed;
+          }
+      }
 
       // finally return
       return Result.Succeeded;
@@ -273,7 +296,8 @@ namespace FamilyCs
       //
       ReferencePlane pRefPlane = findElement(typeof(ReferencePlane), "Reference Plane") as ReferencePlane;  // need to know from the template
       //SketchPlane pSketchPlane = _doc.FamilyCreate.NewSketchPlane(pRefPlane.Plane);  // Revit 2013
-      SketchPlane pSketchPlane = SketchPlane.Create(_doc, pRefPlane.Plane);  // Revit 2014
+      //SketchPlane pSketchPlane = SketchPlane.Create(_doc, pRefPlane.Plane);  // Revit 2014
+      SketchPlane pSketchPlane = SketchPlane.Create(_doc, pRefPlane.GetPlane());  // Revit 2016
 
       // (3) height of the extrusion
       //
@@ -418,7 +442,7 @@ namespace FamilyCs
       // findElement() is a helper function. see below.
       //
       Level upperLevel = findElement(typeof(Level), "Upper Ref Level") as Level;
-      Reference ref1 = upperLevel.PlaneReference;
+      Reference ref1 = upperLevel.GetPlaneReference();
 
       // find the face of the box
       // findFace() is a helper function. see below.
@@ -438,7 +462,7 @@ namespace FamilyCs
       // findElement() is a helper function. see below.
       //
       Level lowerLevel = findElement(typeof(Level), "Lower Ref. Level") as Level;
-      Reference ref3 = lowerLevel.PlaneReference;
+      Reference ref3 = lowerLevel.GetPlaneReference();
 
       // find the face of the box
       // findFace() is a helper function. see below.
@@ -476,12 +500,12 @@ namespace FamilyCs
 
       // create alignments
       //
-      _doc.FamilyCreate.NewAlignment(pViewPlan, refRight.Reference, faceRight.Reference);
-      _doc.FamilyCreate.NewAlignment(pViewPlan, refLeft.Reference, faceLeft.Reference);
-      _doc.FamilyCreate.NewAlignment(pViewPlan, refFront.Reference, faceFront.Reference);
-      _doc.FamilyCreate.NewAlignment(pViewPlan, refBack.Reference, faceBack.Reference);
-      _doc.FamilyCreate.NewAlignment(pViewPlan, refOffsetV.Reference, faceOffsetV.Reference);  // added for L-shape
-      _doc.FamilyCreate.NewAlignment(pViewPlan, refOffsetH.Reference, faceOffsetH.Reference);  // added for L-shape
+      _doc.FamilyCreate.NewAlignment(pViewPlan, refRight.GetReference(), faceRight.Reference);
+      _doc.FamilyCreate.NewAlignment(pViewPlan, refLeft.GetReference(), faceLeft.Reference);
+      _doc.FamilyCreate.NewAlignment(pViewPlan, refFront.GetReference(), faceFront.Reference);
+      _doc.FamilyCreate.NewAlignment(pViewPlan, refBack.GetReference(), faceBack.Reference);
+      _doc.FamilyCreate.NewAlignment(pViewPlan, refOffsetV.GetReference(), faceOffsetV.Reference);  // added for L-shape
+      _doc.FamilyCreate.NewAlignment(pViewPlan, refOffsetH.GetReference(), faceOffsetH.Reference);  // added for L-shape
     }
 
     // ======================================
@@ -544,8 +568,8 @@ namespace FamilyCs
       // define references
       //
       ReferenceArray pRefArray = new ReferenceArray();
-      pRefArray.Append(refLeft.Reference);
-      pRefArray.Append(refOffsetV.Reference);
+      pRefArray.Append(refLeft.GetReference());
+      pRefArray.Append(refOffsetV.GetReference());
 
       // create a dimension
       //
@@ -571,8 +595,8 @@ namespace FamilyCs
       // define references
       //
       pRefArray = new ReferenceArray();
-      pRefArray.Append(refFront.Reference);
-      pRefArray.Append(refOffsetH.Reference);
+      pRefArray.Append(refFront.GetReference());
+      pRefArray.Append(refOffsetH.GetReference());
 
       // create a dimension
       //
@@ -815,7 +839,7 @@ namespace FamilyCs
           {
             PlanarFace pPlanarFace = pFace as PlanarFace;
             // check to see if they have same normal
-            if ((pPlanarFace != null) && pPlanarFace.Normal.IsAlmostEqualTo(normal))
+            if ((pPlanarFace != null) && pPlanarFace.FaceNormal.IsAlmostEqualTo(normal))
             {
               // additionally, we want to check if the face is on the reference plane
               //
@@ -870,7 +894,7 @@ namespace FamilyCs
           foreach (Face pFace in faces)
           {
             PlanarFace pPlanarFace = pFace as PlanarFace;
-            if ((pPlanarFace != null) && pPlanarFace.Normal.IsAlmostEqualTo(normal)) // we found the face
+            if ((pPlanarFace != null) && pPlanarFace.FaceNormal.IsAlmostEqualTo(normal)) // we found the face
             {
               return pPlanarFace;
             }

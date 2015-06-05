@@ -1,6 +1,6 @@
 ﻿#region Copyright
 //
-// Copyright (C) 2010-2014 by Autodesk, Inc.
+// Copyright (C) 2009-2015 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -44,7 +44,7 @@ namespace IntroCs
   /// In this example, we store a fire rating value on all doors.
   /// Please also look at the FireRating Revit SDK sample.
   /// </summary>
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.Manual)]
   class SharedParameter : IExternalCommand
   {
     const string kSharedParamsGroupAPI = "API Parameters";
@@ -57,7 +57,7 @@ namespace IntroCs
       ElementSet elements)
     {
       UIDocument uidoc = commandData.Application.ActiveUIDocument;
-      Application app = commandData.Application.Application; 
+      Application app = commandData.Application.Application;
       Document doc = uidoc.Document;
 
       // Get the current shared params definition file
@@ -110,17 +110,23 @@ namespace IntroCs
         return Result.Failed;
       }
 
-      // Bind the param
-      try
+      using (Transaction transaction = new Transaction(doc))
       {
-        Binding binding = app.Create.NewInstanceBinding(catSet);
-        // We could check if already bound, but looks like Insert will just ignore it in such case
-        doc.ParameterBindings.Insert(fireRatingParamDef, binding);
-      }
-      catch (Exception ex)
-      {
-        message = ex.Message;
-        return Result.Failed;
+        transaction.Start("Bind parameter");
+        // Bind the param
+        try
+        {
+          Binding binding = app.Create.NewInstanceBinding(catSet);
+          // We could check if already bound, but looks like Insert will just ignore it in such case
+          doc.ParameterBindings.Insert(fireRatingParamDef, binding);
+          transaction.Commit();
+        }
+        catch (Exception ex)
+        {
+          message = ex.Message;
+          transaction.RollBack();
+          return Result.Failed;
+        }
       }
 
       return Result.Succeeded;
@@ -146,6 +152,7 @@ namespace IntroCs
       if (0 == sharedParamsFileName.Length ||
         !System.IO.File.Exists(sharedParamsFileName))
       {
+        Directory.CreateDirectory(Path.GetDirectoryName(kSharedParamsPath));
         StreamWriter stream;
         stream = new StreamWriter(kSharedParamsPath);
         stream.Close();
@@ -198,16 +205,18 @@ namespace IntroCs
         try
         {
           //definition = defGroup.Definitions.Create(defName, defType, visible);
-          
+
           // 'Autodesk.Revit.DB.Definitions.Create(string, Autodesk.Revit.DB.ParameterType, bool)' is obsolete: 
           // 'This method is deprecated in Revit 2015. Use Create(Autodesk.Revit.DB.ExternalDefinitonCreationOptions) instead'
-	
+
           // Modified code for Revit 2015
+          // and fixed typo in class name in Revit 2016
 
-          ExternalDefinitonCreationOptions extDefCrOptns = new ExternalDefinitonCreationOptions(defName, defType);
-          extDefCrOptns.Visible = true;
-          definition = defGroup.Definitions.Create(extDefCrOptns);
-
+          ExternalDefinitionCreationOptions opt
+            = new ExternalDefinitionCreationOptions(
+              defName, defType);
+          opt.Visible = true;
+          definition = defGroup.Definitions.Create(opt);
         }
         catch (Exception)
         {
@@ -218,7 +227,7 @@ namespace IntroCs
     }
   }
 
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.Manual)]
   public class PerDocParameter : IExternalCommand
   {
     public const string kParamGroupName = "Per-doc Params";
@@ -233,71 +242,76 @@ namespace IntroCs
       UIDocument uiDoc = commandData.Application.ActiveUIDocument;
       Application app = commandData.Application.Application;
       Document doc = uiDoc.Document;
+      using (Transaction transaction = new Transaction(doc))
+      {
+        transaction.Start("PerDocParameter");
 
-      // get the current shared params definition file
-      DefinitionFile sharedParamsFile = SharedParameter.GetSharedParamsFile(app);
-      if (null == sharedParamsFile)
-      {
-        TaskDialog.Show("Per document parameter", "Error getting the shared params file.");
-        return Result.Failed;
-      }
-      // get or create the shared params group
-      DefinitionGroup sharedParamsGroup = SharedParameter.GetOrCreateSharedParamsGroup(sharedParamsFile, kParamGroupName);
-      if (null == sharedParamsGroup)
-      {
-        TaskDialog.Show("Per document parameter", "Error getting the shared params group.");
-        return Result.Failed;
-      }
-      // visible param
-      Definition docParamDefVisible = SharedParameter.GetOrCreateSharedParamsDefinition(sharedParamsGroup, ParameterType.Integer, kParamNameVisible, true);
-      if (null == docParamDefVisible)
-      {
-        TaskDialog.Show("Per document parameter", "Error creating visible per-doc parameter.");
-        return Result.Failed;
-      }
-      // invisible param
-      Definition docParamDefInvisible = SharedParameter.GetOrCreateSharedParamsDefinition(sharedParamsGroup, ParameterType.Integer, kParamNameInvisible, false);
-      if (null == docParamDefInvisible)
-      {
-        TaskDialog.Show("Per document parameter", "Error creating invisible per-doc parameter.");
-        return Result.Failed;
-      }
-      // bind the param
-      try
-      {
-        CategorySet catSet = app.Create.NewCategorySet();
-        catSet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_ProjectInformation));
-        Binding binding = app.Create.NewInstanceBinding(catSet);
-        doc.ParameterBindings.Insert(docParamDefVisible, binding);
-        doc.ParameterBindings.Insert(docParamDefInvisible, binding);
-      }
-      catch (Exception e)
-      {
-        TaskDialog.Show("Per document parameter", "Error binding shared parameter: " + e.Message);
-        return Result.Failed;
-      }
-      // set the initial values
-      // get the singleton project info element
-      Element projInfoElem = GetProjectInfoElem(doc);
+        // get the current shared params definition file
+        DefinitionFile sharedParamsFile = SharedParameter.GetSharedParamsFile(app);
+        if (null == sharedParamsFile)
+        {
+          TaskDialog.Show("Per document parameter", "Error getting the shared params file.");
+          return Result.Failed;
+        }
+        // get or create the shared params group
+        DefinitionGroup sharedParamsGroup = SharedParameter.GetOrCreateSharedParamsGroup(sharedParamsFile, kParamGroupName);
+        if (null == sharedParamsGroup)
+        {
+          TaskDialog.Show("Per document parameter", "Error getting the shared params group.");
+          return Result.Failed;
+        }
+        // visible param
+        Definition docParamDefVisible = SharedParameter.GetOrCreateSharedParamsDefinition(sharedParamsGroup, ParameterType.Integer, kParamNameVisible, true);
+        if (null == docParamDefVisible)
+        {
+          TaskDialog.Show("Per document parameter", "Error creating visible per-doc parameter.");
+          return Result.Failed;
+        }
+        // invisible param
+        Definition docParamDefInvisible = SharedParameter.GetOrCreateSharedParamsDefinition(sharedParamsGroup, ParameterType.Integer, kParamNameInvisible, false);
+        if (null == docParamDefInvisible)
+        {
+          TaskDialog.Show("Per document parameter", "Error creating invisible per-doc parameter.");
+          return Result.Failed;
+        }
+        // bind the param
+        try
+        {
+          CategorySet catSet = app.Create.NewCategorySet();
+          catSet.Insert(doc.Settings.Categories.get_Item(BuiltInCategory.OST_ProjectInformation));
+          Binding binding = app.Create.NewInstanceBinding(catSet);
+          doc.ParameterBindings.Insert(docParamDefVisible, binding);
+          doc.ParameterBindings.Insert(docParamDefInvisible, binding);
+        }
+        catch (Exception e)
+        {
+          TaskDialog.Show("Per document parameter", "Error binding shared parameter: " + e.Message);
+          return Result.Failed;
+        }
+        // set the initial values
+        // get the singleton project info element
+        Element projInfoElem = GetProjectInfoElem(doc);
 
-      if (null == projInfoElem)
-      {
-        TaskDialog.Show("Per document parameter", "No project info elem found. Aborting command...");
-        return Result.Failed;
+        if (null == projInfoElem)
+        {
+          TaskDialog.Show("Per document parameter", "No project info elem found. Aborting command...");
+          return Result.Failed;
+        }
+        // for simplicity, access params by name rather than by GUID:
+        //projInfoElem.get_Parameter(kParamNameVisible).Set(55);
+        //projInfoElem.get_Parameter(kParamNameInvisible).Set(0);
+
+        // 'Autodesk.Revit.DB.Element.get_Parameter(string)' is obsolete: 
+        // 'This property is obsolete in Revit 2015, as more than one parameter can have the same name on a given element. 
+        // Use Element.Parameters to obtain a complete list of parameters on this Element, 
+        // or Element.GetParameters(String) to get a list of all parameters by name, 
+        // or Element.LookupParameter(String) to return the first available parameter with the given name.
+
+        // modified code for Revit 2015
+        projInfoElem.LookupParameter(kParamNameVisible).Set(55);
+        projInfoElem.LookupParameter(kParamNameVisible).Set(0);
+        transaction.Commit();
       }
-      // for simplicity, access params by name rather than by GUID:
-      //projInfoElem.get_Parameter(kParamNameVisible).Set(55);
-      //projInfoElem.get_Parameter(kParamNameInvisible).Set(0);
-
-      // 'Autodesk.Revit.DB.Element.get_Parameter(string)' is obsolete: 
-      // 'This property is obsolete in Revit 2015, as more than one parameter can have the same name on a given element. 
-      // Use Element.Parameters to obtain a complete list of parameters on this Element, 
-      // or Element.GetParameters(String) to get a list of all parameters by name, 
-      // or Element.LookupParameter(String) to return the first available parameter with the given name.
-
-      // modified code for Revit 2015
-      projInfoElem.LookupParameter(kParamNameVisible).Set(55);
-      projInfoElem.LookupParameter(kParamNameVisible).Set(0);
 
 
       return Result.Succeeded;
@@ -313,9 +327,9 @@ namespace IntroCs
       collector.OfCategory(BuiltInCategory.OST_ProjectInformation);
       IList<Element> elems = collector.ToElements();
 
-      Debug.Assert(elems.Count == 1, "There should be exactly one of this object in the project"); 
+      Debug.Assert(elems.Count == 1, "There should be exactly one of this object in the project");
 
-      return elems[0]; 
+      return elems[0];
     }
   }
 }

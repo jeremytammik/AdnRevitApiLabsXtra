@@ -1,7 +1,7 @@
 #Region "Header"
 'Revit API .NET Labs
 
-'Copyright (C) 2006-2013 by Autodesk, Inc.
+'Copyright (C) 2006-2015 by Autodesk, Inc.
 
 'Permission to use, copy, modify, and distribute this software
 'for any purpose and without fee is hereby granted, provided
@@ -35,9 +35,9 @@ Imports Autodesk.Revit.DB.Architecture
 Imports Autodesk.Revit.UI
 Imports Microsoft.VisualBasic.Constants
 '' todo: report and resolve this, this should not be required: 'RE: ambiguous BoundarySegmentArrayArray'
-Imports BoundarySegmentArrayArray = Autodesk.Revit.DB.Architecture.BoundarySegmentArrayArray
-Imports BoundarySegmentArray = Autodesk.Revit.DB.Architecture.BoundarySegmentArray
-Imports BoundarySegment = Autodesk.Revit.DB.Architecture.BoundarySegment
+'Imports BoundarySegmentArrayArray = Autodesk.Revit.DB.Architecture.BoundarySegmentArrayArray
+'Imports BoundarySegmentArray = Autodesk.Revit.DB.Architecture.BoundarySegmentArray
+'Imports BoundarySegment = Autodesk.Revit.DB.Architecture.BoundarySegment
 #End Region
 
 Namespace XtraVb
@@ -245,7 +245,7 @@ Namespace XtraVb
                 iSeg += 1
 
                 ' Segment's curve
-                Dim crv As Curve = segment.Curve
+                Dim crv As Curve = segment.GetCurve()
 
                 If TypeOf crv Is Line Then
                   Dim line As Line = TryCast(crv, Line)

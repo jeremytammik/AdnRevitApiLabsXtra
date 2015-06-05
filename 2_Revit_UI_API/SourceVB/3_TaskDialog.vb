@@ -1,6 +1,6 @@
 ﻿#Region "Copyright"
 '
-' Copyright (C) 2010-2014 by Autodesk, Inc.
+' Copyright (C) 2009-2015 by Autodesk, Inc.
 '
 ' Permission to use, copy, modify, and distribute this software in
 ' object code form for any purpose and without fee is hereby granted,
@@ -44,7 +44,7 @@
 ''' cf. Developer Guide, Section 3.9 Revit-style Task Dialogs (pp55) 
 ''' Appexdix G. API User Interface Guidelines (pp381), Task Dialog (pp404) 
 ''' </summary>
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.ReadOnly)> _
 Public Class UITaskDialog
   Implements IExternalCommand
 
@@ -178,7 +178,7 @@ End Class
 ''' 
 ''' Show a task dialog and ask the user if he/she wants to create a house interactively or automatically. 
 ''' </summary> 
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.Manual)> _
 Public Class UICreateHouseDialog
   Implements IExternalCommand
 

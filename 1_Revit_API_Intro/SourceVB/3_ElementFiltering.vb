@@ -1,6 +1,6 @@
 ﻿#Region "Copyright"
 '
-' Copyright (C) 2010-2014 by Autodesk, Inc.
+' Copyright (C) 2009-2015 by Autodesk, Inc.
 '
 ' Permission to use, copy, modify, and distribute this software in
 ' object code form for any purpose and without fee is hereby granted,
@@ -47,7 +47,7 @@ Imports IntroVb.Util
 ''' <summary>
 ''' ElementFiltering
 ''' </summary>
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.ReadOnly)> _
 Public Class ElementFiltering
   Implements IExternalCommand
 
@@ -103,9 +103,9 @@ Public Class ElementFiltering
 
     ' Demonstrate obsolete method use first
 
-    'Dim wallTypes As WallTypeSet = _doc.WallTypes ' since 2013
-    Dim wallTypes As FilteredElementCollector = new FilteredElementCollector(_doc).OfClass(GetType(WallType))
-    
+    'Dim wallTypes As WallTypeSet = _doc.WallTypes ' 2013
+    Dim wallTypes As FilteredElementCollector = New FilteredElementCollector(_doc).OfClass(GetType(WallType))
+
 
     For Each wType As WallType In wallTypes
       s += wType.Kind.ToString + " : " + wType.Name + vbCr
@@ -118,7 +118,7 @@ Public Class ElementFiltering
     s = String.Empty
 
     'Dim floorTypes As FloorTypeSet = _doc.FloorTypes
-    Dim floorTypes As FilteredElementCollector = new FilteredElementCollector(_doc).OfClass(GetType(FloorType))
+    Dim floorTypes As FilteredElementCollector = New FilteredElementCollector(_doc).OfClass(GetType(FloorType))
 
     For Each fType As FloorType In floorTypes
       ' Family name is not in the property for floor. so use BuiltInParameter here. 
@@ -443,14 +443,14 @@ Public Class ElementFiltering
     Dim doorType2 As Element = Nothing ' id of door type we are looking for. 
     If doorFamily IsNot Nothing Then
       ' If we have a family, then proceed with finding a type under Symbols property. 
- 
+
       'Public ReadOnly Property Symbols As Autodesk.Revit.DB.FamilySymbolSet' is obsolete: 
       'This property is obsolete in Revit 2015.  Use Family.GetFamilySymbolIds() instead.'.	
-      
+
       'Dim doorFamilySymbolSet As FamilySymbolSet = doorFamily.Symbols
-      
+
       ' Iterate through the set of family symbols. 
-      
+
       'Dim doorTypeItr As FamilySymbolSetIterator = doorFamilySymbolSet.ForwardIterator
       'While doorTypeItr.MoveNext
       '  Dim dType As FamilySymbol = doorTypeItr.Current
@@ -462,14 +462,14 @@ Public Class ElementFiltering
 
       ' updated for Revit 2015
       Dim doorFamilySymbolIds As ISet(Of ElementId) = doorFamily.GetFamilySymbolIds()
-      
-        For Each id As ElementId In doorFamilySymbolIds
-                Dim dType As FamilySymbol = TryCast(doorFamily.Document.GetElement(id), FamilySymbol)
-                If (dType.Name = doorTypeName )Then
-                    doorType2 = dType ' Found it
-                    Exit For
-                End If
-        Next
+
+      For Each id As ElementId In doorFamilySymbolIds
+        Dim dType As FamilySymbol = TryCast(doorFamily.Document.GetElement(id), FamilySymbol)
+        If (dType.Name = doorTypeName) Then
+          doorType2 = dType ' Found it
+          Exit For
+        End If
+      Next
 
 
     End If

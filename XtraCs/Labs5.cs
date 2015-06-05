@@ -1,7 +1,7 @@
 #region Header
 // Revit API .NET Labs
 //
-// Copyright (C) 2007-2013 by Autodesk, Inc.
+// Copyright (C) 2007-2015 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software
 // for any purpose and without fee is hereby granted, provided
@@ -39,8 +39,8 @@ using Autodesk.Revit.UI;
 //using BoundarySegment = Autodesk.Revit.DB.Architecture.BoundarySegment;
 
 // Galaxy Beta 1: Error	1	'BoundarySegment' is an ambiguous reference between 'Autodesk.Revit.DB.BoundarySegment' and 'Autodesk.Revit.DB.Architecture.BoundarySegment'	C:\a\lib\revit\2012\adn\src\rac\labs\cs\Labs5.cs	299	23	LabsCs
-using BoundarySegmentArrayArray = Autodesk.Revit.DB.BoundarySegmentArrayArray;
-using BoundarySegmentArray = Autodesk.Revit.DB.BoundarySegmentArray;
+//using BoundarySegmentArrayArray = Autodesk.Revit.DB.BoundarySegmentArrayArray;
+//using BoundarySegmentArray = Autodesk.Revit.DB.Arch.BoundarySegmentArray;
 using BoundarySegment = Autodesk.Revit.DB.BoundarySegment;
 #endregion // Namespaces
 
@@ -316,7 +316,7 @@ namespace XtraCs
                 ++iSeg;
 
                 // Segment's curve
-                Curve crv = segment.Curve;
+                Curve crv = segment.GetCurve();
 
                 if( crv is Line )
                 {

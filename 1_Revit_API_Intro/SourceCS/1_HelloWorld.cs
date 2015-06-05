@@ -1,5 +1,4 @@
 ﻿#region Copyright
-//
 // Copyright (C) 2010-2014 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software in
@@ -26,25 +25,27 @@ using System;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.Attributes;
-using Autodesk.Revit.ApplicationServices; // This is for Revit Application 
+using Autodesk.Revit.ApplicationServices; // This is for Revit Application
 #endregion
 
 #region Description
-// Revit Intro Lab - 1 
-// 
-// In this lab, you will learn how to "hook" your add-on program to Revit. 
-// This command defines a minimum external command. 
-// 
-// Explain about addin manifest. How to create GUID. 
-// Hello World in VB.NET is from page 367 of Developer Guide. 
+// Revit Intro Lab - 1
+//
+// In this lab, you will learn how to "hook" your add-in to Revit.
+// This lab defines a minimum external command.
+//
+// Explain about add-in manifest, how to create GUID.
+// Hello World in VB.NET is from page 367 of Developer Guide.
 #endregion
 
 namespace IntroCs
 {
   /// <summary>
-  /// Hello World #1 - A minimum Revit external command. 
+  /// Hello World #1 - A minimum Revit external command
+  /// with all namespaces fully qualified.
   /// </summary>
-  [Autodesk.Revit.Attributes.Transaction(Autodesk.Revit.Attributes.TransactionMode.Automatic)]
+  [Autodesk.Revit.Attributes.Transaction(
+    Autodesk.Revit.Attributes.TransactionMode.Manual)]
   public class HelloWorld : Autodesk.Revit.UI.IExternalCommand
   {
     public Autodesk.Revit.UI.Result Execute(
@@ -61,9 +62,10 @@ namespace IntroCs
   }
 
   /// <summary>
-  /// Hello World #2 - simplified without full namespace.
+  /// Hello World #2 - simplified without full namespace
+  /// and using ReadOnly attribute.
   /// </summary>
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.ReadOnly)]
   public class HelloWorldSimple : IExternalCommand
   {
     public Result Execute(
@@ -80,13 +82,13 @@ namespace IntroCs
   }
 
   /// <summary>
-  /// Hello World #3 - minimum external application 
-  /// Difference: IExternalApplication instead of IExternalCommand. 
-  /// In addin manifest, use addin type "Application" and Name instead of Text tag. 
+  /// Hello World #3 - minimum external application
+  /// Difference: IExternalApplication instead of IExternalCommand.
+  /// In addin manifest, use addin type "Application" and Name instead of Text tag.
   /// </summary>
   public class HelloWorldApp : IExternalApplication
   {
-    // OnStartup() - called when Revit starts. 
+    // OnStartup() - called when Revit starts.
 
     public Result OnStartup(UIControlledApplication app)
     {
@@ -95,7 +97,7 @@ namespace IntroCs
       return Result.Succeeded;
     }
 
-    // OnShutdown() - called when Revit ends. 
+    // OnShutdown() - called when Revit ends.
 
     public Result OnShutdown(UIControlledApplication app)
     {
@@ -104,12 +106,12 @@ namespace IntroCs
   }
 
   /// <summary>
-  /// Command Arguments 
-  /// Take a look at the command arguments. 
-  /// commandData is the topmost object and 
-  /// provides the entry point to the Revit model. 
+  /// Command Arguments
+  /// Take a look at the command arguments.
+  /// commandData is the topmost object and
+  /// provides the entry point to the Revit model.
   /// </summary>
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.ReadOnly)]
   public class CommandData : IExternalCommand
   {
     public Result Execute(
@@ -117,18 +119,18 @@ namespace IntroCs
       ref string message,
       ElementSet elements)
     {
-      // The first argument, commandData, provides access to the top most object model. 
-      // You will get the necessary information from commandData. 
-      // To see what's in there, print out a few data accessed from commandData 
-      // 
-      // Exercise: Place a break point at commandData and drill down the data. 
+      // The first argument, commandData, provides access to the top most object model.
+      // You will get the necessary information from commandData.
+      // To see what's in there, print out a few data accessed from commandData
+      //
+      // Exercise: Place a break point at commandData and drill down the data.
 
       UIApplication uiApp = commandData.Application;
       Application rvtApp = uiApp.Application;
       UIDocument uiDoc = uiApp.ActiveUIDocument;
-      Document rvtDoc = uiDoc.Document; 
+      Document rvtDoc = uiDoc.Document;
 
-      // Print out a few information that you can get from commandData 
+      // Print out a few information that you can get from commandData
       string versionName = rvtApp.VersionName;
       string documentTitle = rvtDoc.Title;
 
@@ -141,12 +143,12 @@ namespace IntroCs
 
       //WallTypeSet wallTypes = rvtDoc.WallTypes; // 2013, deprecated in 2014
 
-      FilteredElementCollector wallTypes // since 2014
-        = new FilteredElementCollector( rvtDoc )
-          .OfClass( typeof( WallType ) );
+      FilteredElementCollector wallTypes // 2014
+        = new FilteredElementCollector(rvtDoc)
+          .OfClass(typeof(WallType));
 
       string s = "";
-      foreach( WallType wallType in wallTypes )
+      foreach (WallType wallType in wallTypes)
       {
         s += wallType.Name + "\r\n";
       }
@@ -157,12 +159,11 @@ namespace IntroCs
         "Revit Intro Lab",
         "Wall Types (in main instruction):\n\n" + s);
 
-      // 2nd and 3rd arguments are when the command fails. 
-      // 2nd - set a message to the user. 
-      // 3rd - set elements to highlight. 
+      // 2nd and 3rd arguments are when the command fails.
+      // 2nd - set a message to the user.
+      // 3rd - set elements to highlight.
 
       return Result.Succeeded;
     }
   }
 }
-

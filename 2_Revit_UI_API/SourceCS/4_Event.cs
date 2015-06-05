@@ -1,6 +1,6 @@
 ﻿#region Copyright
 //
-// Copyright (C) 2010-2014 by Autodesk, Inc.
+// Copyright (C) 2009-2015 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -48,7 +48,6 @@ namespace UiCs
   /// External application to register/unregister document changed event. 
   /// Simply reports what has been changed  
   /// </summary>
-  [Transaction(TransactionMode.Automatic)]
   public class UIEventApp : IExternalApplication
   {
     // Flag to indicate if we want to show a message at each object modified events. 
@@ -139,7 +138,7 @@ namespace UiCs
   /// <summary>
   /// External command to toggle event message on/off 
   /// </summary> 
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.ReadOnly)]
   public class UIEvent : IExternalCommand
   {
     public Result Execute(
@@ -154,7 +153,7 @@ namespace UiCs
 
   }
 
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.ReadOnly)]
   public class UIEventOn : IExternalCommand
   {
     public Result Execute(
@@ -168,7 +167,7 @@ namespace UiCs
     }
   }
 
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.ReadOnly)]
   public class UIEventOff : IExternalCommand
   {
     public Result Execute(
@@ -215,8 +214,8 @@ namespace UiCs
 
       foreach (ElementId id in idsModified)
       {
-        //  Wall aWall = rvtDoc.get_Element(id) as Wall; // until 2012
-        Wall aWall = rvtDoc.GetElement(id) as Wall; // since 2013
+        //  Wall aWall = rvtDoc.get_Element(id) as Wall; // For 2012
+        Wall aWall = rvtDoc.GetElement(id) as Wall; // For 2013
         CenterWindowDoor(rvtDoc, aWall);
       }
     }
@@ -325,7 +324,7 @@ namespace UiCs
   /// <summary>
   /// External command to toggle windowDoor updater on/off 
   /// </summary> 
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.ReadOnly)]
   public class UIDynamicModelUpdate : IExternalCommand
   {
     public Result Execute(
@@ -345,7 +344,7 @@ namespace UiCs
     }
   }
 
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.ReadOnly)]
   public class UIDynamicModelUpdateOn : IExternalCommand
   {
     public Result Execute(
@@ -359,7 +358,7 @@ namespace UiCs
     }
   }
 
-  [Transaction(TransactionMode.Automatic)]
+  [Transaction(TransactionMode.ReadOnly)]
   public class UIDynamicModelUpdateOff : IExternalCommand
   {
     public Result Execute(

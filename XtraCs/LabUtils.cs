@@ -1,7 +1,7 @@
 #region Header
 // Revit API .NET Labs
 //
-// Copyright (C) 2007-2013 by Autodesk, Inc.
+// Copyright (C) 2007-2015 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software
 // for any purpose and without fee is hereby granted, provided
@@ -867,8 +867,8 @@ namespace XtraCs
         {
           //definition = defGroup.Definitions.Create( defName, defType, visible ); // 2014
 
-          ExternalDefinitonCreationOptions opt 
-            = new ExternalDefinitonCreationOptions( 
+          ExternalDefinitionCreationOptions opt 
+            = new ExternalDefinitionCreationOptions( 
               defName, defType ); // 2015
 
           opt.Visible = visible;

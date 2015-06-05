@@ -66,11 +66,11 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="RevitAPI">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2015\RevitAPI.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Revit 2016\RevitAPI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="RevitAPIUI">
-      <HintPath>..\..\..\..\..\..\..\..\Program Files\Autodesk\Revit 2015\RevitAPIUI.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Revit 2016\RevitAPIUI.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System" />
@@ -149,11 +149,6 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
-    <Import Include="Autodesk.Revit" />
-    <Import Include="Autodesk.Revit.ApplicationServices" />
-    <Import Include="Autodesk.Revit.Attributes" />
-    <Import Include="Autodesk.Revit.DB" />
-    <Import Include="Autodesk.Revit.UI" />
     <Import Include="Microsoft.VisualBasic" />
   </ItemGroup>
   <ItemGroup>

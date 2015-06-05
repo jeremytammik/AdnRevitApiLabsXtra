@@ -1,6 +1,6 @@
 ﻿#Region "Copyright"
 '
-' Copyright (C) 2010-2014 by Autodesk, Inc.
+' Copyright (C) 2009-2015 by Autodesk, Inc.
 '
 ' Permission to use, copy, modify, and distribute this software in
 ' object code form for any purpose and without fee is hereby granted,
@@ -56,7 +56,7 @@ Imports Autodesk.Revit.UI
 '
 #End Region
 
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.Manual)> _
 Public Class ModelCreationExport
   Implements IExternalCommand
 
@@ -104,21 +104,23 @@ Public Class ModelCreationExport
   End Sub
 
   Public Shared Sub CreateHouse(ByVal rvtDoc As Document)
+    Using transaction As Transaction = New Transaction(rvtDoc)
+      transaction.Start("Create House")
+      ' Simply create four walls with rectangular profile. 
+      Dim walls As List(Of Wall) = CreateWalls(rvtDoc)
 
-    ' Simply create four walls with rectangular profile. 
-    Dim walls As List(Of Wall) = CreateWalls(rvtDoc)
+      ' Add a door to the second wall 
+      AddDoor(rvtDoc, walls(0))
 
-    ' Add a door to the second wall 
-    AddDoor(rvtDoc, walls(0))
+      ' Add windows to the rest of the walls. 
+      For i As Integer = 1 To 3
+        AddWindow(rvtDoc, walls(i))
+      Next
 
-    ' Add windows to the rest of the walls. 
-    For i As Integer = 1 To 3
-      AddWindow(rvtDoc, walls(i))
-    Next
-
-    ' (optional) add a roof over the walls' rectangular profile. 
-    AddRoof(rvtDoc, walls)
-
+      ' (optional) add a roof over the walls' rectangular profile. 
+      AddRoof(rvtDoc, walls)
+      transaction.Commit()
+    End Using
   End Sub
 
   ''' <summary>
@@ -170,7 +172,7 @@ Public Class ModelCreationExport
       ' Define a base curve from two points. 
       Dim baseCurve As Line = Line.CreateBound(pts(i), pts(i + 1))
       ' Create a wall using the one of overloaded methods. 
-            Dim aWall As Wall = Wall.Create(_doc, baseCurve, level1.Id, isStructural)
+      Dim aWall As Wall = Wall.Create(_doc, baseCurve, level1.Id, isStructural)
       ' Set the Top Constraint to Level 2 
       aWall.Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).Set(level2.Id)
       ' Save the wall.
@@ -251,7 +253,7 @@ Public Class ModelCreationExport
     ' Loop through list of points and define four walls. 
     For i As Integer = 0 To 3
       ' define a base curve from two points. 
-      'Dim baseCurve As Line = rvtDoc.Application.Create.NewLineBound(pts(i), pts(i + 1)) ' since 2013
+      'Dim baseCurve As Line = rvtDoc.Application.Create.NewLineBound(pts(i), pts(i + 1)) ' 2013
       Dim baseCurve As Line = Line.CreateBound(pts(i), pts(i + 1)) ' 2014
       ' create a wall using the one of overloaded methods. 
       Dim aWall As Wall = Wall.Create(rvtDoc, baseCurve, level1.Id, isStructural)
@@ -289,6 +291,10 @@ Public Class ModelCreationExport
         doorFamilyAndTypeName + "). Maybe you use a different template? Try with DefaultMetric.rte.")
     End If
 
+    If Not doorType.IsActive Then
+      doorType.Activate()
+    End If
+
     ' Get the start and end points of the wall. 
     Dim locCurve As LocationCurve = hostWall.Location
     Dim pt1 As XYZ = locCurve.Curve.GetEndPoint(0)
@@ -298,7 +304,7 @@ Public Class ModelCreationExport
 
     ' One more thing - we want to set the reference as a bottom of the wall or level1. 
     Dim idLevel1 As ElementId = hostWall.Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId
-        Dim level1 As Level = rvtDoc.GetElement(idLevel1)
+    Dim level1 As Level = rvtDoc.GetElement(idLevel1)
 
     ' Finally, create a door. 
     Dim aDoor As FamilyInstance = rvtDoc.Create.NewFamilyInstance( _
@@ -329,6 +335,10 @@ Public Class ModelCreationExport
         windowFamilyAndTypeName + "). Maybe you use a different template? Try with DefaultMetric.rte.")
     End If
 
+    If Not windowType.IsActive Then
+      windowType.Activate()
+    End If
+
     ' Get the start and end points of the wall. 
     Dim locCurve As LocationCurve = hostWall.Location
     Dim pt1 As XYZ = locCurve.Curve.GetEndPoint(0)
@@ -338,7 +348,7 @@ Public Class ModelCreationExport
 
     ' One more thing - we want to set the reference as a bottom of the wall or level1. 
     Dim idLevel1 As ElementId = hostWall.Parameter(BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId
-        Dim level1 As Level = rvtDoc.GetElement(idLevel1)
+    Dim level1 As Level = rvtDoc.GetElement(idLevel1)
 
     ' Finally create a window. 
     Dim aWindow As FamilyInstance = rvtDoc.Create.NewFamilyInstance( _
@@ -398,10 +408,11 @@ Public Class ModelCreationExport
     ' Get the level2 from the wall
     Dim idLevel2 As ElementId = _
     walls(0).Parameter(BuiltInParameter.WALL_HEIGHT_TYPE).AsElementId
-        Dim level2 As Level = rvtDoc.GetElement(idLevel2)
+    Dim level2 As Level = rvtDoc.GetElement(idLevel2)
 
-    ' Footprint to morel curve mapping  
-    Dim mapping As New ModelCurveArray
+    ' Footprint to model curve mapping  
+
+    Dim mapping As ModelCurveArray = New ModelCurveArray()
 
     ' Create a roof.
     Dim aRoof As FootPrintRoof = _
@@ -413,9 +424,9 @@ Public Class ModelCreationExport
       aRoof.SlopeAngle(modelCurve) = 0.5
     Next
 
-    ' Added. 
-    rvtDoc.Regenerate()
-    rvtDoc.AutoJoinElements()
+    ' Performed automatically by transaction commit.
+    'rvtDoc.Regenerate()
+    'rvtDoc.AutoJoinElements()
 
   End Sub
 End Class

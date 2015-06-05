@@ -1,6 +1,6 @@
 ﻿#Region "Copyright"
 '
-' Copyright (C) 2010-2014 by Autodesk, Inc.
+' Copyright (C) 2009-2015 by Autodesk, Inc.
 '
 ' Permission to use, copy, modify, and distribute this software in
 ' object code form for any purpose and without fee is hereby granted,
@@ -48,7 +48,6 @@
 ''' External application to register/unregister document changed event. 
 ''' Simply reports what has been changed  
 ''' </summary>
-<Transaction(TransactionMode.Automatic)> _
 Public Class UIEventApp
   Implements IExternalApplication
 
@@ -140,7 +139,7 @@ End Class
 ''' <summary>
 ''' External command to toggle event message on/off 
 ''' </summary> 
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.ReadOnly)> _
 Public Class UIEvent
   Implements IExternalCommand
 
@@ -162,7 +161,7 @@ Public Class UIEvent
 
 End Class
 
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.ReadOnly)> _
 Public Class UIEventOn
   Implements IExternalCommand
 
@@ -180,7 +179,7 @@ Public Class UIEventOn
 
 End Class
 
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.ReadOnly)> _
 Public Class UIEventOff
   Implements IExternalCommand
 
@@ -345,7 +344,7 @@ End Class
 ''' <summary>
 ''' External command to toggle windowDoor updater on/off 
 ''' </summary> 
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.ReadOnly)> _
 Public Class UIDynamicModelUpdate
   Implements IExternalCommand
 
@@ -363,7 +362,7 @@ Public Class UIDynamicModelUpdate
 
 End Class
 
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.ReadOnly)> _
 Public Class UIDynamicModelUpdateOn
   Implements IExternalCommand
 
@@ -382,7 +381,7 @@ Public Class UIDynamicModelUpdateOn
 
 End Class
 
-<Transaction(TransactionMode.Automatic)> _
+<Transaction(TransactionMode.ReadOnly)> _
 Public Class UIDynamicModelUpdateOff
   Implements IExternalCommand
 
