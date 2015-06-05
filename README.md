@@ -17,7 +17,7 @@ If you have no need for the Xtra labs or do not know what they are, you can simp
 
 ## Author
 
-- Jeremy Tammik,
+Jeremy Tammik,
 [The Building Coder](http://thebuildingcoder.typepad.com),
 [ADN](http://www.autodesk.com/adn)
 [Open](http://www.autodesk.com/adnopen),
