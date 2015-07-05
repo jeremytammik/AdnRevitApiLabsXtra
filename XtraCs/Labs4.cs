@@ -598,11 +598,14 @@ namespace XtraCs
         return Result.Failed;
       }
 
-      // Visibility of the new parameter:
-      // Category.AllowsBoundParameters property indicates if a category can
-      // have shared or project parameters. If it is false, it may not be bound
-      // to shared parameters using the BindingMap. Please not that non-user-visible
-      // parameters can still be bound to these categories.
+      // Visibility of the new parameter: the 
+      // Category.AllowsBoundParameters property 
+      // determines whether a category is allowed to
+      // have user-visible shared or project parameters. 
+      // If it is false, it may not be bound to visible
+      // shared parameters using the BindingMap. Note 
+      // that non-user-visible parameters can still be 
+      // bound to these categories.
 
       bool visible = cat.AllowsBoundParameters;
 
