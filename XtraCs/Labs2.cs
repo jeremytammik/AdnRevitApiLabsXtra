@@ -46,7 +46,7 @@ namespace XtraCs
   /// a door, two windows, a floor, a roof, a room and a room tag.
   /// <include file='../doc/labs.xml' path='labs/lab[@name="2-0"]/*' />
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab2_0_CreateLittleHouse : IExternalCommand
   {
     public Result Execute(
@@ -62,19 +62,23 @@ namespace XtraCs
         Autodesk.Revit.Creation.Application createApp = app.Application.Create;
         Autodesk.Revit.Creation.Document createDoc = doc.Create;
 
-        // Determine the four corners of the rectangular house:
+        using( Transaction t = new Transaction( doc ) )
+        {
+          t.Start( "Create Little House" );
 
-        double width = 7 * LabConstants.MeterToFeet;
-        double depth = 4 * LabConstants.MeterToFeet;
+          // Determine the four corners of the rectangular house:
 
-        List<XYZ> corners = new List<XYZ>( 4 );
+          double width = 7 * LabConstants.MeterToFeet;
+          double depth = 4 * LabConstants.MeterToFeet;
 
-        corners.Add( XYZ.Zero );
-        corners.Add( new XYZ( width, 0, 0 ) );
-        corners.Add( new XYZ( width, depth, 0 ) );
-        corners.Add( new XYZ( 0, depth, 0 ) );
+          List<XYZ> corners = new List<XYZ>( 4 );
 
-        #region Test creating two levels
+          corners.Add( XYZ.Zero );
+          corners.Add( new XYZ( width, 0, 0 ) );
+          corners.Add( new XYZ( width, depth, 0 ) );
+          corners.Add( new XYZ( 0, depth, 0 ) );
+
+          #region Test creating two levels
 #if CREATE_TWO_LEVELS
         Level levelBottom = null;
         Level levelMiddle = null;
@@ -170,197 +174,205 @@ namespace XtraCs
             StructuralType.NonStructural );
 
 #endif // CREATE_TWO_LEVELS
-        #endregion // Test creating two levels
+          #endregion // Test creating two levels
 
-        // Determine the levels where the walls will be located:
+          // Determine the levels where the walls will be located:
 
-        Level levelBottom = null;
-        Level levelTop = null;
+          Level levelBottom = null;
+          Level levelTop = null;
 
-        if( !LabUtils.GetBottomAndTopLevels( doc, ref levelBottom, ref levelTop ) )
-        {
-          message = "Unable to determine wall bottom and top levels";
-          return Result.Failed;
+          if( !LabUtils.GetBottomAndTopLevels( doc, ref levelBottom, ref levelTop ) )
+          {
+            message = "Unable to determine wall bottom and top levels";
+            return Result.Failed;
+          }
+          Debug.Print( string.Format( "Drawing walls on '{0}' up to '{1}'",
+            levelBottom.Name, levelTop.Name ) );
+
+          // Create the walls:
+
+          BuiltInParameter topLevelParam = BuiltInParameter.WALL_HEIGHT_TYPE;
+          ElementId levelBottomId = levelBottom.Id;
+          ElementId topLevelId = levelTop.Id;
+          List<Wall> walls = new List<Wall>( 4 );
+          for( int i = 0; i < 4; ++i )
+          {
+            Line line = Line.CreateBound( corners[i], corners[3 == i ? 0 : i + 1] );
+            //Wall wall = createDoc.NewWall( line, levelBottom, false ); // 2012
+            Wall wall = Wall.Create( doc, line, levelBottomId, false ); // 2013
+            Parameter param = wall.get_Parameter( topLevelParam );
+            param.Set( topLevelId );
+            walls.Add( wall );
+          }
+
+          // Determine wall thickness for tag offset and profile growth:
+
+          //double wallThickness = walls[0].WallType.CompoundStructure.Layers.get_Item( 0 ).Thickness; // 2011
+          //double wallThickness = walls[0].WallType.GetCompoundStructure().GetLayers()[0].Width; // 2012
+          double wallThickness = walls[0].WallType.Width; // simpler and more direct property available in 2012
+
+          // Add door and windows to the first wall;
+          // note that the NewFamilyInstance() api method does not automatically add door
+          // and window tags, like the ui command does. we add tags here by making additional calls
+          // to NewTag():
+
+          FamilySymbol door = LabUtils.GetFirstFamilySymbol( doc, BuiltInCategory.OST_Doors );
+          if( null == door )
+          {
+            LabUtils.InfoMsg( "No door symbol found." );
+            return Result.Failed;
+          }
+          FamilySymbol window = LabUtils.GetFirstFamilySymbol(
+            doc, BuiltInCategory.OST_Windows );
+
+          if( null == window )
+          {
+            LabUtils.InfoMsg( "No window symbol found." );
+            return Result.Failed;
+          }
+
+          XYZ midpoint = LabUtils.Midpoint( corners[0], corners[1] );
+          XYZ p = LabUtils.Midpoint( corners[0], midpoint );
+          XYZ q = LabUtils.Midpoint( midpoint, corners[1] );
+          double tagOffset = 3 * wallThickness;
+
+          //double windowHeight = 1 * LabConstants.MeterToFeet;
+          double windowHeight = levelBottom.Elevation + 0.3 * (
+            levelTop.Elevation - levelBottom.Elevation );
+
+          p = new XYZ( p.X, p.Y, windowHeight );
+          q = new XYZ( q.X, q.Y, windowHeight );
+          View view = doc.ActiveView;
+
+          door.Activate(); // 2016
+
+          FamilyInstance inst = createDoc.NewFamilyInstance(
+            midpoint, door, walls[0], levelBottom, StructuralType.NonStructural );
+
+          midpoint += tagOffset * XYZ.BasisY;
+          IndependentTag tag = createDoc.NewTag(
+            view, inst, false, TagMode.TM_ADDBY_CATEGORY,
+            TagOrientation.Horizontal, midpoint );
+
+          window.Activate(); // 2016
+
+          inst = createDoc.NewFamilyInstance( p, window,
+            walls[0], levelBottom, StructuralType.NonStructural );
+
+          p += tagOffset * XYZ.BasisY;
+          tag = createDoc.NewTag( view, inst, false,
+            TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, p );
+
+          inst = createDoc.NewFamilyInstance( q, window, walls[0],
+            levelBottom, StructuralType.NonStructural );
+
+          q += tagOffset * XYZ.BasisY;
+
+          //tag = createDoc.NewTag( view, inst, false, TagMode.TM_ADDBY_CATEGORY, TagOrientation.TAG_HORIZONTAL, q ); // 2011
+          tag = createDoc.NewTag( view, inst, false,
+            TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, q ); // 2012
+
+          // Grow the profile out by half the wall thickness,
+          // so the floor and roof do not stop halfway through the wall:
+
+          double w = 0.5 * wallThickness;
+          corners[0] -= w * ( XYZ.BasisX + XYZ.BasisY );
+          corners[1] += w * ( XYZ.BasisX - XYZ.BasisY );
+          corners[2] += w * ( XYZ.BasisX + XYZ.BasisY );
+          corners[3] -= w * ( XYZ.BasisX - XYZ.BasisY );
+          CurveArray profile = new CurveArray();
+          for( int i = 0; i < 4; ++i )
+          {
+            //Line line = createApp.NewLineBound( // 2013
+
+            Line line = Line.CreateBound( // 2014
+              corners[i], corners[3 == i ? 0 : i + 1] );
+
+            profile.Append( line );
+          }
+
+          // Add a floor, a roof and the roof slope:
+
+          bool structural = false;
+          Floor floor = createDoc.NewFloor(
+            profile, structural );
+
+          List<Element> roofTypes
+            = new List<Element>(
+              LabUtils.GetElementsOfType(
+                doc, typeof( RoofType ),
+                BuiltInCategory.OST_Roofs ) );
+
+          Debug.Assert( 0 < roofTypes.Count,
+            "expected at least one roof type"
+            + " to be loaded into project" );
+
+          // Ensure that we get a valid roof type. 
+          // In Revit 2013, the first one encountered 
+          // is sloped glazing with zero entries in
+          // its compound layers; actually, the entire
+          // compound structure is null:
+
+          //RoofType roofType = null;
+          //foreach( RoofType rt in roofTypes )
+          //{
+          //  CompoundStructure cs = rt.GetCompoundStructure();
+          //  if( null != cs 
+          //    && 0 < cs.GetLayers().Count )
+          //  {
+          //    roofType = rt;
+          //    break;
+          //  }
+          //}
+
+          RoofType roofType = roofTypes
+            .Cast<RoofType>()
+            .FirstOrDefault<RoofType>( typ 
+              => null != typ.GetCompoundStructure() );
+
+          ModelCurveArray modelCurves
+            = new ModelCurveArray();
+
+          FootPrintRoof roof
+            = createDoc.NewFootPrintRoof( profile,
+              levelTop, roofType, out modelCurves );
+
+          // Regenerate the model after roof creation, 
+          // otherwise the calls to set_DefinesSlope and 
+          // set_SlopeAngle throwing the exception "Unable
+          // to access curves from the roof sketch."
+
+          doc.Regenerate();
+
+          // The argument to set_SlopeAngle is NOT an 
+          // angle, it is really a slope, i.e. relation 
+          // of height to distance, e.g. 0.5 = 6" / 12", 
+          // 0.75  = 9" / 12", etc.
+
+          double slope = 0.3;
+
+          foreach( ModelCurve curve in modelCurves )
+          {
+            roof.set_DefinesSlope( curve, true );
+            roof.set_SlopeAngle( curve, slope );
+          }
+
+          // Add a room and a room tag:
+
+          Room room = createDoc.NewRoom( levelBottom, new UV( 0.5 * width, 0.5 * depth ) );
+
+          //RoomTag roomTag = createDoc.NewRoomTag( room, new UV( 0.5 * width, 0.7 * depth ), null ); // 2014
+
+          RoomTag roomTag = createDoc.NewRoomTag( new LinkElementId( room.Id ), new UV( 0.5 * width, 0.7 * depth ), null ); // 2015
+
+          //doc.AutoJoinElements(); // todo: remove this, the transaction should perform this automatically
+
+          //LabUtils.InfoMsg( "Little house was created successfully." );
+
+          t.Commit();
+
+          return Result.Succeeded;
         }
-        Debug.Print( string.Format( "Drawing walls on '{0}' up to '{1}'",
-          levelBottom.Name, levelTop.Name ) );
-
-        // Create the walls:
-
-        BuiltInParameter topLevelParam = BuiltInParameter.WALL_HEIGHT_TYPE;
-        ElementId levelBottomId = levelBottom.Id;
-        ElementId topLevelId = levelTop.Id;
-        List<Wall> walls = new List<Wall>( 4 );
-        for( int i = 0; i < 4; ++i )
-        {
-          Line line = Line.CreateBound( corners[i], corners[3 == i ? 0 : i + 1] );
-          //Wall wall = createDoc.NewWall( line, levelBottom, false ); // 2012
-          Wall wall = Wall.Create( doc, line, levelBottomId, false ); // 2013
-          Parameter param = wall.get_Parameter( topLevelParam );
-          param.Set( topLevelId );
-          walls.Add( wall );
-        }
-
-        // Determine wall thickness for tag offset and profile growth:
-
-        //double wallThickness = walls[0].WallType.CompoundStructure.Layers.get_Item( 0 ).Thickness; // 2011
-        //double wallThickness = walls[0].WallType.GetCompoundStructure().GetLayers()[0].Width; // 2012
-        double wallThickness = walls[0].WallType.Width; // simpler and more direct property available in 2012
-
-        // Add door and windows to the first wall;
-        // note that the NewFamilyInstance() api method does not automatically add door
-        // and window tags, like the ui command does. we add tags here by making additional calls
-        // to NewTag():
-
-        FamilySymbol door = LabUtils.GetFirstFamilySymbol( doc, BuiltInCategory.OST_Doors );
-        if( null == door )
-        {
-          LabUtils.InfoMsg( "No door symbol found." );
-          return Result.Failed;
-        }
-        FamilySymbol window = LabUtils.GetFirstFamilySymbol( 
-          doc, BuiltInCategory.OST_Windows );
-
-        if( null == window )
-        {
-          LabUtils.InfoMsg( "No window symbol found." );
-          return Result.Failed;
-        }
-
-        XYZ midpoint = LabUtils.Midpoint( corners[0], corners[1] );
-        XYZ p = LabUtils.Midpoint( corners[0], midpoint );
-        XYZ q = LabUtils.Midpoint( midpoint, corners[1] );
-        double tagOffset = 3 * wallThickness;
-        
-        //double windowHeight = 1 * LabConstants.MeterToFeet;
-        double windowHeight = levelBottom.Elevation + 0.3 * ( 
-          levelTop.Elevation - levelBottom.Elevation );
-
-        p = new XYZ( p.X, p.Y, windowHeight );
-        q = new XYZ( q.X, q.Y, windowHeight );
-        View view = doc.ActiveView;
-        
-        FamilyInstance inst = createDoc.NewFamilyInstance(
-          midpoint, door, walls[0], levelBottom, StructuralType.NonStructural );
-
-        midpoint += tagOffset * XYZ.BasisY;
-        IndependentTag tag = createDoc.NewTag(
-          view, inst, false, TagMode.TM_ADDBY_CATEGORY, 
-          TagOrientation.Horizontal, midpoint );
-
-        inst = createDoc.NewFamilyInstance( p, window, 
-          walls[0], levelBottom, StructuralType.NonStructural );
-
-        p += tagOffset * XYZ.BasisY;
-        tag = createDoc.NewTag( view, inst, false, 
-          TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, p );
-
-        inst = createDoc.NewFamilyInstance( q, window, walls[0], 
-          levelBottom, StructuralType.NonStructural );
-
-        q += tagOffset * XYZ.BasisY;
-        
-        //tag = createDoc.NewTag( view, inst, false, TagMode.TM_ADDBY_CATEGORY, TagOrientation.TAG_HORIZONTAL, q ); // 2011
-        tag = createDoc.NewTag( view, inst, false, 
-          TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, q ); // 2012
-
-        // Grow the profile out by half the wall thickness,
-        // so the floor and roof do not stop halfway through the wall:
-
-        double w = 0.5 * wallThickness;
-        corners[0] -= w * ( XYZ.BasisX + XYZ.BasisY );
-        corners[1] += w * ( XYZ.BasisX - XYZ.BasisY );
-        corners[2] += w * ( XYZ.BasisX + XYZ.BasisY );
-        corners[3] -= w * ( XYZ.BasisX - XYZ.BasisY );
-        CurveArray profile = new CurveArray();
-        for( int i = 0; i < 4; ++i )
-        {
-          //Line line = createApp.NewLineBound( // 2013
-
-          Line line = Line.CreateBound( // 2014
-            corners[i], corners[3 == i ? 0 : i + 1] );
-
-          profile.Append( line );
-        }
-
-        // Add a floor, a roof and the roof slope:
-
-        bool structural = false;
-        Floor floor = createDoc.NewFloor( 
-          profile, structural );
-
-        List<Element> roofTypes 
-          = new List<Element>( 
-            LabUtils.GetElementsOfType(
-              doc, typeof( RoofType ), 
-              BuiltInCategory.OST_Roofs ) );
-
-        Debug.Assert( 0 < roofTypes.Count, 
-          "expected at least one roof type"
-          + " to be loaded into project" );
-
-        // Ensure that we get a valid roof type. 
-        // In Revit 2013, the first one encountered 
-        // is sloped glazing with zero entries in
-        // its compound layers; actually, the entire
-        // compound structure is null:
-
-        //RoofType roofType = null;
-        //foreach( RoofType rt in roofTypes )
-        //{
-        //  CompoundStructure cs = rt.GetCompoundStructure();
-        //  if( null != cs 
-        //    && 0 < cs.GetLayers().Count )
-        //  {
-        //    roofType = rt;
-        //    break;
-        //  }
-        //}
-
-        RoofType roofType = roofTypes
-          .Cast<RoofType>()
-          .FirstOrDefault<RoofType>(
-            t => null != t.GetCompoundStructure() );
-
-        ModelCurveArray modelCurves 
-          = new ModelCurveArray();
-
-        FootPrintRoof roof 
-          = createDoc.NewFootPrintRoof( profile, 
-            levelTop, roofType, out modelCurves );
-
-        // Regenerate the model after roof creation, 
-        // otherwise the calls to set_DefinesSlope and 
-        // set_SlopeAngle throwing the exception "Unable
-        // to access curves from the roof sketch."
-
-        doc.Regenerate();
-
-        // The argument to set_SlopeAngle is NOT an 
-        // angle, it is really a slope, i.e. relation 
-        // of height to distance, e.g. 0.5 = 6" / 12", 
-        // 0.75  = 9" / 12", etc.
-
-        double slope = 0.3;
-
-        foreach( ModelCurve curve in modelCurves )
-        {
-          roof.set_DefinesSlope( curve, true );
-          roof.set_SlopeAngle( curve, slope );
-        }
-
-        // Add a room and a room tag:
-
-        Room room = createDoc.NewRoom( levelBottom, new UV( 0.5 * width, 0.5 * depth ) );
-        
-        //RoomTag roomTag = createDoc.NewRoomTag( room, new UV( 0.5 * width, 0.7 * depth ), null ); // 2014
-
-        RoomTag roomTag = createDoc.NewRoomTag( new LinkElementId( room.Id ), new UV( 0.5 * width, 0.7 * depth ), null ); // 2015
-
-        //doc.AutoJoinElements(); // todo: remove this, the transaction should perform this automatically
-
-        //LabUtils.InfoMsg( "Little house was created successfully." );
-        return Result.Succeeded;
       }
       catch( Exception ex )
       {

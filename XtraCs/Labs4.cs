@@ -512,10 +512,10 @@ namespace XtraCs
   /// <summary>
   /// Create and bind shared parameter.
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab4_3_1_CreateAndBindSharedParam : IExternalCommand
   {
-    // what element type are we interested in? the standard SDK FireRating
+    // What element type are we interested in? the standard SDK FireRating
     // sample uses BuiltInCategory.OST_Doors. we also test using
     // BuiltInCategory.OST_Walls to demonstrate that the same technique
     // works with system families just as well as with standard ones.
@@ -560,7 +560,8 @@ namespace XtraCs
 
       if( null == cat )
       {
-        // the category we are defining the parameter for
+        // The category we are defining the parameter for
+
         try
         {
           cat = doc.Settings.Categories.get_Item( Target );
@@ -578,7 +579,8 @@ namespace XtraCs
         }
       }
 
-      // get the current shared params definition file
+      // Get the current shared params definition file
+
       DefinitionFile sharedParamsFile = LabUtils.GetSharedParamsFile( app );
       if( null == sharedParamsFile )
       {
@@ -586,7 +588,8 @@ namespace XtraCs
         return Result.Failed;
       }
 
-      // get or create the shared params group
+      // Get or create the shared params group
+
       DefinitionGroup sharedParamsGroup = LabUtils.GetOrCreateSharedParamsGroup(
         sharedParamsFile, LabConstants.SharedParamsGroupAPI );
       if( null == sharedParamsGroup )
@@ -595,11 +598,12 @@ namespace XtraCs
         return Result.Failed;
       }
 
-      // visibility of the new parameter:
+      // Visibility of the new parameter:
       // Category.AllowsBoundParameters property indicates if a category can
       // have shared or project parameters. If it is false, it may not be bound
       // to shared parameters using the BindingMap. Please not that non-user-visible
       // parameters can still be bound to these categories.
+
       bool visible = cat.AllowsBoundParameters;
 
       // get or create the shared params definition
@@ -611,8 +615,9 @@ namespace XtraCs
         return Result.Failed;
       }
 
-      // create the category set for binding and add the category
+      // Create the category set for binding and add the category
       // we are interested in, doors or walls or whatever:
+
       CategorySet catSet = app.Create.NewCategorySet();
       try
       {
@@ -626,14 +631,27 @@ namespace XtraCs
         return Result.Failed;
       }
 
-      // bind the param
+      // Bind the parameter.
+
       try
       {
-        Binding binding = app.Create.NewInstanceBinding( catSet );
-        // We could check if already bound, but looks like Insert will just ignore it in such case
-        doc.ParameterBindings.Insert( fireRatingParamDef, binding );
-        // You can also specify the parameter group here:
-        //doc.ParameterBindings.Insert( fireRatingParamDef, binding, BuiltInParameterGroup.PG_GEOMETRY );
+        using( Transaction t = new Transaction( doc ) )
+        {
+          t.Start( "Bind Fire Rating Shared Parameter" );
+
+          Binding binding = app.Create.NewInstanceBinding( catSet );
+
+          // We could check if already bound, but looks 
+          // like Insert will just ignore it in that case.
+          
+          doc.ParameterBindings.Insert( fireRatingParamDef, binding );
+          
+          // You can also specify the parameter group here:
+          
+          //doc.ParameterBindings.Insert( fireRatingParamDef, binding, BuiltInParameterGroup.PG_GEOMETRY );
+
+          t.Commit();
+        }
       }
       catch( Exception ex )
       {
@@ -715,7 +733,9 @@ namespace XtraCs
         {
           worksheet.Cells[row, 3] = tagParameter.AsString();
         }
+
         // FireRating:
+        
         Parameter parameter = e.get_Parameter( paramGuid );
         if( null != parameter )
         {
@@ -732,7 +752,7 @@ namespace XtraCs
   /// <summary>
   /// Import updated FireRating param values from Excel.
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab4_3_3_ImportSharedParamFromExcel : IExternalCommand
   {
     public Result Execute(
@@ -749,7 +769,8 @@ namespace XtraCs
       Guid paramGuid = LabUtils.SharedParamGUID( app,
         LabConstants.SharedParamsGroupAPI, LabConstants.SharedParamsDefFireRating );
 
-      // Let user select the Excel file
+      // Let user select the Excel file.
+
       WinForms.OpenFileDialog dlg = new WinForms.OpenFileDialog();
       dlg.Title = "Select source Excel file from which to update Revit shared parameters";
       dlg.Filter = "Excel spreadsheet files (*.xls;*.xlsx)|*.xls;*.xlsx|All files (*)|*";
@@ -757,9 +778,9 @@ namespace XtraCs
       {
         return Result.Cancelled;
       }
-      //
+
       // Launch/Get Excel via COM Interop:
-      //
+
       X.Application excel = new X.Application();
       if( null == excel )
       {
@@ -773,46 +794,57 @@ namespace XtraCs
         Missing.Value, Missing.Value, Missing.Value, Missing.Value,
         Missing.Value, Missing.Value, Missing.Value );
       X.Worksheet worksheet = workbook.ActiveSheet as X.Worksheet;
-      //
-      // Starting from row 2, loop the rows and extract Id and FireRating param.
-      //
-      int id;
-      double fireRatingValue;
-      int row = 2;
-      while( true )
+
+      using( Transaction t = new Transaction( doc ) )
       {
-        try
+        t.Start( "Import Fire Rating Values from Excel" );
+
+        // Starting from row 2, loop the rows and extract Id and FireRating param.
+
+        int id;
+        double fireRatingValue;
+        int row = 2;
+        while( true )
         {
-          // Extract relevant XLS values
-          X.Range r = worksheet.Cells[row, 1] as X.Range;
-          if( null == r.Value2 )
+          try
+          {
+            // Extract relevant XLS values.
+
+            X.Range r = worksheet.Cells[row, 1] as X.Range;
+            if( null == r.Value2 )
+            {
+              break;
+            }
+            double d = (double) r.Value2;
+            id = (int) d;
+            if( 0 >= id )
+            {
+              break;
+            }
+            r = worksheet.Cells[row, 4] as X.Range;
+            fireRatingValue = (double) r.Value2;
+
+            // Get document's door element via Id
+
+            ElementId elementId = new ElementId( id );
+            Element door = doc.GetElement( elementId );
+
+            // Set the param
+
+            if( null != door )
+            {
+              //Parameter parameter = door.get_Parameter( LabConstants.SharedParamsDefFireRating );
+              Parameter parameter = door.get_Parameter( paramGuid );
+              parameter.Set( fireRatingValue );
+            }
+          }
+          catch( Exception )
           {
             break;
           }
-          double d = (double) r.Value2;
-          id = (int) d;
-          if( 0 >= id )
-          {
-            break;
-          }
-          r = worksheet.Cells[row, 4] as X.Range;
-          fireRatingValue = (double) r.Value2;
-          // Get document's door element via Id
-          ElementId elementId = new ElementId( id );
-          Element door = doc.GetElement( elementId );
-          // Set the param
-          if( null != door )
-          {
-            //Parameter parameter = door.get_Parameter( LabConstants.SharedParamsDefFireRating );
-            Parameter parameter = door.get_Parameter( paramGuid );
-            parameter.Set( fireRatingValue );
-          }
+          ++row;
         }
-        catch( Exception )
-        {
-          break;
-        }
-        ++row;
+        t.Commit();
       }
 
 #if ACTIVATE_REVIT
