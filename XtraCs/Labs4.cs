@@ -609,7 +609,8 @@ namespace XtraCs
 
       bool visible = cat.AllowsBoundParameters;
 
-      // get or create the shared params definition
+      // Get or create the shared params definition
+
       Definition fireRatingParamDef = LabUtils.GetOrCreateSharedParamsDefinition(
         sharedParamsGroup, ParameterType.Number, LabConstants.SharedParamsDefFireRating, visible );
       if( null == fireRatingParamDef )
@@ -681,8 +682,13 @@ namespace XtraCs
       UIApplication uiapp = commandData.Application;
       Application app = uiapp.Application;
       Document doc = uiapp.ActiveUIDocument.Document;
-      Category cat = doc.Settings.Categories.get_Item( Lab4_3_1_CreateAndBindSharedParam.Target );
-      // Launch Excel (same as in Lab 4_2, so we really should have better created some utils...)
+
+      Category cat = doc.Settings.Categories.get_Item( 
+        Lab4_3_1_CreateAndBindSharedParam.Target );
+
+      // Launch Excel (same as in Lab 4_2, so we really 
+      // should have better created some utils...)
+
       X.Application excel = new X.ApplicationClass();
       if( null == excel )
       {

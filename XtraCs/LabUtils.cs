@@ -857,8 +857,8 @@ namespace XtraCs
       string defName,
       bool visible )
     {
-      Definition definition 
-        = defGroup.Definitions.get_Item( 
+      Definition definition
+        = defGroup.Definitions.get_Item(
           defName );
 
       if( null == definition )
@@ -867,8 +867,8 @@ namespace XtraCs
         {
           //definition = defGroup.Definitions.Create( defName, defType, visible ); // 2014
 
-          ExternalDefinitionCreationOptions opt 
-            = new ExternalDefinitionCreationOptions( 
+          ExternalDefinitionCreationOptions opt
+            = new ExternalDefinitionCreationOptions(
               defName, defType ); // 2015
 
           opt.Visible = visible;

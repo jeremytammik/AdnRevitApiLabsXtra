@@ -127,11 +127,12 @@ namespace XtraCs
       #endregion // 1.2.b. List selection set content
 
       #region 1.2.c. Populate return arguments:
-      //
-      // we pretend that something is wrong with the first
-      // element in the selection. pass a message back to
-      // the user and indicate the error result:
-      //
+
+      // We pretend that something is wrong with the 
+      // first element in the selection. Pass an error 
+      // message back to the user and indicate the 
+      // error result:
+
       ICollection<ElementId> ids = sel.GetElementIds();
 
       if( 0 < ids.Count )
@@ -139,21 +140,25 @@ namespace XtraCs
         //ElementSetIterator iter = sel.Elements.ForwardIterator();
         //iter.MoveNext();
         //Element errElem = iter.Current as Element;
+
         Element errElem = doc.GetElement( ids.First()  );
         elements.Clear();
         elements.Insert( errElem );
-        message = "We pretend something is wrong with this element and pass back this message to user";
+        message = "We pretend something is wrong with this "
+          + " element and pass back this message to user";
+
         return Result.Failed;
       }
       else
       {
-        //
-        // we return failed here as well, actually.
-        // as long as the message string and element set are empty,
+        // We return failed here as well.
+        // As long as the message string and element set are empty,
         // it makes no difference to the user.
-        // it also aborts the automatic transaction, avoiding marking
-        // the database as dirty.
-        //
+        // If they are not empty, the message is displayed to the
+        // user and/or the elements in the set are highlighted.
+        // If an automatic transaction is open, it is aborted, 
+        // avoiding marking the database as dirty.
+
         return Result.Failed;
       }
       #endregion // 1.2.c. Populate return arguments
