@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Revit API Introduction XtraVb Labs")> 
 <Assembly: AssemblyCompany("Autodesk, Inc.")>
 <Assembly: AssemblyProduct("XtraVb")> 
-<Assembly: AssemblyCopyright("Copyright © 2007-2014 by Jeremy Tammik, Autodesk, Inc.")> 
+<Assembly: AssemblyCopyright("Copyright © 2007-2015 by Jeremy Tammik, Autodesk, Inc.")> 
 <Assembly: AssemblyTrademark("")>
 <Assembly: CLSCompliant(True)>
 
