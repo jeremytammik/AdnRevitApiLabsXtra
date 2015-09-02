@@ -339,7 +339,7 @@ namespace XtraCs
 
           // Regenerate the model after roof creation, 
           // otherwise the calls to set_DefinesSlope and 
-          // set_SlopeAngle throwing the exception "Unable
+          // set_SlopeAngle throw the exception "Unable
           // to access curves from the roof sketch."
 
           doc.Regenerate();
