@@ -327,7 +327,7 @@ namespace XtraCs
 
           RoofType roofType = roofTypes
             .Cast<RoofType>()
-            .FirstOrDefault<RoofType>( typ 
+            .FirstOrDefault<RoofType>( typ
               => null != typ.GetCompoundStructure() );
 
           ModelCurveArray modelCurves
@@ -617,10 +617,10 @@ namespace XtraCs
           if( null != element.Category
             && 0 < element.Parameters.Size
             && ( element.Category.HasMaterialQuantities
-              //|| null != element.PhaseCreated ) ) // 2012
+            //|| null != element.PhaseCreated ) ) // 2012
               || !ElementId.InvalidElementId.Equals( // 2013
                 element.CreatedPhaseId ) ) )
-            {
+          {
             if( !categories.ContainsKey(
               element.Category.Name ) )
             {
