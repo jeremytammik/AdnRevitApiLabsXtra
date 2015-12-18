@@ -166,5 +166,19 @@ namespace IntroCs
 
       return Result.Failed;
     }
+
+    #region Revit Macros
+    public void MyFirstMacro()
+    {
+      TaskDialog.Show( "My First Macro", "Hello World!" );
+    }
+
+    public void MyFirstMacro2()
+    {
+      TaskDialog.Show( "My First Macro",
+        "The current model file is " );
+        //+ this.Application.ActiveUIDocument.Document.PathName );
+    }
+    #endregion // Revit Macros
   }
 }

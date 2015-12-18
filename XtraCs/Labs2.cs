@@ -369,6 +369,13 @@ namespace XtraCs
 
           //LabUtils.InfoMsg( "Little house was created successfully." );
 
+          //#region Test setting BaseOffset and LimitOffset
+          //// 11334196 [Failed to set Room.BaseOffset and Room.LimitOffset properties]
+          //double h = 0.123;
+          //room.BaseOffset = -h;
+          //room.LimitOffset = h + h;
+          //#endregion // Test setting BaseOffset and LimitOffset
+
           t.Commit();
 
           return Result.Succeeded;
