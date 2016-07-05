@@ -319,13 +319,17 @@ Namespace XtraVb
           ' this is a message box
           e.OverrideResult(CInt(WinForms.DialogResult.Yes))
 
-          Debug.Print( _
-              "Dialog id is {0}" + vbCr + vbLf + "Message is {1}", _
-              msgArgs.HelpId, msgArgs.Message)
+          'Debug.Print(
+          '    "Dialog id is {0}" + vbCr + vbLf + "Message is {1}",
+          '    msgArgs.HelpId, msgArgs.Message) ' Revit 2016
+
+          Debug.Print(
+              "Dialog id is {0}" + vbCr + vbLf + "Message is {1}",
+              msgArgs.DialogId, msgArgs.Message)
         Else
           ' this is some other dialog, for example, element property dialog.
           'Use the HelpId to identify the dialog.
-          If e.HelpId = 1002 Then
+          If e.DialogId = 1002 Then
             ' Element property dialog's HelpId is 1002
             e.OverrideResult(CInt(WinForms.DialogResult.No))
             Debug.Print("We just dismissed the element property dialog " _

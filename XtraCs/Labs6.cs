@@ -339,14 +339,20 @@ namespace XtraCs
         MessageBoxShowingEventArgs msgArgs = e as MessageBoxShowingEventArgs;
         if( null != msgArgs ) // this is a message box
         {
+          //e.OverrideResult( (int) WinForms.DialogResult.Yes );
+          //Debug.Print( "Dialog id is {0}\r\nMessage is {1}",
+          //  msgArgs.HelpId, msgArgs.Message ); // Revit 2016
+
           e.OverrideResult( (int) WinForms.DialogResult.Yes );
           Debug.Print( "Dialog id is {0}\r\nMessage is {1}",
-            msgArgs.HelpId, msgArgs.Message );
+            msgArgs.DialogId, msgArgs.Message ); // Revit 2017
         }
         else // this is some other dialog, for example, element property dialog.
         {
-          //Use the HelpId to identify the dialog.
-          if( e.HelpId == 1002 ) // Element property dialog's HelpId is 1002
+          // Use the HelpId to identify the dialog.
+          //if( e.HelpId == 1002 ) // Element property dialog's HelpId is 1002 in Revit 2016 and earlier
+
+          if( e.DialogId.Equals( "1002" ) ) // What is the corresponding Element property dialog DialogId?
           {
             e.OverrideResult( (int) WinForms.DialogResult.No );
             Debug.Print(

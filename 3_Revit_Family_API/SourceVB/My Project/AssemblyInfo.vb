@@ -12,7 +12,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Revit Family API Labs")>
 <Assembly: AssemblyCompany("Autodesk, Inc.")>
 <Assembly: AssemblyProduct("RFA LabsVb")>
-<Assembly: AssemblyCopyright("Copyright © 2009-2016 by Autodesk, Inc.")> 
+<Assembly: AssemblyCopyright("Copyright © 2009-2016 by Autodesk, Inc.")>
 <Assembly: AssemblyTrademark("")>
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")>
 
-<Assembly: AssemblyVersion("2017.0.0.1")>
-<Assembly: AssemblyFileVersion("2017.0.0.1")>
+<Assembly: AssemblyVersion("2017.0.0.2")>
+<Assembly: AssemblyFileVersion("2017.0.0.2")>

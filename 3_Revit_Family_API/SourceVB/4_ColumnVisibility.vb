@@ -842,7 +842,8 @@ Public Class RvtCmd_FamilyCreateColumnVisibility
 
     ''  for vertical line, we draw a straight vertical line at point (1) 
     Dim normal As New XYZ(1, 0, 0)
-    Dim pGeomPlaneH As Plane = _app.Create.NewPlane(normal, pts(1))
+    'Dim pGeomPlaneH As Plane = _app.Create.NewPlane(normal, pts(1)) ' Revit 2016
+    Dim pGeomPlaneH As Plane = Plane.CreateByNormalAndOrigin(normal, pts(1)) ' Revit 2017
     'Dim pSketchPlaneH As SketchPlane = _doc.FamilyCreate.NewSketchPlane(pGeomPlaneH)  ' Revit 2013
     Dim pSketchPlaneH As SketchPlane = SketchPlane.Create(_doc, pGeomPlaneH)  ' Revit 2014
 

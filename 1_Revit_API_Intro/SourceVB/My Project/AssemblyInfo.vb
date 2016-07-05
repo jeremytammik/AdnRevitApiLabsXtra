@@ -8,14 +8,14 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Revit API Introduction Labs for VB")> 
-<Assembly: AssemblyDescription("Revit API Introduction Labs for VB")> 
-<Assembly: AssemblyCompany("Autodesk Inc.")> 
-<Assembly: AssemblyProduct("Revit API Introduction Labs for VB")> 
-<Assembly: AssemblyCopyright("Copyright © 2009-2016 by Autodesk Inc.")> 
-<Assembly: AssemblyTrademark("")> 
+<Assembly: AssemblyTitle("Revit API Introduction Labs for VB")>
+<Assembly: AssemblyDescription("Revit API Introduction Labs for VB")>
+<Assembly: AssemblyCompany("Autodesk Inc.")>
+<Assembly: AssemblyProduct("Revit API Introduction Labs for VB")>
+<Assembly: AssemblyCopyright("Copyright © 2009-2016 by Autodesk Inc.")>
+<Assembly: AssemblyTrademark("")>
 
-<Assembly: ComVisible(False)> 
+<Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
 <Assembly: Guid("33e55dac-e8b7-4fb7-80fd-5ce4e6950fb2")>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("2017.0.0.1")>
-<Assembly: AssemblyFileVersion("2017.0.0.1")>
+<Assembly: AssemblyVersion("2017.0.0.2")>
+<Assembly: AssemblyFileVersion("2017.0.0.2")>
