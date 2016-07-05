@@ -231,7 +231,7 @@ namespace XtraCs
         // may occur multiple times:
 
         const string paramName = "Base Offset";
-        
+
         //Parameter parByName = e.get_Parameter( paramName ); // 2014
 
         IList<Parameter> paramsByName = e.GetParameters( paramName ); // 2015
@@ -241,13 +241,13 @@ namespace XtraCs
           LabUtils.InfoMsg( paramName + " is NOT available for this element." );
         }
         else foreach( Parameter p in paramsByName )
-        {
-          string parByNameName = p.Definition.Name;
-          string parByNameType = p.StorageType.ToString();
-          string parByNameValue = LabUtils.GetParameterValue2( p, doc );
-          LabUtils.InfoMsg( paramName + ": Name=" + parByNameName
-            + "; Type=" + parByNameType + "; Value=" + parByNameValue );
-        }
+          {
+            string parByNameName = p.Definition.Name;
+            string parByNameType = p.StorageType.ToString();
+            string parByNameValue = LabUtils.GetParameterValue2( p, doc );
+            LabUtils.InfoMsg( paramName + ": Name=" + parByNameName
+              + "; Type=" + parByNameType + "; Value=" + parByNameValue );
+          }
 
         #region TEST_2
 #if TEST_2
@@ -272,7 +272,7 @@ namespace XtraCs
   /// <include file='../doc/labs.xml' path='labs/lab[@name="4-2"]/*' />
   /// </summary>
   [Transaction( TransactionMode.ReadOnly )]
-  public class Lab4_2_ExportParametersToExcel 
+  public class Lab4_2_ExportParametersToExcel
     : IExternalCommand
   {
     public Result Execute(
@@ -289,14 +289,14 @@ namespace XtraCs
 
       Stopwatch sw = Stopwatch.StartNew();
 
-      Dictionary<string, List<Element>> sortedElements 
+      Dictionary<string, List<Element>> sortedElements
         = new Dictionary<string, List<Element>>();
 
       // Iterate over all elements, both symbols and 
       // model elements, and them in the dictionary.
 
       ElementFilter f = new LogicalOrFilter(
-        new ElementIsElementTypeFilter( false ), 
+        new ElementIsElementTypeFilter( false ),
         new ElementIsElementTypeFilter( true ) );
 
       FilteredElementCollector collector
@@ -319,7 +319,7 @@ namespace XtraCs
 
           if( !sortedElements.ContainsKey( name ) )
           {
-            sortedElements.Add( name, 
+            sortedElements.Add( name,
               new List<Element>() );
           }
           sortedElements[name].Add( e );
@@ -332,14 +332,14 @@ namespace XtraCs
 
       if( null == excel )
       {
-        LabUtils.ErrorMsg( 
+        LabUtils.ErrorMsg(
           "Failed to get or start Excel." );
 
         return Result.Failed;
       }
       excel.Visible = true;
 
-      X.Workbook workbook = excel.Workbooks.Add( 
+      X.Workbook workbook = excel.Workbooks.Add(
         Missing.Value );
 
       X.Worksheet worksheet;
@@ -359,7 +359,7 @@ namespace XtraCs
       // from the end, since the worksheet added last 
       // shows up first in the Excel tab.
 
-      List<string> keys = new List<string>( 
+      List<string> keys = new List<string>(
         sortedElements.Keys );
 
       keys.Sort();
@@ -372,23 +372,23 @@ namespace XtraCs
 
       foreach( string categoryName in keys )
       {
-        List<Element> elementSet 
+        List<Element> elementSet
           = sortedElements[categoryName];
 
         // Create and name the worksheet
 
         if( first )
         {
-          worksheet = workbook.Sheets.get_Item( 1 ) 
+          worksheet = workbook.Sheets.get_Item( 1 )
             as X.Worksheet;
 
           first = false;
         }
         else
         {
-          worksheet = excel.Worksheets.Add( 
-            Missing.Value, Missing.Value, 
-            Missing.Value, Missing.Value ) 
+          worksheet = excel.Worksheets.Add(
+            Missing.Value, Missing.Value,
+            Missing.Value, Missing.Value )
             as X.Worksheet;
         }
 
@@ -450,8 +450,8 @@ namespace XtraCs
 
           worksheet.Cells[row, 1] = e.Id.IntegerValue;
 
-          worksheet.Cells[row, 2] = (e is ElementType) 
-            ? 1 
+          worksheet.Cells[row, 2] = ( e is ElementType )
+            ? 1
             : 0;
 
           column = 3;
@@ -472,16 +472,16 @@ namespace XtraCs
             {
               //try
               //{
-                paramValue 
-                  = LabUtils.GetParameterValue( p );
+              paramValue
+                = LabUtils.GetParameterValue( p );
               //}
               //catch( Exception ex )
               //{
               //  Debug.Print( ex.Message );
               //}
             }
-            
-            worksheet.Cells[row, column++] 
+
+            worksheet.Cells[row, column++]
               = paramValue;
           } // column
 
@@ -647,11 +647,11 @@ namespace XtraCs
 
           // We could check if already bound, but looks 
           // like Insert will just ignore it in that case.
-          
+
           doc.ParameterBindings.Insert( fireRatingParamDef, binding );
-          
+
           // You can also specify the parameter group here:
-          
+
           //doc.ParameterBindings.Insert( fireRatingParamDef, binding, BuiltInParameterGroup.PG_GEOMETRY );
 
           t.Commit();
@@ -683,7 +683,7 @@ namespace XtraCs
       Application app = uiapp.Application;
       Document doc = uiapp.ActiveUIDocument.Document;
 
-      Category cat = doc.Settings.Categories.get_Item( 
+      Category cat = doc.Settings.Categories.get_Item(
         Lab4_3_1_CreateAndBindSharedParam.Target );
 
       // Launch Excel (same as in Lab 4_2, so we really 
@@ -733,7 +733,7 @@ namespace XtraCs
         worksheet.Cells[row, 1] = e.Id.IntegerValue; // ID
 
         //worksheet.Cells[row, 2] = e.Level.Name; // Level // 2013
-        worksheet.Cells[row, 2] = doc.GetElement(e.LevelId).Name; // Level // 2014
+        worksheet.Cells[row, 2] = doc.GetElement( e.LevelId ).Name; // Level // 2014
 
         // Tag:
 
@@ -744,7 +744,7 @@ namespace XtraCs
         }
 
         // FireRating:
-        
+
         Parameter parameter = e.get_Parameter( paramGuid );
         if( null != parameter )
         {
@@ -894,7 +894,7 @@ namespace XtraCs
   /// <summary>
   /// Add and bind a visible and an invisible per-doc parameter.
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab4_4_1_CreatePerDocParameters : IExternalCommand
   {
     public Result Execute(
@@ -911,73 +911,78 @@ namespace XtraCs
         return Result.Failed;
       }
 
-      // get the current shared params definition file
-      DefinitionFile sharedParamsFile = LabUtils.GetSharedParamsFile( app.Application );
-      if( null == sharedParamsFile )
+      using( Transaction tx = new Transaction( doc ) )
       {
-        message = "Error getting the shared params file.";
-        return Result.Failed;
+        tx.Start( "Create per doc Parameters" );
+        // get the current shared params definition file
+        DefinitionFile sharedParamsFile = LabUtils.GetSharedParamsFile( app.Application );
+        if( null == sharedParamsFile )
+        {
+          message = "Error getting the shared params file.";
+          return Result.Failed;
+        }
+        // get or create the shared params group
+        DefinitionGroup sharedParamsGroup = LabUtils.GetOrCreateSharedParamsGroup(
+          sharedParamsFile, LabConstants.ParamGroupName );
+
+        if( null == sharedParamsGroup )
+        {
+          message = "Error getting the shared params group.";
+          return Result.Failed;
+        }
+        // visible param
+        Definition docParamDefVisible = LabUtils.GetOrCreateSharedParamsDefinition(
+          sharedParamsGroup, ParameterType.Integer, LabConstants.ParamNameVisible, true );
+
+        if( null == docParamDefVisible )
+        {
+          message = "Error creating visible per-doc parameter.";
+          return Result.Failed;
+        }
+        // invisible param
+        Definition docParamDefInvisible = LabUtils.GetOrCreateSharedParamsDefinition(
+          sharedParamsGroup, ParameterType.Integer, LabConstants.ParamNameInvisible, false );
+
+        if( null == docParamDefInvisible )
+        {
+          message = "Error creating invisible per-doc parameter.";
+          return Result.Failed;
+        }
+        // bind the param
+        try
+        {
+          CategorySet catSet = app.Application.Create.NewCategorySet();
+
+          catSet.Insert( doc.Settings.Categories.get_Item(
+            BuiltInCategory.OST_ProjectInformation ) );
+
+          Binding binding = app.Application.Create.NewInstanceBinding( catSet );
+          doc.ParameterBindings.Insert( docParamDefVisible, binding );
+          doc.ParameterBindings.Insert( docParamDefInvisible, binding );
+        }
+        catch( Exception e )
+        {
+          message = "Error binding shared parameter: " + e.Message;
+          return Result.Failed;
+        }
+        // set the initial values
+        // get the singleton project info element
+        Element projInfoElem = LabUtils.GetProjectInfoElem( doc );
+
+        if( null == projInfoElem )
+        {
+          message = "No project info element found. Aborting command...";
+          return Result.Failed;
+        }
+
+        // For simplicity, access params by name rather than by GUID
+        // and simply the first best one found under that name:
+
+        projInfoElem.LookupParameter( LabConstants.ParamNameVisible ).Set( 55 );
+        projInfoElem.LookupParameter( LabConstants.ParamNameInvisible ).Set( 0 );
+
+        tx.Commit();
       }
-      // get or create the shared params group
-      DefinitionGroup sharedParamsGroup = LabUtils.GetOrCreateSharedParamsGroup(
-        sharedParamsFile, LabConstants.ParamGroupName );
-
-      if( null == sharedParamsGroup )
-      {
-        message = "Error getting the shared params group.";
-        return Result.Failed;
-      }
-      // visible param
-      Definition docParamDefVisible = LabUtils.GetOrCreateSharedParamsDefinition(
-        sharedParamsGroup, ParameterType.Integer, LabConstants.ParamNameVisible, true );
-
-      if( null == docParamDefVisible )
-      {
-        message = "Error creating visible per-doc parameter.";
-        return Result.Failed;
-      }
-      // invisible param
-      Definition docParamDefInvisible = LabUtils.GetOrCreateSharedParamsDefinition(
-        sharedParamsGroup, ParameterType.Integer, LabConstants.ParamNameInvisible, false );
-
-      if( null == docParamDefInvisible )
-      {
-        message = "Error creating invisible per-doc parameter.";
-        return Result.Failed;
-      }
-      // bind the param
-      try
-      {
-        CategorySet catSet = app.Application.Create.NewCategorySet();
-
-        catSet.Insert( doc.Settings.Categories.get_Item(
-          BuiltInCategory.OST_ProjectInformation ) );
-
-        Binding binding = app.Application.Create.NewInstanceBinding( catSet );
-        doc.ParameterBindings.Insert( docParamDefVisible, binding );
-        doc.ParameterBindings.Insert( docParamDefInvisible, binding );
-      }
-      catch( Exception e )
-      {
-        message = "Error binding shared parameter: " + e.Message;
-        return Result.Failed;
-      }
-      // set the initial values
-      // get the singleton project info element
-      Element projInfoElem = LabUtils.GetProjectInfoElem( doc );
-
-      if( null == projInfoElem )
-      {
-        message = "No project info element found. Aborting command...";
-        return Result.Failed;
-      }
-
-      // For simplicity, access params by name rather than by GUID
-      // and simply the first best one found under that name:
-
-      projInfoElem.LookupParameter( LabConstants.ParamNameVisible ).Set( 55 );
-      projInfoElem.LookupParameter( LabConstants.ParamNameInvisible ).Set( 0 );
-
       return Result.Succeeded;
     }
   }
@@ -987,7 +992,7 @@ namespace XtraCs
   /// <summary>
   /// Increment the invisible per-doc param.
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab4_4_2_IncrementPerDocParameters : IExternalCommand
   {
     public Result Execute(
@@ -1023,10 +1028,17 @@ namespace XtraCs
         int iOldValue = param.AsInteger();
         LabUtils.InfoMsg( "OLD value = " + iOldValue.ToString() );
 
-        // set and report NEW value
+        using( Transaction tx = new Transaction( doc ) )
+        {
+          tx.Start( "Set Parameter Value" );
 
-        param.Set( iOldValue + 1 );
-        LabUtils.InfoMsg( "NEW value = " + param.AsInteger().ToString() );
+          // set and report NEW value
+
+          param.Set( iOldValue + 1 );
+          LabUtils.InfoMsg( "NEW value = " + param.AsInteger().ToString() );
+
+          tx.Commit();
+        }
       }
       catch( System.Exception e )
       {

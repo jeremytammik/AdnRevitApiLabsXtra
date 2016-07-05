@@ -39,7 +39,7 @@ namespace XtraCs
   /// <summary>
   /// Create a loft form using reference points and curve by points.
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab7_1_CreateForm : IExternalCommand
   {
     public Result Execute(
@@ -56,7 +56,12 @@ namespace XtraCs
         message = "Please run this comand in a conceptual massing family document.";
         return Result.Failed;
       }
-      FamilyItemFactory creator = doc.FamilyCreate;
+
+      using( Transaction tx = new Transaction( doc ) )
+      {
+        tx.Start( "Create Loft Form" );
+
+        FamilyItemFactory creator = doc.FamilyCreate;
 
       // Create profiles array
       ReferenceArrayArray ref_ar_ar = new ReferenceArrayArray();
@@ -107,7 +112,8 @@ namespace XtraCs
       ref_ar_ar.Append( ref_ar );
 
       Form form = creator.NewLoftForm( true, ref_ar_ar );
-
+        tx.Commit();
+      }
       return Result.Succeeded;
     }
   }

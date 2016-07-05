@@ -39,13 +39,13 @@ Namespace XtraVb
   ''' <summary>
   ''' Create a loft form using reference points and curve by points.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab7_1_CreateForm
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) _
         As Result _
         Implements IExternalCommand.Execute
@@ -57,57 +57,64 @@ Namespace XtraVb
         message = "Please run this comand in a conceptual massing family document."
         Return Result.Failed
       End If
-      Dim creator As FamilyItemFactory = doc.FamilyCreate
 
-      ' Create profiles array
-      Dim ref_ar_ar As New ReferenceArrayArray()
+      Using tx As New Transaction(doc)
+        tx.Start("Create Loft Form")
 
-      ' Create first profile
-      Dim ref_ar As New ReferenceArray()
+        Dim creator As FamilyItemFactory = doc.FamilyCreate
 
-      Dim y As Integer = 100
-      Dim x As Integer = 50
-      Dim pa As New XYZ(-x, y, 0)
-      Dim pb As New XYZ(x, y, 0)
-      Dim pc As New XYZ(0, y + 10, 10)
-      Dim curve As CurveByPoints = FormUtils.MakeCurve(creator, pa, pb, pc)
-      ref_ar.Append(curve.GeometryCurve.Reference)
-      ref_ar_ar.Append(ref_ar)
+        ' Create profiles array
+        Dim ref_ar_ar As New ReferenceArrayArray()
 
-      ' Create second profile
-      ref_ar = New ReferenceArray()
+        ' Create first profile
+        Dim ref_ar As New ReferenceArray()
 
-      y = 40
-      pa = New XYZ(-x, y, 5)
-      pb = New XYZ(x, y, 5)
-      pc = New XYZ(0, y, 25)
-      curve = FormUtils.MakeCurve(creator, pa, pb, pc)
-      ref_ar.Append(curve.GeometryCurve.Reference)
-      ref_ar_ar.Append(ref_ar)
+        Dim y As Integer = 100
+        Dim x As Integer = 50
+        Dim pa As New XYZ(-x, y, 0)
+        Dim pb As New XYZ(x, y, 0)
+        Dim pc As New XYZ(0, y + 10, 10)
+        Dim curve As CurveByPoints = FormUtils.MakeCurve(creator, pa, pb, pc)
+        ref_ar.Append(curve.GeometryCurve.Reference)
+        ref_ar_ar.Append(ref_ar)
 
-      ' Create third profile
-      ref_ar = New ReferenceArray()
+        ' Create second profile
+        ref_ar = New ReferenceArray()
 
-      y = -20
-      pa = New XYZ(-x, y, 0)
-      pb = New XYZ(x, y, 0)
-      pc = New XYZ(0, y, 15)
-      curve = FormUtils.MakeCurve(creator, pa, pb, pc)
-      ref_ar.Append(curve.GeometryCurve.Reference)
-      ref_ar_ar.Append(ref_ar)
+        y = 40
+        pa = New XYZ(-x, y, 5)
+        pb = New XYZ(x, y, 5)
+        pc = New XYZ(0, y, 25)
+        curve = FormUtils.MakeCurve(creator, pa, pb, pc)
+        ref_ar.Append(curve.GeometryCurve.Reference)
+        ref_ar_ar.Append(ref_ar)
 
-      ' Create fourth profile
-      ref_ar = New ReferenceArray()
+        ' Create third profile
+        ref_ar = New ReferenceArray()
 
-      y = -60
-      pa = New XYZ(-x, y, 0)
-      pb = New XYZ(x, y, 0)
-      pc = New XYZ(0, y + 10, 20)
-      curve = FormUtils.MakeCurve(creator, pa, pb, pc)
-      ref_ar.Append(curve.GeometryCurve.Reference)
-      ref_ar_ar.Append(ref_ar)
+        y = -20
+        pa = New XYZ(-x, y, 0)
+        pb = New XYZ(x, y, 0)
+        pc = New XYZ(0, y, 15)
+        curve = FormUtils.MakeCurve(creator, pa, pb, pc)
+        ref_ar.Append(curve.GeometryCurve.Reference)
+        ref_ar_ar.Append(ref_ar)
 
-      Dim form As Form = creator.NewLoftForm(True, ref_ar_ar)
+        ' Create fourth profile
+        ref_ar = New ReferenceArray()
+
+        y = -60
+        pa = New XYZ(-x, y, 0)
+        pb = New XYZ(x, y, 0)
+        pc = New XYZ(0, y + 10, 20)
+        curve = FormUtils.MakeCurve(creator, pa, pb, pc)
+        ref_ar.Append(curve.GeometryCurve.Reference)
+        ref_ar_ar.Append(ref_ar)
+
+        Dim form As Form = creator.NewLoftForm(True, ref_ar_ar)
+
+        tx.Commit()
+      End Using
 
       Return Result.Succeeded
     End Function
@@ -119,13 +126,13 @@ Namespace XtraVb
   ''' <summary>
   ''' Create a divided surface using reference of a face of the form.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Automatic)>
   Public Class Lab7_2_CreateDividedSurface
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) _
         As Result _
         Implements IExternalCommand.Execute
@@ -182,13 +189,13 @@ Namespace XtraVb
   ''' <summary>
   ''' Change the tiling pattern of the divided surface using the built-in TilePattern enumeration.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Automatic)>
   Public Class Lab7_3_ChangeTilePattern
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) _
         As Result _
         Implements IExternalCommand.Execute
@@ -252,9 +259,9 @@ Namespace XtraVb
     ''' <summary>
     ''' Create a CurveByPoints element by three given points
     ''' </summary>
-    Public Shared Function MakeCurve( _
-        ByVal creator As FamilyItemFactory, _
-        ByVal pa As XYZ, ByVal pb As XYZ, _
+    Public Shared Function MakeCurve(
+        ByVal creator As FamilyItemFactory,
+        ByVal pa As XYZ, ByVal pb As XYZ,
         ByVal pc As XYZ) _
         As CurveByPoints
 

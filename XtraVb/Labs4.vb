@@ -47,13 +47,13 @@ Namespace XtraVb
   ''' List all parameters for selected elements.
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="4-1"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Automatic)>
   Public Class Lab4_1_ElementParameters
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) _
         As Result _
         Implements IExternalCommand.Execute
@@ -172,13 +172,13 @@ Namespace XtraVb
   ''' Export all parameters for each model element to Excel, one sheet per category.
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="4-2"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Automatic)>
   Public Class Lab4_2_ExportParametersToExcel
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) As Result _
         Implements IExternalCommand.Execute
 
@@ -313,7 +313,7 @@ Namespace XtraVb
   ''' <summary>
   ''' Create and bind shared parameter.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Automatic)>
   Public Class Lab4_3_1_CreateAndBindSharedParam
     Implements IExternalCommand
     '
@@ -335,9 +335,9 @@ Namespace XtraVb
     'static public string Target = "Model Groups"; // doc.Settings.Categories.get_Item throws an exception SystemInvalidOperationException "Operation is not valid due to the current state of the object."
     'static public BuiltInCategory Target = BuiltInCategory.OST_Lines; // model lines
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) As Result _
         Implements IExternalCommand.Execute
 
@@ -418,13 +418,13 @@ Namespace XtraVb
   ''' <summary>
   ''' Export all target element ids and their FireRating param values to Excel.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Automatic)>
   Public Class Lab4_3_2_ExportSharedParamToExcel
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) As Result _
         Implements IExternalCommand.Execute
 
@@ -495,13 +495,13 @@ Namespace XtraVb
   ''' <summary>
   ''' Import updated FireRating param values from Excel.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Automatic)>
   Public Class Lab4_3_3_ImportSharedParamFromExcel
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) As Result _
         Implements IExternalCommand.Execute
 
@@ -529,8 +529,8 @@ Namespace XtraVb
         Return Result.Failed
       End If
       excel.Visible = True
-      Dim workbook As X.Workbook = excel.Workbooks.Open(dlg.FileName, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, _
-      Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, _
+      Dim workbook As X.Workbook = excel.Workbooks.Open(dlg.FileName, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
+      Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
       Missing.Value, Missing.Value, Missing.Value)
       Dim worksheet As X.Worksheet = TryCast(workbook.ActiveSheet, X.Worksheet)
       '
@@ -577,13 +577,13 @@ Namespace XtraVb
   ''' <summary>
   ''' Add and bind a visible and an invisible per-doc parameter.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab4_4_1_CreatePerDocParameters
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) As Result _
         Implements IExternalCommand.Execute
 
@@ -595,55 +595,62 @@ Namespace XtraVb
         Return Result.Failed
       End If
 
-      ' get the current shared params definition file
-      Dim sharedParamsFile As DefinitionFile = LabUtils.GetSharedParamsFile(app.Application)
-      If sharedParamsFile Is Nothing Then
-        message = "Error getting the shared params file."
-        Return Result.Failed
-      End If
-      ' get or create the shared params group
-      Dim sharedParamsGroup As DefinitionGroup = LabUtils.GetOrCreateSharedParamsGroup(sharedParamsFile, LabConstants.ParamGroupName)
+      Using tx As New Transaction(doc)
+        tx.Start("Create per doc Parameter")
 
-      If sharedParamsGroup Is Nothing Then
-        message = "Error getting the shared params group."
-        Return Result.Failed
-      End If
-      ' visible param
-      Dim docParamDefVisible As Definition = LabUtils.GetOrCreateSharedParamsDefinition(sharedParamsGroup, ParameterType.[Integer], LabConstants.ParamNameVisible, True)
+        ' get the current shared params definition file
+        Dim sharedParamsFile As DefinitionFile = LabUtils.GetSharedParamsFile(app.Application)
+        If sharedParamsFile Is Nothing Then
+          message = "Error getting the shared params file."
+          Return Result.Failed
+        End If
+        ' get or create the shared params group
+        Dim sharedParamsGroup As DefinitionGroup = LabUtils.GetOrCreateSharedParamsGroup(sharedParamsFile, LabConstants.ParamGroupName)
 
-      If docParamDefVisible Is Nothing Then
-        message = "Error creating visible per-doc parameter."
-        Return Result.Failed
-      End If
-      ' invisible param
-      Dim docParamDefInvisible As Definition = LabUtils.GetOrCreateSharedParamsDefinition(sharedParamsGroup, ParameterType.[Integer], LabConstants.ParamNameInvisible, False)
+        If sharedParamsGroup Is Nothing Then
+          message = "Error getting the shared params group."
+          Return Result.Failed
+        End If
+        ' visible param
+        Dim docParamDefVisible As Definition = LabUtils.GetOrCreateSharedParamsDefinition(sharedParamsGroup, ParameterType.[Integer], LabConstants.ParamNameVisible, True)
 
-      If docParamDefInvisible Is Nothing Then
-        message = "Error creating invisible per-doc parameter."
-        Return Result.Failed
-      End If
-      ' bind the param
-      Try
-        Dim catSet As CategorySet = app.Application.Create.NewCategorySet()
-        catSet.Insert(doc.Settings.Categories.Item(BuiltInCategory.OST_ProjectInformation))
-        Dim binding As Binding = app.Application.Create.NewInstanceBinding(catSet)
-        doc.ParameterBindings.Insert(docParamDefVisible, binding)
-        doc.ParameterBindings.Insert(docParamDefInvisible, binding)
-      Catch e As Exception
-        message = "Error binding shared parameter: " + e.Message
-        Return Result.Failed
-      End Try
-      ' set the initial values
-      ' get the singleton project info element
-      Dim projInfoElem As Element = LabUtils.GetProjectInfoElem(doc)
+        If docParamDefVisible Is Nothing Then
+          message = "Error creating visible per-doc parameter."
+          Return Result.Failed
+        End If
+        ' invisible param
+        Dim docParamDefInvisible As Definition = LabUtils.GetOrCreateSharedParamsDefinition(sharedParamsGroup, ParameterType.[Integer], LabConstants.ParamNameInvisible, False)
 
-      If projInfoElem Is Nothing Then
-        message = "No project info elem found. Aborting command..."
-        Return Result.Failed
-      End If
-      ' for simplicity, access params by name rather than by GUID:
-      projInfoElem.LookupParameter(LabConstants.ParamNameVisible).Set(55)
-      projInfoElem.LookupParameter(LabConstants.ParamNameInvisible).Set(0)
+        If docParamDefInvisible Is Nothing Then
+          message = "Error creating invisible per-doc parameter."
+          Return Result.Failed
+        End If
+        ' bind the param
+        Try
+          Dim catSet As CategorySet = app.Application.Create.NewCategorySet()
+          catSet.Insert(doc.Settings.Categories.Item(BuiltInCategory.OST_ProjectInformation))
+          Dim binding As Binding = app.Application.Create.NewInstanceBinding(catSet)
+          doc.ParameterBindings.Insert(docParamDefVisible, binding)
+          doc.ParameterBindings.Insert(docParamDefInvisible, binding)
+        Catch e As Exception
+          message = "Error binding shared parameter: " + e.Message
+          Return Result.Failed
+        End Try
+        ' set the initial values
+        ' get the singleton project info element
+        Dim projInfoElem As Element = LabUtils.GetProjectInfoElem(doc)
+
+        If projInfoElem Is Nothing Then
+          message = "No project info elem found. Aborting command..."
+          Return Result.Failed
+        End If
+        ' for simplicity, access params by name rather than by GUID:
+        projInfoElem.LookupParameter(LabConstants.ParamNameVisible).Set(55)
+        projInfoElem.LookupParameter(LabConstants.ParamNameInvisible).Set(0)
+
+        tx.Commit()
+      End Using
+
       Return Result.Succeeded
     End Function
   End Class
@@ -653,13 +660,13 @@ Namespace XtraVb
   ''' <summary>
   ''' Increment the invisible per-doc param.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab4_4_2_IncrementPerDocParameters
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) As Result _
         Implements IExternalCommand.Execute
 
@@ -688,10 +695,16 @@ Namespace XtraVb
         Dim iOldValue As Integer = param.AsInteger()
         LabUtils.InfoMsg("OLD value = " + iOldValue.ToString())
 
-        ' set and report NEW value
+        Using tx As New Transaction(doc)
+          tx.Start("Set Parameter value")
 
-        param.Set(iOldValue + 1)
-        LabUtils.InfoMsg("NEW value = " + param.AsInteger().ToString())
+          ' set and report NEW value
+
+          param.Set(iOldValue + 1)
+          LabUtils.InfoMsg("NEW value = " + param.AsInteger().ToString())
+
+          tx.Commit()
+        End Using
       Catch e As System.Exception
         message = "Failed: " + e.Message
         Return Result.Failed

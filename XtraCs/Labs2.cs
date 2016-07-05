@@ -624,7 +624,7 @@ namespace XtraCs
           if( null != element.Category
             && 0 < element.Parameters.Size
             && ( element.Category.HasMaterialQuantities
-            //|| null != element.PhaseCreated ) ) // 2012
+              //|| null != element.PhaseCreated ) ) // 2012
               || !ElementId.InvalidElementId.Equals( // 2013
                 element.CreatedPhaseId ) ) )
           {
@@ -778,7 +778,7 @@ namespace XtraCs
   ///
   /// <include file='../doc/labs.xml' path='labs/lab[@name="2-4"]/*' />
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab2_4_EditFamilyInstance : IExternalCommand
   {
     public Result Execute(
@@ -795,26 +795,32 @@ namespace XtraCs
         FilteredElementCollector doors = LabUtils.GetFamilyInstances(
           doc, BuiltInCategory.OST_Doors );
 
-        // move doors up 0.2 feet:
-
-        XYZ v = 0.2 * XYZ.BasisZ;
-
-        foreach( FamilyInstance door in doors )
+        using( Transaction tx = new Transaction( doc ) )
         {
-          //doc.Move( door, v ); // 2011
-          ElementTransformUtils.MoveElement( doc, door.Id, v ); // 2012
+          tx.Start( "Move Doors Up" );
 
-          // widen doors by one foot by changing parameter value:
+          // move doors up 0.2 feet:
 
-          Parameter p = door.Symbol.get_Parameter(
-            BuiltInParameter.WINDOW_WIDTH );
+          XYZ v = 0.2 * XYZ.BasisZ;
 
-          if( null != p )
+          foreach( FamilyInstance door in doors )
           {
-            double width = p.AsDouble();
-            width += 1.0;
-            p.Set( width );
+            //doc.Move( door, v ); // 2011
+            ElementTransformUtils.MoveElement( doc, door.Id, v ); // 2012
+
+            // widen doors by one foot by changing parameter value:
+
+            Parameter p = door.Symbol.get_Parameter(
+              BuiltInParameter.WINDOW_WIDTH );
+
+            if( null != p )
+            {
+              double width = p.AsDouble();
+              width += 1.0;
+              p.Set( width );
+            }
           }
+          tx.Commit();
         }
         return Result.Succeeded;
         #endregion // 2.4 Retrieve all doors, move them and widen them
@@ -841,7 +847,7 @@ namespace XtraCs
   /// This is a temporary problem, NewFamilyInstance identifies the nonstructural instance
   /// as an annotation instance, so only shows them in plan view.
   /// </remarks>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab2_5_SelectAndMoveWallAndAddColumns : IExternalCommand
   {
     /// <summary>
@@ -1046,45 +1052,51 @@ namespace XtraCs
         return Result.Failed;
       }
 
-      // insert column family instances:
-
-      foreach( XYZ p in locations )
+      using( Transaction tx = new Transaction( doc ) )
       {
-        try
+        tx.Start( "Insert Columns and Move Wall" );
+
+        // insert column family instances:
+
+        foreach( XYZ p in locations )
         {
-          // Note: Currently there is a problem.
-          // If we set the type as NonStructural, it is treated as Annotation instance,
-          // and it shows only in plan view.
-          // FamilyInstance column = doc.Create.NewFamilyInstance( p, symbol, botLev, StructuralType.NonStuctural );
+          try
+          {
+            // Note: Currently there is a problem.
+            // If we set the type as NonStructural, it is treated as Annotation instance,
+            // and it shows only in plan view.
+            // FamilyInstance column = doc.Create.NewFamilyInstance( p, symbol, botLev, StructuralType.NonStuctural );
 
-          FamilyInstance column = doc.Create.NewFamilyInstance(
-            p, symbol, botLev, StructuralType.Column );
+            FamilyInstance column = doc.Create.NewFamilyInstance(
+              p, symbol, botLev, StructuralType.Column );
 
-          Parameter paramTopLevel = column.get_Parameter(
-            BuiltInParameter.FAMILY_TOP_LEVEL_PARAM );
+            Parameter paramTopLevel = column.get_Parameter(
+              BuiltInParameter.FAMILY_TOP_LEVEL_PARAM );
 
-          ElementId id = topLev.Id;
+            ElementId id = topLev.Id;
 
-          paramTopLevel.Set( id );
+            paramTopLevel.Set( id );
+          }
+          catch( Exception )
+          {
+            LabUtils.ErrorMsg( "Failed to create or adjust column." );
+          }
         }
-        catch( Exception )
+
+        // Finally, move the wall so the columns are visible.
+        // We move the wall perpendicularly to its location
+        // curve by one tenth of its length:
+
+        XYZ v = new XYZ(
+          -0.1 * ( ptEnd.Y - ptStart.Y ),
+          0.1 * ( ptEnd.X - ptStart.X ),
+          0 );
+
+        if( !wall.Location.Move( v ) )
         {
-          LabUtils.ErrorMsg( "Failed to create or adjust column." );
+          LabUtils.ErrorMsg( "Failed to move the wall." );
         }
-      }
-
-      // Finally, move the wall so the columns are visible.
-      // We move the wall perpendicularly to its location
-      // curve by one tenth of its length:
-
-      XYZ v = new XYZ(
-        -0.1 * ( ptEnd.Y - ptStart.Y ),
-        0.1 * ( ptEnd.X - ptStart.X ),
-        0 );
-
-      if( !wall.Location.Move( v ) )
-      {
-        LabUtils.ErrorMsg( "Failed to move the wall." );
+        tx.Commit();
       }
       return Result.Succeeded;
     }

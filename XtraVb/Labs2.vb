@@ -46,13 +46,13 @@ Namespace XtraVb
   ''' a door, two windows, a floor, a roof, a room and a room tag.
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="2-0"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Automatic)>
   Public Class Lab2_0_CreateLittleHouse
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) _
         As Result _
         Implements IExternalCommand.Execute
@@ -94,9 +94,9 @@ Namespace XtraVb
         Dim walls As New List(Of Wall)(4)
         For i As Integer = 0 To 3
           'Dim line As Line = createApp.NewLineBound(corners(i), corners(If(3 = i, 0, i + 1))) ' 2013
-          Dim line As Line = line.CreateBound(corners(i), corners(If(3 = i, 0, i + 1))) ' 2014
+          Dim line As Line = Line.CreateBound(corners(i), corners(If(3 = i, 0, i + 1))) ' 2014
           'Dim wall As Wall = createDoc.NewWall(line, levelBottom, False) ' 2012
-          Dim wall As Wall = wall.Create(doc, line, levelBottom.Id, False) ' 2013
+          Dim wall As Wall = Wall.Create(doc, line, levelBottom.Id, False) ' 2013
           Dim param As Parameter = wall.Parameter(topLevelParam)
           param.Set(topLevelId)
           walls.Add(wall)
@@ -125,10 +125,10 @@ Namespace XtraVb
         p = New XYZ(p.X, p.Y, windowHeight)
         q = New XYZ(q.X, q.Y, windowHeight)
         Dim view As View = doc.ActiveView
-        Dim inst As FamilyInstance = createDoc.NewFamilyInstance( _
+        Dim inst As FamilyInstance = createDoc.NewFamilyInstance(
             midpoint, door, walls(0), levelBottom, StructuralType.NonStructural)
         midpoint += tagOffset * XYZ.BasisY
-        Dim tag As IndependentTag = createDoc.NewTag( _
+        Dim tag As IndependentTag = createDoc.NewTag(
             view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, midpoint)
         inst = createDoc.NewFamilyInstance(p, window, walls(0), levelBottom, StructuralType.NonStructural)
         p += tagOffset * XYZ.BasisY
@@ -200,13 +200,13 @@ Namespace XtraVb
   ''' This is not recommended for normal use!
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="2-1"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.ReadOnly)> _
+  <Transaction(TransactionMode.ReadOnly)>
   Public Class Lab2_1_Elements
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) _
         As Result _
         Implements IExternalCommand.Execute
@@ -225,7 +225,7 @@ Namespace XtraVb
       Try
         sw = New StreamWriter(LabConstants.FilePath)
       Catch e As Exception
-        LabUtils.ErrorMsg(String.Format("Cannot open '{0}': {1}", _
+        LabUtils.ErrorMsg(String.Format("Cannot open '{0}': {1}",
                                         LabConstants.FilePath, e.Message))
         Return Result.Failed
       End Try
@@ -247,7 +247,7 @@ Namespace XtraVb
             = New FilteredElementCollector(doc) _
                 .WhereElementIsElementType()
 
-        Dim collector2 As FilteredElementCollector = _
+        Dim collector2 As FilteredElementCollector =
             New FilteredElementCollector(doc) _
                 .WhereElementIsNotElementType()
 
@@ -315,13 +315,13 @@ Namespace XtraVb
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="2-2"]/*' />
   ''' </summary>
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="2-2-remarks"]/*' />
-  <Transaction(TransactionMode.ReadOnly)> _
+  <Transaction(TransactionMode.ReadOnly)>
   Public Class Lab2_2_ModelElements
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) _
         As Result _
         Implements IExternalCommand.Execute
@@ -344,7 +344,7 @@ Namespace XtraVb
         ' && 0 < e.Materials.Size
 
         If e.Category IsNot Nothing AndAlso e.Category.HasMaterialQuantities Then
-          a.Add(String.Format("Category={0}; Name={1}; Id={2}", _
+          a.Add(String.Format("Category={0}; Name={1}; Id={2}",
                               e.Category.Name, e.Name, e.Id.IntegerValue))
         End If
       Next
@@ -370,13 +370,13 @@ Namespace XtraVb
   ''' additionally checking the category.
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="2-3"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.ReadOnly)> _
+  <Transaction(TransactionMode.ReadOnly)>
   Public Class Lab2_3_ListWallsAndDoors
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) _
         As Result _
         Implements IExternalCommand.Execute
@@ -398,9 +398,9 @@ Namespace XtraVb
       Dim a As New List(Of String)()
 
       For Each wall As Wall In walls
-        a.Add(String.Format("Id={0}; Kind={1}; Type={2}", _
-                            wall.Id.IntegerValue, _
-                            wall.WallType.Kind.ToString(), _
+        a.Add(String.Format("Id={0}; Kind={1}; Type={2}",
+                            wall.Id.IntegerValue,
+                            wall.WallType.Kind.ToString(),
                             wall.WallType.Name))
       Next
 
@@ -430,8 +430,8 @@ Namespace XtraVb
         ' For family instances, the element name property
         ' returns the type name:
 
-        a.Add(String.Format("Id={0}; Type={1}", _
-                            door.Id.IntegerValue, _
+        a.Add(String.Format("Id={0}; Type={1}",
+                            door.Id.IntegerValue,
                             door.Name))
       Next
 
@@ -454,13 +454,13 @@ Namespace XtraVb
   '''
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="2-4"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab2_4_EditFamilyInstance
     Implements IExternalCommand
 
-    Public Function Execute( _
-        ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+    Public Function Execute(
+        ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) _
         As Result _
         Implements IExternalCommand.Execute
@@ -474,25 +474,30 @@ Namespace XtraVb
         Dim doors As FilteredElementCollector _
             = LabUtils.GetFamilyInstances(doc, BuiltInCategory.OST_Doors)
 
-        ' move doors up 0.2 feet:
+        Using tx As New Transaction(doc)
+          tx.Start("Move Doors Up")
+          ' move doors up 0.2 feet:
 
-        Dim v As XYZ = 0.2 * XYZ.BasisZ
+          Dim v As XYZ = 0.2 * XYZ.BasisZ
 
-        For Each door As FamilyInstance In doors
+          For Each door As FamilyInstance In doors
 
-          'doc.Move(door, v) ' 2011
-          ElementTransformUtils.MoveElement(doc, door.Id, v) ' 2012
+            'doc.Move(door, v) ' 2011
+            ElementTransformUtils.MoveElement(doc, door.Id, v) ' 2012
 
-          ' widen doors by one foot by changing parameter value:
+            ' widen doors by one foot by changing parameter value:
 
-          Dim p As Parameter = door.Symbol.Parameter(BuiltInParameter.WINDOW_WIDTH)
+            Dim p As Parameter = door.Symbol.Parameter(BuiltInParameter.WINDOW_WIDTH)
 
-          If p IsNot Nothing Then
-            Dim width As Double = p.AsDouble()
-            width += 1
-            p.Set(width)
-          End If
-        Next
+            If p IsNot Nothing Then
+              Dim width As Double = p.AsDouble()
+              width += 1
+              p.Set(width)
+            End If
+          Next
+          tx.Commit()
+        End Using
+
 
         Return Result.Succeeded
 
@@ -519,7 +524,7 @@ Namespace XtraVb
   ''' This is a temporary problem, NewFamilyInstance identifies the nonstructural instance
   ''' as an annotation instance, so only shows them in plan view.
   ''' </remarks>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab2_5_SelectAndMoveWallAndAddColumns
     Implements IExternalCommand
 
@@ -552,7 +557,7 @@ Namespace XtraVb
       ''' <param name="position">The 3D position of the mouse on the candidate reference.</param>
       ''' <returns>Return true to allow the user to select this candidate reference.</returns>
       Public Function AllowReference _
-          (ByVal reference As Reference, _
+          (ByVal reference As Reference,
            ByVal position As XYZ) As Boolean _
            Implements ISelectionFilter.AllowReference
         Return True
@@ -561,8 +566,8 @@ Namespace XtraVb
     End Class
 
     Public Function Execute _
-        (ByVal commandData As ExternalCommandData, _
-        ByRef message As String, _
+        (ByVal commandData As ExternalCommandData,
+        ByRef message As String,
         ByVal elements As ElementSet) As Result _
         Implements IExternalCommand.Execute
 
@@ -602,7 +607,7 @@ Namespace XtraVb
 
         Try
 
-          Dim r As Reference = uidoc.Selection.PickObject( _
+          Dim r As Reference = uidoc.Selection.PickObject(
               ObjectType.Element, New WallSelectionFilter(), "Please pick a wall")
 
           'wall = TryCast(r.Element, Wall) ' 2011
@@ -618,7 +623,7 @@ Namespace XtraVb
       Dim topLev As Level = Nothing
 
       Try
-        Dim id As ElementId = wall.Parameter( _
+        Dim id As ElementId = wall.Parameter(
             BuiltInParameter.WALL_HEIGHT_TYPE).AsElementId()
         topLev = TryCast(doc.GetElement(id), Level)
       Catch generatedExceptionName As Exception
@@ -635,7 +640,7 @@ Namespace XtraVb
       Dim botLev As Level = Nothing
 
       Try
-        Dim id As ElementId = wall.Parameter( _
+        Dim id As ElementId = wall.Parameter(
             BuiltInParameter.WALL_BASE_CONSTRAINT).AsElementId()
         botLev = TryCast(doc.GetElement(id), Level)
       Catch generatedExceptionName As Exception
@@ -659,7 +664,7 @@ Namespace XtraVb
       locations.Add(ptMid)
       locations.Add(ptEnd)
 
-      Dim s As String = _
+      Dim s As String =
           "{0} location{1} for the new columns in raw database coordinates, e.g. feet{2}"
       Dim a As New List(Of String)()
       a.Add("Start: " + LabUtils.PointString(ptStart))
@@ -709,41 +714,47 @@ Namespace XtraVb
       End Try
 
       If symbol Is Nothing Then
-        message = String.Format( _
-            "Cannot find type '{0}' in family '{1}' in the current model - please load it first.", _
+        message = String.Format(
+            "Cannot find type '{0}' in family '{1}' in the current model - please load it first.",
             type_name, family_name)
         Return Result.Failed
       End If
 
-      ' insert column family instances:
+      Using tx As New Transaction(doc)
+        tx.Start("Insert Columns and Move Wall")
 
-      For Each p As XYZ In locations
-        Try
-          ' Note: Currently there is a problem.
-          ' If we set the type as NonStructural, it is treated as Annotation instance,
-          ' and it shows only in plan view.
-          ' FamilyInstance column = doc.Create.NewFamilyInstance( p, symbol, botLev, StructuralType.NonStuctural );
+        ' insert column family instances:
 
-          Dim column As FamilyInstance = doc.Create.NewFamilyInstance( _
-              p, symbol, botLev, StructuralType.Column)
-          Dim paramTopLevel As Parameter = column.Parameter( _
-              BuiltInParameter.FAMILY_TOP_LEVEL_PARAM)
-          Dim id As ElementId = topLev.Id
-          paramTopLevel.Set(id)
-        Catch generatedExceptionName As Exception
-          LabUtils.ErrorMsg("Failed to create or adjust column.")
-        End Try
-      Next
+        For Each p As XYZ In locations
+          Try
+            ' Note: Currently there is a problem.
+            ' If we set the type as NonStructural, it is treated as Annotation instance,
+            ' and it shows only in plan view.
+            ' FamilyInstance column = doc.Create.NewFamilyInstance( p, symbol, botLev, StructuralType.NonStuctural );
 
-      ' Finally, move the wall so the columns are visible.
-      ' We move the wall perpendicularly to its location
-      ' curve by one tenth of its length:
+            Dim column As FamilyInstance = doc.Create.NewFamilyInstance(
+                p, symbol, botLev, StructuralType.Column)
+            Dim paramTopLevel As Parameter = column.Parameter(
+                BuiltInParameter.FAMILY_TOP_LEVEL_PARAM)
+            Dim id As ElementId = topLev.Id
+            paramTopLevel.Set(id)
+          Catch generatedExceptionName As Exception
+            LabUtils.ErrorMsg("Failed to create or adjust column.")
+          End Try
+        Next
 
-      Dim v As New XYZ(-0.1 * (ptEnd.Y - ptStart.Y), 0.1 * (ptEnd.X - ptStart.X), 0)
+        ' Finally, move the wall so the columns are visible.
+        ' We move the wall perpendicularly to its location
+        ' curve by one tenth of its length:
 
-      If Not wall.Location.Move(v) Then
-        LabUtils.ErrorMsg("Failed to move the wall.")
-      End If
+        Dim v As New XYZ(-0.1 * (ptEnd.Y - ptStart.Y), 0.1 * (ptEnd.X - ptStart.X), 0)
+
+        If Not wall.Location.Move(v) Then
+          LabUtils.ErrorMsg("Failed to move the wall.")
+        End If
+        tx.Commit()
+      End Using
+
       Return Result.Succeeded
     End Function
 
