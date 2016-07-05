@@ -163,7 +163,7 @@ namespace XtraCs
   /// <summary>
   /// Swap group types for selected groups.
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab5_2_SwapGroupTypes : IExternalCommand
   {
     public Result Execute(
@@ -209,7 +209,12 @@ namespace XtraCs
           switch( r )
           {
             case TaskDialogResult.Yes:
-              g.GroupType = gt;
+              using( Transaction tx = new Transaction( doc ) )
+              {
+                tx.Start( "Swap Group Type" );
+                g.GroupType = gt;
+                tx.Commit();
+              }
               LabUtils.InfoMsg( "Group type successfully swapped." );
               return Result.Succeeded;
 

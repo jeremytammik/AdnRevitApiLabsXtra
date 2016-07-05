@@ -126,7 +126,7 @@ Namespace XtraVb
   ''' <summary>
   ''' Create a divided surface using reference of a face of the form.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)>
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab7_2_CreateDividedSurface
     Implements IExternalCommand
 
@@ -148,32 +148,37 @@ Namespace XtraVb
         Dim forms As New FilteredElementCollector(doc)
         forms.OfCategory(BuiltInCategory.OST_MassForm)
         ' was OST_MassSurface
-        For Each form As Form In forms
-          ' create the divided surface on the loft form:
 
-          Dim factory As FamilyItemFactory = doc.FamilyCreate
-          Dim options As Options = creApp.NewGeometryOptions()
-          options.ComputeReferences = True
-          options.View = doc.ActiveView
-          Dim element As GeometryElement = form.Geometry(options)
+        Using tx As New Transaction(doc)
+          tx.Start("Create Divided Surface")
+          For Each form As Form In forms
+            ' create the divided surface on the loft form:
 
-          'Dim geoObjectArray As GeometryObjectArray = element.Objects ' 2012
-          'For j As Integer = 0 To geoObjectArray.Size - 1
-          '  Dim geoObject As GeometryObject = geoObjectArray.Item(j)
+            Dim factory As FamilyItemFactory = doc.FamilyCreate
+            Dim options As Options = creApp.NewGeometryOptions()
+            options.ComputeReferences = True
+            options.View = doc.ActiveView
+            Dim element As GeometryElement = form.Geometry(options)
 
-          Dim geoObject As GeometryObject
-          For Each geoObject In elements ' 2013
-            Dim solid As Solid = TryCast(geoObject, Solid)
-            For Each face As Face In solid.Faces
-              If face.Reference IsNot Nothing Then
-                If face IsNot Nothing Then
-                  'Dim divSurface As DividedSurface = factory.NewDividedSurface(face.Reference) ' 2013
-                  Dim divSurface As DividedSurface = DividedSurface.Create(doc, face.Reference) ' 2014
+            'Dim geoObjectArray As GeometryObjectArray = element.Objects ' 2012
+            'For j As Integer = 0 To geoObjectArray.Size - 1
+            '  Dim geoObject As GeometryObject = geoObjectArray.Item(j)
+
+            Dim geoObject As GeometryObject
+            For Each geoObject In elements ' 2013
+              Dim solid As Solid = TryCast(geoObject, Solid)
+              For Each face As Face In solid.Faces
+                If face.Reference IsNot Nothing Then
+                  If face IsNot Nothing Then
+                    'Dim divSurface As DividedSurface = factory.NewDividedSurface(face.Reference) ' 2013
+                    Dim divSurface As DividedSurface = DividedSurface.Create(doc, face.Reference) ' 2014
+                  End If
                 End If
-              End If
+              Next
             Next
           Next
-        Next
+          tx.Commit()
+        End Using
         Return Result.Succeeded
       Catch ex As Exception
         message = ex.Message
@@ -189,7 +194,7 @@ Namespace XtraVb
   ''' <summary>
   ''' Change the tiling pattern of the divided surface using the built-in TilePattern enumeration.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)>
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab7_3_ChangeTilePattern
     Implements IExternalCommand
 
@@ -209,38 +214,42 @@ Namespace XtraVb
         Dim forms As New FilteredElementCollector(doc)
         forms.OfClass(GetType(Form))
 
-        For Each form As Form In forms
-          ' access the divided surface data from the form:
+        Using tx As New Transaction(doc)
+          tx.Start("Change Tile Pattern")
+          For Each form As Form In forms
+            ' access the divided surface data from the form:
 
-          'Dim dsData As DividedSurfaceData = form.GetDividedSurfaceData() ' 2014
-          'If dsData IsNot Nothing Then ' 2014
+            'Dim dsData As DividedSurfaceData = form.GetDividedSurfaceData() ' 2014
+            'If dsData IsNot Nothing Then ' 2014
 
-          ' get the references associated with the divided surfaces
+            ' get the references associated with the divided surfaces
 
-          'For Each reference As Reference In dsData.GetReferencesWithDividedSurfaces() ' 2014
-          For Each reference As Reference In DividedSurface.GetReferencesWithDividedSurfaces(form) ' 2015
+            'For Each reference As Reference In dsData.GetReferencesWithDividedSurfaces() ' 2014
+            For Each reference As Reference In DividedSurface.GetReferencesWithDividedSurfaces(form) ' 2015
 
-            'Dim divSurface As DividedSurface = dsData.GetDividedSurfaceForReference(reference) ' 2014
-            Dim divSurface As DividedSurface = DividedSurface.GetDividedSurfaceForReference(doc, reference) ' 2015
+              'Dim divSurface As DividedSurface = dsData.GetDividedSurfaceForReference(reference) ' 2014
+              Dim divSurface As DividedSurface = DividedSurface.GetDividedSurfaceForReference(doc, reference) ' 2015
 
-            Dim count As Integer = 0
-            Dim tilepatterns As TilePatterns = doc.Settings.TilePatterns
-            For Each i As TilePatternsBuiltIn In System.Enum.GetValues(GetType(TilePatternsBuiltIn))
-              If count.Equals(3) Then
-                ' Warning: 'Autodesk.Revit.DB.Element.ObjectType' is obsolete:
-                ' 'Use Element.GetTypeId() and Element.ChangeTypeId() instead.'
-                '
-                'divSurface.ObjectType = tilepatterns.GetTilePattern(i)
+              Dim count As Integer = 0
+              Dim tilepatterns As TilePatterns = doc.Settings.TilePatterns
+              For Each i As TilePatternsBuiltIn In System.Enum.GetValues(GetType(TilePatternsBuiltIn))
+                If count.Equals(3) Then
+                  ' Warning: 'Autodesk.Revit.DB.Element.ObjectType' is obsolete:
+                  ' 'Use Element.GetTypeId() and Element.ChangeTypeId() instead.'
+                  '
+                  'divSurface.ObjectType = tilepatterns.GetTilePattern(i)
 
-                divSurface.ChangeTypeId(tilepatterns.GetTilePattern(i).Id)
+                  divSurface.ChangeTypeId(tilepatterns.GetTilePattern(i).Id)
 
-                Exit For
-              End If
-              count += 1
+                  Exit For
+                End If
+                count += 1
+              Next
             Next
+            'End If ' 2014
           Next
-          'End If ' 2014
-        Next
+          tx.Commit()
+        End Using
       Catch ex As Exception
         message = ex.Message
         Return Result.Failed

@@ -123,7 +123,7 @@ namespace XtraCs
   /// <summary>
   /// Create a divided surface using reference of a face of the form.
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab7_2_CreateDividedSurface : IExternalCommand
   {
     public Result Execute(
@@ -144,36 +144,42 @@ namespace XtraCs
         FilteredElementCollector forms = new FilteredElementCollector( doc );
         forms.OfCategory( BuiltInCategory.OST_MassForm ); // was OST_MassSurface
 
-        foreach( Form form in forms )
+        using( Transaction tx = new Transaction( doc ) )
         {
-          // create the divided surface on the loft form:
+          tx.Start( "Create Devided Surface" );
 
-          FamilyItemFactory factory = doc.FamilyCreate;
-          Options options = creApp.NewGeometryOptions();
-          options.ComputeReferences = true;
-          options.View = doc.ActiveView;
-          GeometryElement element = form.get_Geometry( options );
-
-          //GeometryObjectArray geoObjectArray = element.Objects; // 2012
-          //for( int j = 0; j < geoObjectArray.Size; j++ )
-          //{
-          //  GeometryObject geoObject = geoObjectArray.get_Item( j );
-
-          foreach( GeometryObject geoObject in element ) // 2013
+          foreach( Form form in forms )
           {
-            Solid solid = geoObject as Solid;
-            foreach( Face face in solid.Faces )
+            // create the divided surface on the loft form:
+
+            FamilyItemFactory factory = doc.FamilyCreate;
+            Options options = creApp.NewGeometryOptions();
+            options.ComputeReferences = true;
+            options.View = doc.ActiveView;
+            GeometryElement element = form.get_Geometry( options );
+
+            //GeometryObjectArray geoObjectArray = element.Objects; // 2012
+            //for( int j = 0; j < geoObjectArray.Size; j++ )
+            //{
+            //  GeometryObject geoObject = geoObjectArray.get_Item( j );
+
+            foreach( GeometryObject geoObject in element ) // 2013
             {
-              if( face.Reference != null )
+              Solid solid = geoObject as Solid;
+              foreach( Face face in solid.Faces )
               {
-                if( null != face )
+                if( face.Reference != null )
                 {
-                  //DividedSurface divSurface = factory.NewDividedSurface( face.Reference ); // 2013
-                  DividedSurface divSurface = DividedSurface.Create( doc, face.Reference ); // 2014
+                  if( null != face )
+                  {
+                    //DividedSurface divSurface = factory.NewDividedSurface( face.Reference ); // 2013
+                    DividedSurface divSurface = DividedSurface.Create( doc, face.Reference ); // 2014
+                  }
                 }
               }
             }
           }
+          tx.Commit();
         }
         return Result.Succeeded;
       }
@@ -190,7 +196,7 @@ namespace XtraCs
   /// <summary>
   /// Change the tiling pattern of the divided surface using the built-in TilePattern enumeration.
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab7_3_ChangeTilePattern : IExternalCommand
   {
     public Result Execute(
@@ -208,39 +214,45 @@ namespace XtraCs
         FilteredElementCollector forms = new FilteredElementCollector( doc );
         forms.OfClass( typeof( Form ) );
 
-        foreach( Form form in forms )
+        using( Transaction tx = new Transaction( doc ) )
         {
-          // access the divided surface data from the form:
+          tx.Start( "Change Tile Pattern" );
 
-          //DividedSurfaceData dsData = form.GetDividedSurfaceData(); // before 2014
-
-          //if( null != dsData )
+          foreach( Form form in forms )
           {
-            // get the references associated with the divided surfaces
-            //foreach( Reference reference in dsData.GetReferencesWithDividedSurfaces() )
-            foreach( Reference reference in DividedSurface.GetReferencesWithDividedSurfaces( form ) )
+            // access the divided surface data from the form:
+
+            //DividedSurfaceData dsData = form.GetDividedSurfaceData(); // before 2014
+
+            //if( null != dsData )
             {
-              DividedSurface divSurface = DividedSurface.GetDividedSurfaceForReference( doc, reference );
-
-              int count = 0;
-              TilePatterns tilepatterns = doc.Settings.TilePatterns;
-              foreach( TilePatternsBuiltIn i in Enum.GetValues( typeof( TilePatternsBuiltIn ) ) )
+              // get the references associated with the divided surfaces
+              //foreach( Reference reference in dsData.GetReferencesWithDividedSurfaces() )
+              foreach( Reference reference in DividedSurface.GetReferencesWithDividedSurfaces( form ) )
               {
-                if( 3 == count )
+                DividedSurface divSurface = DividedSurface.GetDividedSurfaceForReference( doc, reference );
+
+                int count = 0;
+                TilePatterns tilepatterns = doc.Settings.TilePatterns;
+                foreach( TilePatternsBuiltIn i in Enum.GetValues( typeof( TilePatternsBuiltIn ) ) )
                 {
-                  // Warning:	'Autodesk.Revit.DB.Element.ObjectType' is obsolete:
-                  // 'Use Element.GetTypeId() and Element.ChangeTypeId() instead.'
-                  //
-                  //divSurface.ObjectType = tilepatterns.GetTilePattern( i );
+                  if( 3 == count )
+                  {
+                    // Warning:	'Autodesk.Revit.DB.Element.ObjectType' is obsolete:
+                    // 'Use Element.GetTypeId() and Element.ChangeTypeId() instead.'
+                    //
+                    //divSurface.ObjectType = tilepatterns.GetTilePattern( i );
 
-                  divSurface.ChangeTypeId( tilepatterns.GetTilePattern( i ).Id );
+                    divSurface.ChangeTypeId( tilepatterns.GetTilePattern( i ).Id );
 
-                  break;
+                    break;
+                  }
+                  ++count;
                 }
-                ++count;
               }
             }
           }
+          tx.Commit();
         }
       }
       catch( Exception ex )

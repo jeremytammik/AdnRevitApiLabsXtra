@@ -121,7 +121,7 @@ Namespace XtraVb
   ''' <summary>
   ''' Swap group types for selected groups.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab5_2_SwapGroupTypes
     Implements IExternalCommand
     Public Function Execute( _
@@ -163,7 +163,11 @@ Namespace XtraVb
 
           Select Case r
             Case TaskDialogResult.Yes
-              g.GroupType = gt
+              Using tx As New Transaction(doc)
+                tx.Start("Swap Group Type")
+                g.GroupType = gt
+                tx.Commit()
+              End Using
               LabUtils.InfoMsg("Group type successfully swapped.")
               Return Result.Succeeded
 
