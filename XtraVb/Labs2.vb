@@ -46,7 +46,7 @@ Namespace XtraVb
   ''' a door, two windows, a floor, a roof, a room and a room tag.
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="2-0"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)>
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab2_0_CreateLittleHouse
     Implements IExternalCommand
 
@@ -63,125 +63,129 @@ Namespace XtraVb
         Dim doc As Document = app.ActiveUIDocument.Document
         Dim createApp As Autodesk.Revit.Creation.Application = app.Application.Create
         Dim createDoc As Autodesk.Revit.Creation.Document = doc.Create
-        '
-        ' determine the four corners of the rectangular house:
-        '
-        Dim width As Double = 7 * LabConstants.MeterToFeet
-        Dim depth As Double = 4 * LabConstants.MeterToFeet
 
-        Dim corners As New List(Of XYZ)(4)
+        Using t As New Transaction(doc)
+          '
+          ' determine the four corners of the rectangular house:
+          '
+          Dim width As Double = 7 * LabConstants.MeterToFeet
+          Dim depth As Double = 4 * LabConstants.MeterToFeet
 
-        corners.Add(XYZ.Zero)
-        corners.Add(New XYZ(width, 0, 0))
-        corners.Add(New XYZ(width, depth, 0))
-        corners.Add(New XYZ(0, depth, 0))
-        '
-        ' determine the levels where the walls will be located:
-        '
-        Dim levelBottom As Level = Nothing
-        Dim levelTop As Level = Nothing
+          Dim corners As New List(Of XYZ)(4)
 
-        If Not LabUtils.GetBottomAndTopLevels(doc, levelBottom, levelTop) Then
-          message = "Unable to determine wall bottom and top levels"
-          Return Result.Failed
-        End If
-        Debug.Print(String.Format("Drawing walls on '{0}' up to '{1}'", levelBottom.Name, levelTop.Name))
-        '
-        ' create the walls:
-        '
-        Dim topLevelParam As BuiltInParameter = BuiltInParameter.WALL_HEIGHT_TYPE
-        Dim topLevelId As ElementId = levelTop.Id
-        Dim walls As New List(Of Wall)(4)
-        For i As Integer = 0 To 3
-          'Dim line As Line = createApp.NewLineBound(corners(i), corners(If(3 = i, 0, i + 1))) ' 2013
-          Dim line As Line = Line.CreateBound(corners(i), corners(If(3 = i, 0, i + 1))) ' 2014
-          'Dim wall As Wall = createDoc.NewWall(line, levelBottom, False) ' 2012
-          Dim wall As Wall = Wall.Create(doc, line, levelBottom.Id, False) ' 2013
-          Dim param As Parameter = wall.Parameter(topLevelParam)
-          param.Set(topLevelId)
-          walls.Add(wall)
-        Next
+          corners.Add(XYZ.Zero)
+          corners.Add(New XYZ(width, 0, 0))
+          corners.Add(New XYZ(width, depth, 0))
+          corners.Add(New XYZ(0, depth, 0))
+          '
+          ' determine the levels where the walls will be located:
+          '
+          Dim levelBottom As Level = Nothing
+          Dim levelTop As Level = Nothing
 
-        ' determine wall thickness for tag offset and profile growth:
+          If Not LabUtils.GetBottomAndTopLevels(doc, levelBottom, levelTop) Then
+            message = "Unable to determine wall bottom and top levels"
+            Return Result.Failed
+          End If
+          Debug.Print(String.Format("Drawing walls on '{0}' up to '{1}'", levelBottom.Name, levelTop.Name))
+          '
+          ' create the walls:
+          '
+          Dim topLevelParam As BuiltInParameter = BuiltInParameter.WALL_HEIGHT_TYPE
+          Dim topLevelId As ElementId = levelTop.Id
+          Dim walls As New List(Of Wall)(4)
+          For i As Integer = 0 To 3
+            'Dim line As Line = createApp.NewLineBound(corners(i), corners(If(3 = i, 0, i + 1))) ' 2013
+            Dim line As Line = Line.CreateBound(corners(i), corners(If(3 = i, 0, i + 1))) ' 2014
+            'Dim wall As Wall = createDoc.NewWall(line, levelBottom, False) ' 2012
+            Dim wall As Wall = Wall.Create(doc, line, levelBottom.Id, False) ' 2013
+            Dim param As Parameter = wall.Parameter(topLevelParam)
+            param.Set(topLevelId)
+            walls.Add(wall)
+          Next
 
-        Dim wallThickness As Double
+          ' determine wall thickness for tag offset and profile growth:
 
-        'wallThickness = walls(0).WallType.CompoundStructure.Layers.Item(0).Thickness ' 2011
-        wallThickness = walls(0).WallType.GetCompoundStructure().GetLayers().Item(0).Width ' 2012
+          Dim wallThickness As Double
 
-        ' add door and windows to the first wall;
-        ' note that the NewFamilyInstance() api method does not automatically add door
-        ' and window tags, like the ui command does. we add tags here by making additional calls
-        ' to NewTag():
+          'wallThickness = walls(0).WallType.CompoundStructure.Layers.Item(0).Thickness ' 2011
+          wallThickness = walls(0).WallType.GetCompoundStructure().GetLayers().Item(0).Width ' 2012
 
-        Dim door As FamilySymbol = LabUtils.GetFirstFamilySymbol(doc, BuiltInCategory.OST_Doors)
-        Dim window As FamilySymbol = LabUtils.GetFirstFamilySymbol(doc, BuiltInCategory.OST_Windows)
-        Dim midpoint As XYZ = LabUtils.Midpoint(corners(0), corners(1))
-        Dim p As XYZ = LabUtils.Midpoint(corners(0), midpoint)
-        Dim q As XYZ = LabUtils.Midpoint(midpoint, corners(1))
-        Dim tagOffset As Double = 3 * wallThickness
-        'double windowHeight = 1 * LabConstants.MeterToFeet;
-        Dim windowHeight As Double = levelBottom.Elevation + 0.3 * (levelTop.Elevation - levelBottom.Elevation)
-        p = New XYZ(p.X, p.Y, windowHeight)
-        q = New XYZ(q.X, q.Y, windowHeight)
-        Dim view As View = doc.ActiveView
-        Dim inst As FamilyInstance = createDoc.NewFamilyInstance(
-            midpoint, door, walls(0), levelBottom, StructuralType.NonStructural)
-        midpoint += tagOffset * XYZ.BasisY
-        Dim tag As IndependentTag = createDoc.NewTag(
-            view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, midpoint)
-        inst = createDoc.NewFamilyInstance(p, window, walls(0), levelBottom, StructuralType.NonStructural)
-        p += tagOffset * XYZ.BasisY
-        tag = createDoc.NewTag(view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, p)
-        inst = createDoc.NewFamilyInstance(q, window, walls(0), levelBottom, StructuralType.NonStructural)
-        q += tagOffset * XYZ.BasisY
-        'tag = createDoc.NewTag(view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.TAG_HORIZONTAL, q) ' 2011
-        tag = createDoc.NewTag(view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, q)
-        '
-        ' grow the profile out by half the wall thickness,
-        ' so the floor and roof do not stop halfway through the wall:
-        '
-        Dim w As Double = 0.5 * wallThickness
-        corners(0) -= w * (XYZ.BasisX + XYZ.BasisY)
-        corners(1) += w * (XYZ.BasisX - XYZ.BasisY)
-        corners(2) += w * (XYZ.BasisX + XYZ.BasisY)
-        corners(3) -= w * (XYZ.BasisX - XYZ.BasisY)
-        Dim profile As New CurveArray()
-        For i As Integer = 0 To 3
-          Dim line As Line = Autodesk.Revit.DB.Line.CreateBound(
-            corners(i), corners(If(3 = i, 0, i + 1)))
-          profile.Append(line)
-        Next
-        '
-        ' add a floor, a roof, the roof slope, a room and a room tag:
-        '
-        Dim structural As Boolean = False
-        Dim floor As Floor = createDoc.NewFloor(profile, structural)
-        Dim roofTypes As New List(Of Element)(LabUtils.GetElementsOfType(doc, GetType(RoofType), BuiltInCategory.OST_Roofs))
-        Debug.Assert(0 < roofTypes.Count, "expected at least one roof type to be loaded into project")
-        Dim roofType As RoofType = TryCast(roofTypes(0), RoofType)
-        Dim modelCurves As New ModelCurveArray()
-        Dim roof As FootPrintRoof = createDoc.NewFootPrintRoof(profile, levelTop, roofType, modelCurves)
-        '
-        ' regenerate the model after creation, otherwise both the calls
-        ' to set_DefinesSlope and set_SlopeAngle throwing the exception
-        ' "Unable to access curves from the roof sketch."
-        '
-        doc.Regenerate()
-        ' 
-        ' the argument to set_SlopeAngle is NOT an angle, it is
-        ' really a slope, i.e. relation of height to distance,
-        ' e.g. 0.5 = 6” / 12”, 0.75  = 9” / 12”, etc.
-        '
-        'Dim slopeAngle As Double = 30 * LabConstants.DegreesToRadians
-        Dim slope As Double = 0.3
-        For Each curve As ModelCurve In modelCurves
-          roof.DefinesSlope(curve) = True
-          roof.SlopeAngle(curve) = slope
-        Next
-        Dim room As Room = createDoc.NewRoom(levelBottom, New UV(0.5 * width, 0.5 * depth))
-        Dim roomTag As RoomTag = createDoc.NewRoomTag(New LinkElementId(room.Id), New UV(0.5 * width, 0.7 * depth), Nothing)
-        'LabUtils.InfoMsg( "Little house was created successfully." );
+          ' add door and windows to the first wall;
+          ' note that the NewFamilyInstance() api method does not automatically add door
+          ' and window tags, like the ui command does. we add tags here by making additional calls
+          ' to NewTag():
+
+          Dim door As FamilySymbol = LabUtils.GetFirstFamilySymbol(doc, BuiltInCategory.OST_Doors)
+          Dim window As FamilySymbol = LabUtils.GetFirstFamilySymbol(doc, BuiltInCategory.OST_Windows)
+          Dim midpoint As XYZ = LabUtils.Midpoint(corners(0), corners(1))
+          Dim p As XYZ = LabUtils.Midpoint(corners(0), midpoint)
+          Dim q As XYZ = LabUtils.Midpoint(midpoint, corners(1))
+          Dim tagOffset As Double = 3 * wallThickness
+          'double windowHeight = 1 * LabConstants.MeterToFeet;
+          Dim windowHeight As Double = levelBottom.Elevation + 0.3 * (levelTop.Elevation - levelBottom.Elevation)
+          p = New XYZ(p.X, p.Y, windowHeight)
+          q = New XYZ(q.X, q.Y, windowHeight)
+          Dim view As View = doc.ActiveView
+          Dim inst As FamilyInstance = createDoc.NewFamilyInstance(
+              midpoint, door, walls(0), levelBottom, StructuralType.NonStructural)
+          midpoint += tagOffset * XYZ.BasisY
+          Dim tag As IndependentTag = createDoc.NewTag(
+              view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, midpoint)
+          inst = createDoc.NewFamilyInstance(p, window, walls(0), levelBottom, StructuralType.NonStructural)
+          p += tagOffset * XYZ.BasisY
+          tag = createDoc.NewTag(view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, p)
+          inst = createDoc.NewFamilyInstance(q, window, walls(0), levelBottom, StructuralType.NonStructural)
+          q += tagOffset * XYZ.BasisY
+          'tag = createDoc.NewTag(view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.TAG_HORIZONTAL, q) ' 2011
+          tag = createDoc.NewTag(view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, q)
+          '
+          ' grow the profile out by half the wall thickness,
+          ' so the floor and roof do not stop halfway through the wall:
+          '
+          Dim w As Double = 0.5 * wallThickness
+          corners(0) -= w * (XYZ.BasisX + XYZ.BasisY)
+          corners(1) += w * (XYZ.BasisX - XYZ.BasisY)
+          corners(2) += w * (XYZ.BasisX + XYZ.BasisY)
+          corners(3) -= w * (XYZ.BasisX - XYZ.BasisY)
+          Dim profile As New CurveArray()
+          For i As Integer = 0 To 3
+            Dim line As Line = Autodesk.Revit.DB.Line.CreateBound(
+              corners(i), corners(If(3 = i, 0, i + 1)))
+            profile.Append(line)
+          Next
+          '
+          ' add a floor, a roof, the roof slope, a room and a room tag:
+          '
+          Dim structural As Boolean = False
+          Dim floor As Floor = createDoc.NewFloor(profile, structural)
+          Dim roofTypes As New List(Of Element)(LabUtils.GetElementsOfType(doc, GetType(RoofType), BuiltInCategory.OST_Roofs))
+          Debug.Assert(0 < roofTypes.Count, "expected at least one roof type to be loaded into project")
+          Dim roofType As RoofType = TryCast(roofTypes(0), RoofType)
+          Dim modelCurves As New ModelCurveArray()
+          Dim roof As FootPrintRoof = createDoc.NewFootPrintRoof(profile, levelTop, roofType, modelCurves)
+          '
+          ' regenerate the model after creation, otherwise both the calls
+          ' to set_DefinesSlope and set_SlopeAngle throwing the exception
+          ' "Unable to access curves from the roof sketch."
+          '
+          doc.Regenerate()
+          ' 
+          ' the argument to set_SlopeAngle is NOT an angle, it is
+          ' really a slope, i.e. relation of height to distance,
+          ' e.g. 0.5 = 6” / 12”, 0.75  = 9” / 12”, etc.
+          '
+          'Dim slopeAngle As Double = 30 * LabConstants.DegreesToRadians
+          Dim slope As Double = 0.3
+          For Each curve As ModelCurve In modelCurves
+            roof.DefinesSlope(curve) = True
+            roof.SlopeAngle(curve) = slope
+          Next
+          Dim room As Room = createDoc.NewRoom(levelBottom, New UV(0.5 * width, 0.5 * depth))
+          Dim roomTag As RoomTag = createDoc.NewRoomTag(New LinkElementId(room.Id), New UV(0.5 * width, 0.7 * depth), Nothing)
+          'LabUtils.InfoMsg( "Little house was created successfully." );
+          t.Commit()
+        End Using
         Return Result.Succeeded
       Catch ex As Exception
         message = ex.Message
