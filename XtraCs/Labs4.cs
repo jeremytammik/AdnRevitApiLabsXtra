@@ -526,13 +526,14 @@ namespace XtraCs
     //
     // The last test is for attaching shared parameters to model groups.
 
-    static public BuiltInCategory Target = BuiltInCategory.OST_Doors;
+    //static public BuiltInCategory Target = BuiltInCategory.OST_Doors;
     //static public BuiltInCategory Target = BuiltInCategory.OST_Walls;
     //static public string Target = "Drawing1.dwg";
     //static public BuiltInCategory Target = BuiltInCategory.OST_IOSModelGroups; // doc.Settings.Categories.get_Item returns null
     //static public string Target = "Model Groups"; // doc.Settings.Categories.get_Item throws an exception SystemInvalidOperationException "Operation is not valid due to the current state of the object."
     //static public BuiltInCategory Target = BuiltInCategory.OST_Lines; // model lines
     //static public BuiltInCategory Target = BuiltInCategory.OST_SWallRectOpening; // Rectangular Straight Wall Openings, case 1260656 [Add Parameters Wall Opening]
+    static public BuiltInCategory Target = BuiltInCategory.OST_Materials; // can i attach a shared parameter to a material element?
 
     public Result Execute(
       ExternalCommandData commandData,
