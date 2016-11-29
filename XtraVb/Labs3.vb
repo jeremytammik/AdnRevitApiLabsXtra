@@ -139,7 +139,7 @@ Namespace XtraVb
   ''' Load an entire family or a specific type from a family.
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="3-2"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.ReadOnly)>
   Public Class Lab3_2_LoadStandardFamilies
     Implements IExternalCommand
 
@@ -154,51 +154,55 @@ Namespace XtraVb
       Dim doc As Document = app.ActiveUIDocument.Document
       Dim rc As Boolean
 
-      '#region 3.2.a Load an entire RFA family file:
+      Using t As New Transaction(doc)
 
-      ' Load a whole Family
-      '
-      ' Example for a family WITH TXT file:
+        '#region 3.2.a Load an entire RFA family file:
 
-      rc = doc.LoadFamily(LabConstants.WholeFamilyFileToLoad1)
-      '#endregion 3.2.a
+        ' Load a whole Family
+        '
+        ' Example for a family WITH TXT file:
 
-      If rc Then
-        LabUtils.InfoMsg("Successfully loaded family " _
-                         + LabConstants.WholeFamilyFileToLoad1 + ".")
-      Else
-        LabUtils.ErrorMsg("ERROR loading family " _
-                          + LabConstants.WholeFamilyFileToLoad1 + ".")
-      End If
+        rc = doc.LoadFamily(LabConstants.WholeFamilyFileToLoad1)
+        '#endregion 3.2.a
 
-      ' Example for a family WITHOUT TXT file:
+        If rc Then
+          LabUtils.InfoMsg("Successfully loaded family " _
+                           + LabConstants.WholeFamilyFileToLoad1 + ".")
+        Else
+          LabUtils.ErrorMsg("ERROR loading family " _
+                            + LabConstants.WholeFamilyFileToLoad1 + ".")
+        End If
 
-      If doc.LoadFamily(LabConstants.WholeFamilyFileToLoad2) Then
-        LabUtils.InfoMsg("Successfully loaded family " _
-                         + LabConstants.WholeFamilyFileToLoad2 + ".")
-      Else
-        LabUtils.ErrorMsg("ERROR loading family " _
-                          + LabConstants.WholeFamilyFileToLoad2 + ".")
-      End If
+        ' Example for a family WITHOUT TXT file:
 
-      '#region 3.2.b Load an individual type from a RFA family file:
+        If doc.LoadFamily(LabConstants.WholeFamilyFileToLoad2) Then
+          LabUtils.InfoMsg("Successfully loaded family " _
+                           + LabConstants.WholeFamilyFileToLoad2 + ".")
+        Else
+          LabUtils.ErrorMsg("ERROR loading family " _
+                            + LabConstants.WholeFamilyFileToLoad2 + ".")
+        End If
 
-      ' Load only a specific symbol (type):
+        '#region 3.2.b Load an individual type from a RFA family file:
 
-      rc = doc.LoadFamilySymbol( _
-          LabConstants.FamilyFileToLoadSingleSymbol, _
-          LabConstants.SymbolName)
-      '#endregion 3.2.b
+        ' Load only a specific symbol (type):
 
-      If rc Then
-        LabUtils.InfoMsg("Successfully loaded family symbol " _
+        rc = doc.LoadFamilySymbol(
+            LabConstants.FamilyFileToLoadSingleSymbol,
+            LabConstants.SymbolName)
+        '#endregion 3.2.b
+
+        If rc Then
+          LabUtils.InfoMsg("Successfully loaded family symbol " _
                          + LabConstants.FamilyFileToLoadSingleSymbol _
                          + " : " + LabConstants.SymbolName + ".")
-      Else
-        LabUtils.ErrorMsg("ERROR loading family symbol " _
+        Else
+          LabUtils.ErrorMsg("ERROR loading family symbol " _
                           + LabConstants.FamilyFileToLoadSingleSymbol _
                           + " : " + LabConstants.SymbolName + ".")
-      End If
+        End If
+        t.Commit()
+      End Using
       Return Result.Succeeded
     End Function
   End Class
@@ -209,7 +213,7 @@ Namespace XtraVb
   ''' For a selected family instance in the model, determine its type and family.
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="3-3"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.ReadOnly)>
   Public Class Lab3_3_DetermineInstanceTypeAndFamily
     Implements IExternalCommand
 
@@ -283,7 +287,7 @@ Namespace XtraVb
   ''' Form-based utility to change the type or symbol of a selected standard instance.
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="3-4"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab3_4_ChangeSelectedInstanceType
     Implements IExternalCommand
 
@@ -368,10 +372,16 @@ Namespace XtraVb
       form = New Lab3_4_Form(mapFamilyToSymbols)
 
       If System.Windows.Forms.DialogResult.OK = form.ShowDialog() Then
-        inst.Symbol = TryCast(form.cmbType.SelectedItem, FamilySymbol)
+        Using t As New Transaction(doc)
+          t.Start("Change Selected Instance Type")
+          inst.Symbol = TryCast(form.cmbType.SelectedItem, FamilySymbol)
+          t.Commit()
+        End Using
 
-        LabUtils.InfoMsg("Successfully changed family : type to " _
-                         + form.cmbFamily.Text + " : " + form.cmbType.Text)
+        LabUtils.InfoMsg(
+          "Successfully changed family : type to " _
+          + form.cmbFamily.Text + " : " + form.cmbType.Text)
+
       End If
       Return Result.Succeeded
     End Function
@@ -388,7 +398,7 @@ Namespace XtraVb
   ''' change the type of selected walls and floors.
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="3-5"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab3_5_WallAndFloorTypes
     Implements IExternalCommand
 
@@ -460,42 +470,47 @@ Namespace XtraVb
 
       ' Change the type for selected walls and floors:
 
-      msg = "{0} {1}: Id={2}" + vbCrLf _
+      Using t As New Transaction(doc)
+        t.Start("Change Type of Walls and Floors")
+
+        msg = "{0} {1}: Id={2}" + vbCrLf _
           + " changed from old type={3}; Id={4}" _
           + " to new type={5}; Id={6}."
 
-      'Dim sel As ElementSet = uidoc.Selection.Elements ' 2014
+        'Dim sel As ElementSet = uidoc.Selection.Elements ' 2014
 
-      Dim ids As ICollection(Of ElementId) = uidoc.Selection.GetElementIds()
+        Dim ids As ICollection(Of ElementId) = uidoc.Selection.GetElementIds()
 
-      Dim iWall As Integer = 0
-      Dim iFloor As Integer = 0
+        Dim iWall As Integer = 0
+        Dim iFloor As Integer = 0
 
-      For Each id As ElementId In ids
-        Dim e As Element = doc.GetElement(id)
-        If TypeOf e Is Wall Then
-          iWall += 1
-          Dim wall As Wall = TryCast(e, Wall)
-          Dim oldWallType As WallType = wall.WallType
+        For Each id As ElementId In ids
+          Dim e As Element = doc.GetElement(id)
+          If TypeOf e Is Wall Then
+            iWall += 1
+            Dim wall As Wall = TryCast(e, Wall)
+            Dim oldWallType As WallType = wall.WallType
 
-          ' change wall type and report the old/new values
+            ' change wall type and report the old/new values
 
-          wall.WallType = newWallType
+            wall.WallType = newWallType
 
-          LabUtils.InfoMsg(String.Format(msg, "Wall", iWall, wall.Id.IntegerValue, _
-                                         oldWallType.Name, oldWallType.Id.IntegerValue, _
+            LabUtils.InfoMsg(String.Format(msg, "Wall", iWall, wall.Id.IntegerValue,
+                                         oldWallType.Name, oldWallType.Id.IntegerValue,
           wall.WallType.Name, wall.WallType.Id.IntegerValue))
-        ElseIf newFloorType IsNot Nothing AndAlso TypeOf e Is Floor Then
-          iFloor += 1
-          Dim f As Floor = TryCast(e, Floor)
-          Dim oldFloorType As FloorType = f.FloorType
-          f.FloorType = newFloorType
+          ElseIf newFloorType IsNot Nothing AndAlso TypeOf e Is Floor Then
+            iFloor += 1
+            Dim f As Floor = TryCast(e, Floor)
+            Dim oldFloorType As FloorType = f.FloorType
+            f.FloorType = newFloorType
 
-          LabUtils.InfoMsg(String.Format(msg, "Floor", iFloor, f.Id.IntegerValue, _
-                                         oldFloorType.Name, oldFloorType.Id.IntegerValue, _
+            LabUtils.InfoMsg(String.Format(msg, "Floor", iFloor, f.Id.IntegerValue,
+                                         oldFloorType.Name, oldFloorType.Id.IntegerValue,
           f.FloorType.Name, f.FloorType.Id.IntegerValue))
-        End If
-      Next
+          End If
+        Next
+        t.Commit()
+      End Using
       Return Result.Succeeded
     End Function
 
@@ -507,7 +522,7 @@ Namespace XtraVb
   ''' Create a new family symbol or type by calling Duplicate()
   ''' on an existing one and then modifying its parameters.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab3_6_DuplicateWallType
     Implements IExternalCommand
 
@@ -525,25 +540,30 @@ Namespace XtraVb
 
       Const newWallTypeName As String = "NewWallType_with_Width_doubled"
 
-      For Each id As ElementId In ids
-        Dim e As Element = doc.GetElement(id)
-        Dim wall As Wall = TryCast(e, Wall)
-        If wall IsNot Nothing Then
-          Dim wallType As WallType = wall.WallType
-          Dim newWallType As WallType = TryCast(wallType.Duplicate(newWallTypeName), WallType)
-          'Dim layers As CompoundStructureLayerArray = newWallType.CompoundStructure.Layers ' 2011
-          Dim layers As IList(Of CompoundStructureLayer) = newWallType.GetCompoundStructure().GetLayers() ' 2012
-          For Each layer As CompoundStructureLayer In layers
-            ' double each layer thickness:
-            'layer.Thickness *= 2.0R ' 2011
-            layer.Width *= 2.0R ' 2012
-          Next
-          ' assign the new wall type back to the wall:
-          wall.WallType = newWallType
-          ' only process the first wall, if one was selected:
-          Exit For
-        End If
-      Next
+      Using t As New Transaction(doc)
+        t.Start("Duplicate Wall Type")
+
+        For Each id As ElementId In ids
+          Dim e As Element = doc.GetElement(id)
+          Dim wall As Wall = TryCast(e, Wall)
+          If wall IsNot Nothing Then
+            Dim wallType As WallType = wall.WallType
+            Dim newWallType As WallType = TryCast(wallType.Duplicate(newWallTypeName), WallType)
+            'Dim layers As CompoundStructureLayerArray = newWallType.CompoundStructure.Layers ' 2011
+            Dim layers As IList(Of CompoundStructureLayer) = newWallType.GetCompoundStructure().GetLayers() ' 2012
+            For Each layer As CompoundStructureLayer In layers
+              ' double each layer thickness:
+              'layer.Thickness *= 2.0R ' 2011
+              layer.Width *= 2.0R ' 2012
+            Next
+            ' assign the new wall type back to the wall:
+            wall.WallType = newWallType
+            ' only process the first wall, if one was selected:
+            Exit For
+          End If
+        Next
+        t.Commit()
+      End Using
       Return Result.Succeeded
 
     End Function
@@ -556,7 +576,7 @@ Namespace XtraVb
   ''' Delete a specific individual type from a family.
   ''' Hard-coded to a column type named "475 x 610mm".
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab3_7_DeleteFamilyType
     Implements IExternalCommand
 
@@ -595,9 +615,12 @@ Namespace XtraVb
       Dim symbol As Element = collector.First( _
           Function(e As Element) e.Name.Equals("475 x 610mm"))
 
-      'doc.Delete(symbol) ' 2013
-      doc.Delete(symbol.Id) ' 2014
-
+      Using t As New Transaction(doc)
+        t.Start("Delete Family Type")
+        'doc.Delete(symbol) ' 2013
+        doc.Delete(symbol.Id) ' 2014
+        t.Commit()
+      End Using
       Return Result.Succeeded
     End Function
 

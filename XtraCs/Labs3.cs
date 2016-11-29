@@ -144,7 +144,7 @@ namespace XtraCs
   /// Load an entire family or a specific type from a family.
   /// <include file='../doc/labs.xml' path='labs/lab[@name="3-2"]/*' />
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab3_2_LoadStandardFamilies : IExternalCommand
   {
     public Result Execute(
@@ -156,61 +156,65 @@ namespace XtraCs
       Document doc = app.ActiveUIDocument.Document;
       bool rc;
 
-      #region 3.2.a Load an entire RFA family file:
-
-      // Load a whole Family
-      //
-      // Example for a family WITH TXT file:
-
-      rc = doc.LoadFamily( LabConstants.WholeFamilyFileToLoad1 );
-      #endregion // 3.2.a
-
-      if( rc )
+      using( Transaction t = new Transaction( doc ) )
       {
-        LabUtils.InfoMsg( "Successfully loaded family "
-          + LabConstants.WholeFamilyFileToLoad1 + "." );
-      }
-      else
-      {
-        LabUtils.ErrorMsg( "ERROR loading family "
-          + LabConstants.WholeFamilyFileToLoad1 + "." );
-      }
+        #region 3.2.a Load an entire RFA family file:
 
-      // Example for a family WITHOUT TXT file:
+        // Load a whole Family
+        //
+        // Example for a family WITH TXT file:
 
-      rc = doc.LoadFamily( LabConstants.WholeFamilyFileToLoad2 );
+        rc = doc.LoadFamily( LabConstants.WholeFamilyFileToLoad1 );
+        #endregion // 3.2.a
 
-      if( rc )
-      {
-        LabUtils.InfoMsg( "Successfully loaded family "
-          + LabConstants.WholeFamilyFileToLoad2 + "." );
-      }
-      else
-      {
-        LabUtils.ErrorMsg( "ERROR loading family "
-          + LabConstants.WholeFamilyFileToLoad2 + "." );
-      }
+        if( rc )
+        {
+          LabUtils.InfoMsg( "Successfully loaded family "
+            + LabConstants.WholeFamilyFileToLoad1 + "." );
+        }
+        else
+        {
+          LabUtils.ErrorMsg( "ERROR loading family "
+            + LabConstants.WholeFamilyFileToLoad1 + "." );
+        }
 
-      #region 3.2.b Load an individual type from a RFA family file:
+        // Example for a family WITHOUT TXT file:
 
-      // Load only a specific symbol (type):
+        rc = doc.LoadFamily( LabConstants.WholeFamilyFileToLoad2 );
 
-      rc = doc.LoadFamilySymbol(
-        LabConstants.FamilyFileToLoadSingleSymbol,
-        LabConstants.SymbolName );
-      #endregion // 3.2.b
+        if( rc )
+        {
+          LabUtils.InfoMsg( "Successfully loaded family "
+            + LabConstants.WholeFamilyFileToLoad2 + "." );
+        }
+        else
+        {
+          LabUtils.ErrorMsg( "ERROR loading family "
+            + LabConstants.WholeFamilyFileToLoad2 + "." );
+        }
 
-      if( rc )
-      {
-        LabUtils.InfoMsg( "Successfully loaded family symbol "
-          + LabConstants.FamilyFileToLoadSingleSymbol + " : "
-          + LabConstants.SymbolName + "." );
-      }
-      else
-      {
-        LabUtils.ErrorMsg( "ERROR loading family symbol "
-          + LabConstants.FamilyFileToLoadSingleSymbol + " : "
-          + LabConstants.SymbolName + "." );
+        #region 3.2.b Load an individual type from a RFA family file:
+
+        // Load only a specific symbol (type):
+
+        rc = doc.LoadFamilySymbol(
+          LabConstants.FamilyFileToLoadSingleSymbol,
+          LabConstants.SymbolName );
+        #endregion // 3.2.b
+
+        if( rc )
+        {
+          LabUtils.InfoMsg( "Successfully loaded family symbol "
+            + LabConstants.FamilyFileToLoadSingleSymbol + " : "
+            + LabConstants.SymbolName + "." );
+        }
+        else
+        {
+          LabUtils.ErrorMsg( "ERROR loading family symbol "
+            + LabConstants.FamilyFileToLoadSingleSymbol + " : "
+            + LabConstants.SymbolName + "." );
+        }
+        t.Commit();
       }
       return Result.Succeeded;
     }
@@ -298,7 +302,7 @@ namespace XtraCs
   /// Form-based utility to change the type or symbol of a selected standard family instance.
   /// <include file='../doc/labs.xml' path='labs/lab[@name="3-4"]/*' />
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab3_4_ChangeSelectedInstanceType
     : IExternalCommand
   {
@@ -406,8 +410,13 @@ namespace XtraCs
       if( System.Windows.Forms.DialogResult.OK
         == form.ShowDialog() )
       {
-        inst.Symbol = form.cmbType.SelectedItem
-          as FamilySymbol;
+        using( Transaction t = new Transaction( doc ) )
+        {
+          t.Start( "Change Selected Instance Type" );
+          inst.Symbol = form.cmbType.SelectedItem
+            as FamilySymbol;
+          t.Commit();
+        }
 
         LabUtils.InfoMsg(
           "Successfully changed family : type to "
@@ -428,7 +437,7 @@ namespace XtraCs
   /// change the type of selected walls and floors.
   /// <include file='../doc/labs.xml' path='labs/lab[@name="3-5"]/*' />
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab3_5_WallAndFloorTypes : IExternalCommand
   {
     public Result Execute(
@@ -507,47 +516,53 @@ namespace XtraCs
 
       // Change the type for selected walls and floors:
 
-      msg = "{0} {1}: Id={2}"
+      using( Transaction t = new Transaction( doc ) )
+      {
+        t.Start( "Change Type of Walls and Floors" );
+
+        msg = "{0} {1}: Id={2}"
         + "\r\n  changed from old type={3}; Id={4}"
         + "  to new type={5}; Id={6}.";
 
-      //ElementSet sel = uidoc.Selection.Elements; // 2014
-      ICollection<ElementId> ids = uidoc.Selection.GetElementIds(); // 2015
+        //ElementSet sel = uidoc.Selection.Elements; // 2014
+        ICollection<ElementId> ids = uidoc.Selection.GetElementIds(); // 2015
 
-      int iWall = 0;
-      int iFloor = 0;
+        int iWall = 0;
+        int iFloor = 0;
 
-      foreach( ElementId id in ids )
-      {
-        Element e = doc.GetElement( id );
-
-        if( e is Wall )
+        foreach( ElementId id in ids )
         {
-          ++iWall;
-          Wall wall = e as Wall;
-          WallType oldWallType = wall.WallType;
+          Element e = doc.GetElement( id );
 
-          // change wall type and report the old/new values
+          if( e is Wall )
+          {
+            ++iWall;
+            Wall wall = e as Wall;
+            WallType oldWallType = wall.WallType;
 
-          wall.WallType = newWallType;
+            // change wall type and report the old/new values
 
-          LabUtils.InfoMsg( string.Format( msg, "Wall",
-            iWall, wall.Id.IntegerValue,
-            oldWallType.Name, oldWallType.Id.IntegerValue,
-            wall.WallType.Name, wall.WallType.Id.IntegerValue ) );
+            wall.WallType = newWallType;
+
+            LabUtils.InfoMsg( string.Format( msg, "Wall",
+              iWall, wall.Id.IntegerValue,
+              oldWallType.Name, oldWallType.Id.IntegerValue,
+              wall.WallType.Name, wall.WallType.Id.IntegerValue ) );
+          }
+          else if( null != newFloorType && e is Floor )
+          {
+            ++iFloor;
+            Floor f = e as Floor;
+            FloorType oldFloorType = f.FloorType;
+            f.FloorType = newFloorType;
+
+            LabUtils.InfoMsg( string.Format( msg, "Floor",
+              iFloor, f.Id.IntegerValue,
+              oldFloorType.Name, oldFloorType.Id.IntegerValue,
+              f.FloorType.Name, f.FloorType.Id.IntegerValue ) );
+          }
         }
-        else if( null != newFloorType && e is Floor )
-        {
-          ++iFloor;
-          Floor f = e as Floor;
-          FloorType oldFloorType = f.FloorType;
-          f.FloorType = newFloorType;
-
-          LabUtils.InfoMsg( string.Format( msg, "Floor",
-            iFloor, f.Id.IntegerValue,
-            oldFloorType.Name, oldFloorType.Id.IntegerValue,
-            f.FloorType.Name, f.FloorType.Id.IntegerValue ) );
-        }
+        t.Commit();
       }
       return Result.Succeeded;
     }
@@ -559,7 +574,7 @@ namespace XtraCs
   /// Create a new family symbol or type by calling Duplicate()
   /// on an existing one and then modifying its parameters.
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab3_6_DuplicateWallType : IExternalCommand
   {
     public Result Execute(
@@ -575,36 +590,42 @@ namespace XtraCs
 
       const string newWallTypeName = "NewWallType_with_Width_doubled";
 
-      foreach( ElementId id in ids )
+      using( Transaction t = new Transaction( doc ) )
       {
-        Wall wall = doc.GetElement( id ) as Wall;
+        t.Start( "Duplicate Wall Type" );
 
-        if( null != wall )
+        foreach( ElementId id in ids )
         {
-          WallType wallType = wall.WallType;
+          Wall wall = doc.GetElement( id ) as Wall;
 
-          WallType newWallType = wallType.Duplicate(
-            newWallTypeName ) as WallType;
-
-          //CompoundStructureLayerArray layers = newWallType.CompoundStructure.Layers; // 2011
-          IList<CompoundStructureLayer> layers = newWallType.GetCompoundStructure().GetLayers(); // 2012
-
-          foreach( CompoundStructureLayer layer in layers )
+          if( null != wall )
           {
-            // double each layer thickness:
+            WallType wallType = wall.WallType;
 
-            //layer.Thickness *= 2.0; // 2011
+            WallType newWallType = wallType.Duplicate(
+              newWallTypeName ) as WallType;
 
-            layer.Width *= 2.0; // 2012
+            //CompoundStructureLayerArray layers = newWallType.CompoundStructure.Layers; // 2011
+            IList<CompoundStructureLayer> layers = newWallType.GetCompoundStructure().GetLayers(); // 2012
+
+            foreach( CompoundStructureLayer layer in layers )
+            {
+              // double each layer thickness:
+
+              //layer.Thickness *= 2.0; // 2011
+
+              layer.Width *= 2.0; // 2012
+            }
+            // assign the new wall type back to the wall:
+
+            wall.WallType = newWallType;
+
+            // only process the first wall, if one was selected:
+
+            break;
           }
-          // assign the new wall type back to the wall:
-
-          wall.WallType = newWallType;
-
-          // only process the first wall, if one was selected:
-
-          break;
         }
+        t.Commit();
       }
       return Result.Succeeded;
 
@@ -644,7 +665,7 @@ namespace XtraCs
   /// Delete a specific individual type from a family.
   /// Hard-coded to a column type named "475 x 610mm".
   /// </summary>
-  [Transaction( TransactionMode.Automatic )]
+  [Transaction( TransactionMode.Manual )]
   public class Lab3_7_DeleteFamilyType : IExternalCommand
   {
     public Result Execute(
@@ -680,9 +701,13 @@ namespace XtraCs
       Element symbol = collector.First<Element>(
         e => e.Name.Equals( "475 x 610mm" ) );
 
-      //doc.Delete( symbol ); // 2013
-      doc.Delete( symbol.Id ); // 2014
-
+      using( Transaction t = new Transaction( doc ) )
+      {
+        t.Start( "Delete Family Type" );
+        //doc.Delete( symbol ); // 2013
+        doc.Delete( symbol.Id ); // 2014
+        t.Commit();
+      }
       return Result.Succeeded;
     }
   }
