@@ -515,25 +515,28 @@ namespace XtraCs
   [Transaction( TransactionMode.Manual )]
   public class Lab4_3_1_CreateAndBindSharedParam : IExternalCommand
   {
-    // What element type are we interested in? the standard SDK FireRating
-    // sample uses BuiltInCategory.OST_Doors. we also test using
-    // BuiltInCategory.OST_Walls to demonstrate that the same technique
+    // What element type are we interested in? 
+    // The standard SDK FireRating sample uses BuiltInCategory.OST_Doors. 
+    // We also test using BuiltInCategory.OST_Walls to demonstrate that the same technique
     // works with system families just as well as with standard ones.
     //
     // To test attaching shared parameters to inserted DWG files,
     // which generate their own category on the fly, we also identify
     // the category by category name.
     //
-    // The last test is for attaching shared parameters to model groups.
+    // Further tests confirm the possibility to attach 
+    // shared parameters to model groups, model lines, 
+    // rectangular straight wall openings and material 
+    // elements.
 
-    //static public BuiltInCategory Target = BuiltInCategory.OST_Doors;
+    static public BuiltInCategory Target = BuiltInCategory.OST_Doors;
     //static public BuiltInCategory Target = BuiltInCategory.OST_Walls;
     //static public string Target = "Drawing1.dwg";
     //static public BuiltInCategory Target = BuiltInCategory.OST_IOSModelGroups; // doc.Settings.Categories.get_Item returns null
     //static public string Target = "Model Groups"; // doc.Settings.Categories.get_Item throws an exception SystemInvalidOperationException "Operation is not valid due to the current state of the object."
     //static public BuiltInCategory Target = BuiltInCategory.OST_Lines; // model lines
     //static public BuiltInCategory Target = BuiltInCategory.OST_SWallRectOpening; // Rectangular Straight Wall Openings, case 1260656 [Add Parameters Wall Opening]
-    static public BuiltInCategory Target = BuiltInCategory.OST_Materials; // can I attach a shared parameter to a material element?
+    //static public BuiltInCategory Target = BuiltInCategory.OST_Materials; // can I attach a shared parameter to a material element? Yes, absolutely, no problem at all.
 
     public Result Execute(
       ExternalCommandData commandData,
