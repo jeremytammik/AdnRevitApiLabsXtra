@@ -347,7 +347,7 @@ Namespace XtraVb
   ''' <summary>
   ''' List the contents of the Revit ribbon in the Visual Studio debug output window.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.ReadOnly)>
   Public Class Lab6_5_RibbonExplorer
     Implements IExternalCommand
 
