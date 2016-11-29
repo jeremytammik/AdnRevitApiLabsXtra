@@ -533,7 +533,7 @@ namespace XtraCs
     //static public string Target = "Model Groups"; // doc.Settings.Categories.get_Item throws an exception SystemInvalidOperationException "Operation is not valid due to the current state of the object."
     //static public BuiltInCategory Target = BuiltInCategory.OST_Lines; // model lines
     //static public BuiltInCategory Target = BuiltInCategory.OST_SWallRectOpening; // Rectangular Straight Wall Openings, case 1260656 [Add Parameters Wall Opening]
-    static public BuiltInCategory Target = BuiltInCategory.OST_Materials; // can i attach a shared parameter to a material element?
+    static public BuiltInCategory Target = BuiltInCategory.OST_Materials; // can I attach a shared parameter to a material element?
 
     public Result Execute(
       ExternalCommandData commandData,

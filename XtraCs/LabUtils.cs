@@ -660,7 +660,7 @@ namespace XtraCs
 
         collector.OfCategory( (BuiltInCategory) targetCategory );
 
-        // I removed this to test ataqching a shared 
+        // I removed this to test attaching a shared 
         // parameter to Material elements:
         //
         //var model_elements = from e in collector
