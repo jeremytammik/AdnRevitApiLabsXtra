@@ -47,7 +47,7 @@ Namespace XtraVb
   ''' List all parameters for selected elements.
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="4-1"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)>
+  <Transaction(TransactionMode.ReadOnly)>
   Public Class Lab4_1_ElementParameters
     Implements IExternalCommand
 
@@ -172,7 +172,7 @@ Namespace XtraVb
   ''' Export all parameters for each model element to Excel, one sheet per category.
   ''' <include file='../doc/labs.xml' path='labs/lab[@name="4-2"]/*' />
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)>
+  <Transaction(TransactionMode.ReadOnly)>
   Public Class Lab4_2_ExportParametersToExcel
     Implements IExternalCommand
 
@@ -313,7 +313,7 @@ Namespace XtraVb
   ''' <summary>
   ''' Create and bind shared parameter.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)>
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab4_3_1_CreateAndBindSharedParam
     Implements IExternalCommand
     '
@@ -400,11 +400,14 @@ Namespace XtraVb
 
       ' bind the param
       Try
-        Dim binding As Binding = app.Create.NewInstanceBinding(catSet)
-        ' We could check if already bound, but looks like Insert will just ignore it in such case
-        ' You can also specify the parameter group here:
-        'doc.ParameterBindings.Insert( fireRatingParamDef, binding, BuiltInParameterGroup.PG_GEOMETRY );
-        doc.ParameterBindings.Insert(fireRatingParamDef, binding)
+        Using t As New Transaction(doc)
+          Dim binding As Binding = app.Create.NewInstanceBinding(catSet)
+          ' We could check if already bound, but looks like Insert will just ignore it in such case
+          ' You can also specify the parameter group here:
+          'doc.ParameterBindings.Insert( fireRatingParamDef, binding, BuiltInParameterGroup.PG_GEOMETRY );
+          doc.ParameterBindings.Insert(fireRatingParamDef, binding)
+          t.Commit()
+        End Using
       Catch ex As Exception
         message = ex.Message
         Return Result.Failed
@@ -418,7 +421,7 @@ Namespace XtraVb
   ''' <summary>
   ''' Export all target element ids and their FireRating param values to Excel.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)>
+  <Transaction(TransactionMode.ReadOnly)>
   Public Class Lab4_3_2_ExportSharedParamToExcel
     Implements IExternalCommand
 
@@ -495,7 +498,7 @@ Namespace XtraVb
   ''' <summary>
   ''' Import updated FireRating param values from Excel.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)>
+  <Transaction(TransactionMode.Manual)>
   Public Class Lab4_3_3_ImportSharedParamFromExcel
     Implements IExternalCommand
 
@@ -533,41 +536,44 @@ Namespace XtraVb
       Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value, Missing.Value,
       Missing.Value, Missing.Value, Missing.Value)
       Dim worksheet As X.Worksheet = TryCast(workbook.ActiveSheet, X.Worksheet)
-      '
-      ' Starting from row 2, loop the rows and extract Id and FireRating param.
-      '
-      Dim id As Integer
-      Dim fireRatingValue As Double
-      Dim row As Integer = 2
-      While True
-        Try
-          ' Extract relevant XLS values
-          Dim r As X.Range = TryCast(worksheet.Cells(row, 1), X.Range)
-          If r.Value2 Is Nothing Then
-            Exit Try
-          End If
-          Dim d As Double = CDbl(r.Value2)
-          id = CInt(d)
-          If 0 >= id Then
-            Exit Try
-          End If
-          r = TryCast(worksheet.Cells(row, 4), X.Range)
-          fireRatingValue = CDbl(r.Value2)
-          ' Get document's door element via Id
-          Dim elementId As New ElementId(id)
-          Dim door As Element = doc.GetElement(elementId)
-          ' Set the param
-          If door IsNot Nothing Then
-            'Parameter parameter = door.Parameter( LabConstants.SharedParamsDefFireRating );
-            Dim parameter As Parameter = door.Parameter(paramGuid)
-            parameter.Set(fireRatingValue)
-          End If
-        Catch generatedExceptionName As Exception
-          Exit Try
-        End Try
-        row += 1
-      End While
 
+      Using t As New Transaction(doc)
+        '
+        ' Starting from row 2, loop the rows and extract Id and FireRating param.
+        '
+        Dim id As Integer
+        Dim fireRatingValue As Double
+        Dim row As Integer = 2
+        While True
+          Try
+            ' Extract relevant XLS values
+            Dim r As X.Range = TryCast(worksheet.Cells(row, 1), X.Range)
+            If r.Value2 Is Nothing Then
+              Exit Try
+            End If
+            Dim d As Double = CDbl(r.Value2)
+            id = CInt(d)
+            If 0 >= id Then
+              Exit Try
+            End If
+            r = TryCast(worksheet.Cells(row, 4), X.Range)
+            fireRatingValue = CDbl(r.Value2)
+            ' Get document's door element via Id
+            Dim elementId As New ElementId(id)
+            Dim door As Element = doc.GetElement(elementId)
+            ' Set the param
+            If door IsNot Nothing Then
+              'Parameter parameter = door.Parameter( LabConstants.SharedParamsDefFireRating );
+              Dim parameter As Parameter = door.Parameter(paramGuid)
+              parameter.Set(fireRatingValue)
+            End If
+          Catch generatedExceptionName As Exception
+            Exit Try
+          End Try
+          row += 1
+        End While
+        t.Commit()
+      End Using
       Return Result.Succeeded
     End Function
   End Class
