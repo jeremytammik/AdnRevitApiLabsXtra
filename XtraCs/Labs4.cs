@@ -591,8 +591,10 @@ namespace XtraCs
 
       // Get or create the shared params group
 
-      DefinitionGroup sharedParamsGroup = LabUtils.GetOrCreateSharedParamsGroup(
-        sharedParamsFile, LabConstants.SharedParamsGroupAPI );
+      DefinitionGroup sharedParamsGroup 
+        = LabUtils.GetOrCreateSharedParamsGroup(
+          sharedParamsFile, LabConstants.SharedParamsGroupAPI );
+
       if( null == sharedParamsGroup )
       {
         message = "Error getting the shared params group.";
@@ -612,8 +614,11 @@ namespace XtraCs
 
       // Get or create the shared params definition
 
-      Definition fireRatingParamDef = LabUtils.GetOrCreateSharedParamsDefinition(
-        sharedParamsGroup, ParameterType.Number, LabConstants.SharedParamsDefFireRating, visible );
+      Definition fireRatingParamDef 
+        = LabUtils.GetOrCreateSharedParamsDefinition(
+          sharedParamsGroup, ParameterType.Number, 
+          LabConstants.SharedParamsDefFireRating, visible );
+
       if( null == fireRatingParamDef )
       {
         message = "Error in creating shared parameter.";
@@ -718,7 +723,8 @@ namespace XtraCs
       // Get Shared param Guid
 
       Guid paramGuid = LabUtils.SharedParamGUID( app,
-        LabConstants.SharedParamsGroupAPI, LabConstants.SharedParamsDefFireRating );
+        LabConstants.SharedParamsGroupAPI, 
+        LabConstants.SharedParamsDefFireRating );
 
       if( paramGuid.Equals( Guid.Empty ) )
       {
@@ -733,12 +739,25 @@ namespace XtraCs
       {
         worksheet.Cells[row, 1] = e.Id.IntegerValue; // ID
 
-        //worksheet.Cells[row, 2] = e.Level.Name; // Level // 2013
-        worksheet.Cells[row, 2] = doc.GetElement( e.LevelId ).Name; // Level // 2014
+        // Level:
+
+        //worksheet.Cells[row, 2] = e.Level.Name; // 2013
+        //worksheet.Cells[row, 2] = doc.GetElement( e.LevelId ).Name; // 2014
+
+        // When attaching a shared parameter to Material 
+        // elements, no valid level is defined, of course:
+
+        ElementId levelId = e.LevelId;
+        string levelName 
+          = ElementId.InvalidElementId == levelId
+            ? "N/A" 
+            : doc.GetElement( levelId ).Name;
+        worksheet.Cells[row, 2] = levelName;
 
         // Tag:
 
-        Parameter tagParameter = e.get_Parameter( BuiltInParameter.ALL_MODEL_MARK );
+        Parameter tagParameter = e.get_Parameter( 
+          BuiltInParameter.ALL_MODEL_MARK );
         if( null != tagParameter )
         {
           worksheet.Cells[row, 3] = tagParameter.AsString();

@@ -660,11 +660,16 @@ namespace XtraCs
 
         collector.OfCategory( (BuiltInCategory) targetCategory );
 
-        var model_elements = from e in collector
-                             where ( null != e.Category && e.Category.HasMaterialQuantities )
-                             select e;
+        // I removed this to test ataqching a shared 
+        // parameter to Material elements:
+        //
+        //var model_elements = from e in collector
+        //                     where ( null != e.Category && e.Category.HasMaterialQuantities )
+        //                     select e;
 
-        elements = model_elements.ToList<Element>();
+        //elements = model_elements.ToList<Element>();
+
+        elements = collector.ToList<Element>();
       }
       return elements;
     }
