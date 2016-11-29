@@ -189,7 +189,7 @@ Namespace XtraVb
   ''' <summary>
   ''' List room boundaries.
   ''' </summary>
-  <Transaction(TransactionMode.Automatic)> _
+  <Transaction(TransactionMode.ReadOnly)>
   Public Class Lab5_3_Rooms
     Implements IExternalCommand
     Public Function Execute( _
