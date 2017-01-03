@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration( "" )]
 [assembly: AssemblyCompany( "Autodesk, Inc." )]
 [assembly: AssemblyProduct( "XtraCs" )]
-[assembly: AssemblyCopyright( "Copyright © 2007-2016 by Jeremy Tammik, Autodesk, Inc." )]
+[assembly: AssemblyCopyright( "Copyright © 2007-2017 by Jeremy Tammik, Autodesk, Inc." )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers
 // by using the '*' as shown below:
-[assembly: AssemblyVersion( "2017.0.0.7" )]
-[assembly: AssemblyFileVersion( "2017.0.0.7" )]
+[assembly: AssemblyVersion( "2017.0.0.8" )]
+[assembly: AssemblyFileVersion( "2017.0.0.8" )]

@@ -11,8 +11,8 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyTitle("XtraVb")> 
 <Assembly: AssemblyDescription("Revit API Introduction XtraVb Labs")> 
 <Assembly: AssemblyCompany("Autodesk, Inc.")>
-<Assembly: AssemblyProduct("XtraVb")> 
-<Assembly: AssemblyCopyright("Copyright © 2007-2016 by Autodesk, Inc.")> 
+<Assembly: AssemblyProduct("XtraVb")>
+<Assembly: AssemblyCopyright("Copyright © 2007-2017 by Autodesk, Inc.")>
 <Assembly: AssemblyTrademark("")>
 <Assembly: CLSCompliant(True)>
 
@@ -29,6 +29,6 @@ Imports System.Runtime.InteropServices
 ' You can specify all the values or you can default the Build and Revision Numbers
 ' by using the '*' as shown below:
 
-<Assembly: AssemblyVersion("2017.0.0.7")>
-<Assembly: AssemblyFileVersionAttribute("2017.0.0.7")>
+<Assembly: AssemblyVersion("2017.0.0.8")>
+<Assembly: AssemblyFileVersionAttribute("2017.0.0.8")>
 <Assembly: ComVisibleAttribute(False)>
