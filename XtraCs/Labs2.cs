@@ -250,9 +250,16 @@ namespace XtraCs
             midpoint, door, walls[0], levelBottom, StructuralType.NonStructural );
 
           midpoint += tagOffset * XYZ.BasisY;
-          IndependentTag tag = createDoc.NewTag(
-            view, inst, false, TagMode.TM_ADDBY_CATEGORY,
-            TagOrientation.Horizontal, midpoint );
+          //IndependentTag tag = createDoc.NewTag(
+          //  view, inst, false, TagMode.TM_ADDBY_CATEGORY,
+          //  TagOrientation.Horizontal, midpoint ); // 2017
+
+          IList<FamilyPointPlacementReference> fpprefs = inst.GetFamilyPointPlacementReferences();
+          IList<Reference> refs = inst.GetReferences( FamilyInstanceReferenceType.CenterLeftRight );
+
+          IndependentTag tag = IndependentTag.Create( doc,
+            view.Id, refs[0], false, TagMode.TM_ADDBY_CATEGORY,
+            TagOrientation.Horizontal, midpoint ); // 2018
 
           window.Activate(); // 2016
 
