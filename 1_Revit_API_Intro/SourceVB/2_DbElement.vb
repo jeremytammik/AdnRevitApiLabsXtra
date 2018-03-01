@@ -1,6 +1,6 @@
 ﻿#Region "Copyright"
 '
-' Copyright (C) 2009-2017 by Autodesk, Inc.
+' Copyright (C) 2009-2018 by Autodesk, Inc.
 '
 ' Permission to use, copy, modify, and distribute this software in
 ' object code form for any purpose and without fee is hereby granted,
@@ -47,7 +47,7 @@
 ''' DBElement - identifying element
 ''' </summary>
 
-<Transaction(TransactionMode.ReadOnly)> _
+<Transaction(TransactionMode.ReadOnly)>
 Public Class DBElement
   Implements IExternalCommand
 

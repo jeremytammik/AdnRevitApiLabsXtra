@@ -1,6 +1,6 @@
 #Region "Copyright"
 ''
-'' (C) Copyright 2009-2017 by Autodesk, Inc.
+'' (C) Copyright 2009-2018 by Autodesk, Inc.
 ''
 '' Permission to use, copy, modify, and distribute this software in
 '' object code form for any purpose and without fee is hereby granted,
@@ -86,7 +86,7 @@
 ''' </summary>
 #End Region
 
-<Transaction(TransactionMode.Manual)> _
+<Transaction(TransactionMode.Manual)>
 Public Class RvtCmd_FamilyCreateColumnVisibility
   Implements IExternalCommand
 
