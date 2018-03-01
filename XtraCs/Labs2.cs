@@ -251,9 +251,14 @@ namespace XtraCs
 
           midpoint += tagOffset * XYZ.BasisY;
 
-          IndependentTag tag = createDoc.NewTag(
-            view, inst, false, TagMode.TM_ADDBY_CATEGORY,
-            TagOrientation.Horizontal, midpoint ); // 2017
+          //IndependentTag tag = createDoc.NewTag(
+          //  view, inst, false, TagMode.TM_ADDBY_CATEGORY,
+          //  TagOrientation.Horizontal, midpoint ); // 2017
+
+          IndependentTag tag = IndependentTag.Create(
+            doc, view.Id, new Reference( inst ),
+            false, TagMode.TM_ADDBY_CATEGORY,
+            TagOrientation.Horizontal, midpoint ); // 2018
 
           IList<FamilyPointPlacementReference> fpprefs = inst.GetFamilyPointPlacementReferences();
           IList<Reference> refs = inst.GetReferences( FamilyInstanceReferenceType.CenterLeftRight );
@@ -268,17 +273,33 @@ namespace XtraCs
             walls[0], levelBottom, StructuralType.NonStructural );
 
           p += tagOffset * XYZ.BasisY;
-          tag = createDoc.NewTag( view, inst, false,
-            TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, p );
+
+          //tag = createDoc.NewTag( view, inst, 
+          //  false, TagMode.TM_ADDBY_CATEGORY, 
+          //  TagOrientation.Horizontal, p ); // 2017
+
+          tag = IndependentTag.Create(
+            doc, view.Id, new Reference( inst ),
+            false, TagMode.TM_ADDBY_CATEGORY,
+            TagOrientation.Horizontal, p ); // 2018
 
           inst = createDoc.NewFamilyInstance( q, window, walls[0],
             levelBottom, StructuralType.NonStructural );
 
           q += tagOffset * XYZ.BasisY;
 
-          //tag = createDoc.NewTag( view, inst, false, TagMode.TM_ADDBY_CATEGORY, TagOrientation.TAG_HORIZONTAL, q ); // 2011
-          tag = createDoc.NewTag( view, inst, false,
-            TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, q ); // 2012
+          //tag = createDoc.NewTag( view, inst, 
+          //  false, TagMode.TM_ADDBY_CATEGORY, 
+          //  TagOrientation.TAG_HORIZONTAL, q ); // 2011
+
+          //tag = createDoc.NewTag( view, inst, 
+          //  false, TagMode.TM_ADDBY_CATEGORY, 
+          //  TagOrientation.Horizontal, q ); // 2012
+
+          tag = IndependentTag.Create(
+            doc, view.Id, new Reference( inst ),
+            false, TagMode.TM_ADDBY_CATEGORY,
+            TagOrientation.Horizontal, p ); // 2018
 
           // Grow the profile out by half the wall thickness,
           // so the floor and roof do not stop halfway through the wall:

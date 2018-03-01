@@ -130,15 +130,47 @@ Namespace XtraVb
           Dim inst As FamilyInstance = createDoc.NewFamilyInstance(
               midpoint, door, walls(0), levelBottom, StructuralType.NonStructural)
           midpoint += tagOffset * XYZ.BasisY
-          Dim tag As IndependentTag = createDoc.NewTag(
-              view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, midpoint)
+
+          'Dim tag As IndependentTag = createDoc.NewTag(
+          '    view, inst, False, TagMode.TM_ADDBY_CATEGORY,
+          '    TagOrientation.Horizontal, midpoint) ' 2017
+
+          Dim tag As IndependentTag = IndependentTag.Create(
+              doc, view.Id, New Reference(inst),
+              False, TagMode.TM_ADDBY_CATEGORY,
+              TagOrientation.Horizontal, midpoint) ' 2018
+
           inst = createDoc.NewFamilyInstance(p, window, walls(0), levelBottom, StructuralType.NonStructural)
           p += tagOffset * XYZ.BasisY
-          tag = createDoc.NewTag(view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, p)
-          inst = createDoc.NewFamilyInstance(q, window, walls(0), levelBottom, StructuralType.NonStructural)
+
+          'tag = createDoc.NewTag(
+          '  view, inst, False, TagMode.TM_ADDBY_CATEGORY,
+          '  TagOrientation.Horizontal, p) ' 2017
+
+          tag = IndependentTag.Create(
+            doc, view.Id, New Reference(inst),
+            False, TagMode.TM_ADDBY_CATEGORY,
+            TagOrientation.Horizontal, p) ' 2018
+
+          inst = createDoc.NewFamilyInstance(
+            q, window, walls(0), levelBottom,
+            StructuralType.NonStructural)
+
           q += tagOffset * XYZ.BasisY
-          'tag = createDoc.NewTag(view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.TAG_HORIZONTAL, q) ' 2011
-          tag = createDoc.NewTag(view, inst, False, TagMode.TM_ADDBY_CATEGORY, TagOrientation.Horizontal, q)
+
+          'tag = createDoc.NewTag(view, inst, 
+          '  False, TagMode.TM_ADDBY_CATEGORY, 
+          '  TagOrientation.TAG_HORIZONTAL, q) ' 2011
+
+          'tag = createDoc.NewTag(
+          '  view, inst, False, TagMode.TM_ADDBY_CATEGORY,
+          '  TagOrientation.Horizontal, q) ' 2017
+
+          tag = IndependentTag.Create(
+            doc, view.Id, New Reference(inst),
+            False, TagMode.TM_ADDBY_CATEGORY,
+            TagOrientation.Horizontal, p) ' 2018
+
           '
           ' grow the profile out by half the wall thickness,
           ' so the floor and roof do not stop halfway through the wall:
