@@ -195,6 +195,7 @@ namespace XtraCs
           ElementId levelBottomId = levelBottom.Id;
           ElementId topLevelId = levelTop.Id;
           List<Wall> walls = new List<Wall>( 4 );
+
           for( int i = 0; i < 4; ++i )
           {
             Line line = Line.CreateBound( corners[i], corners[3 == i ? 0 : i + 1] );
