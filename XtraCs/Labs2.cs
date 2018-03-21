@@ -388,11 +388,17 @@ namespace XtraCs
 
           // Add a room and a room tag:
 
-          Room room = createDoc.NewRoom( levelBottom, new UV( 0.5 * width, 0.5 * depth ) );
+          Room room = createDoc.NewRoom( levelBottom, 
+            new UV( 0.5 * width, 0.5 * depth ) );
 
-          //RoomTag roomTag = createDoc.NewRoomTag( room, new UV( 0.5 * width, 0.7 * depth ), null ); // 2014
+          //RoomTag roomTag = createDoc.NewRoomTag( 
+          //  room, new UV( 0.5 * width, 0.7 * depth ), 
+          //  null ); // 2014
 
-          RoomTag roomTag = createDoc.NewRoomTag( new LinkElementId( room.Id ), new UV( 0.5 * width, 0.7 * depth ), null ); // 2015
+          RoomTag roomTag = createDoc.NewRoomTag( 
+            new LinkElementId( room.Id ), 
+            new UV( 0.5 * width, 0.7 * depth ), 
+            null ); // 2015
 
           //doc.AutoJoinElements(); // todo: remove this, the transaction should perform this automatically
 
