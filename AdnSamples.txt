@@ -24,8 +24,8 @@
 # 2010-06-11 added rme samples, removed the parameter based tree hierarchy display
 # 2011-03-03 started porting to Revit 2012
 # 2011-03-06 added RST 2012 labs and link
-# 2011-04-05 moved rac/labs to lab\XtraCs and lab\XtraVb
-# 2011-04-06 moved from C:\a\j\adn\train\revit\2012 to C:\a\lib\revit\2012\adn
+# 2011-04-05 moved rac/labs to lab/XtraCs and lab/XtraVb
+# 2011-04-06 moved from C:/a/j/adn/train/revit/2012 to C:/a/lib/revit/2012/adn
 # 2012-04-20 migrated to Revit 2013
 # 2012-05-05 migrated AdnRme to Revit MEP 2013
 # 2012-05-29 started migration to Revit 2014
@@ -36,6 +36,7 @@
 # 2015-06-05 updated for Revit 2016, version 2016.0.0.6
 # 2016-07-05 updated for Revit 2017, version 2017.0.0.0
 # 2017-09-20 updated for Revit 2018, version 2018.0.0.0
+# 2018-04-18 updated for Revit 2019, version 2019.0.0.0
 #
 # This file is read by the Revit external application RvtSamples, which is
 # discussed in the class on the Revit SDK samples. From Revit 2009 onwards,
@@ -73,7 +74,7 @@ ADN Abc
 Basic sample that displays a message box from Revit!
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab1_1_HelloWorld
 
 ADN Abc
@@ -81,7 +82,7 @@ ADN Abc
 Lists the app, doc and view data; then the current selection set and finally simulates an error condition on return
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab1_2_CommandArguments
 
 ADN Abc
@@ -89,7 +90,7 @@ ADN Abc
 Create a little house consisting of four walls, a door, three windows, a floor and a room
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab2_0_CreateLittleHouse
 
 ADN Abc
@@ -97,7 +98,7 @@ ADN Abc
 Outputs info on each element to a text file line
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab2_1_Elements
 
 ADN Abc
@@ -105,7 +106,7 @@ ADN Abc
 Outputs info on each model-element instance to a mesage box
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab2_2_ModelElements
 
 ADN Abc
@@ -113,7 +114,7 @@ ADN Abc
 Outputs some info on each instance of walls and doors to a message box
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab2_3_ListWallsAndDoors
 
 ADN Abc
@@ -121,7 +122,7 @@ ADN Abc
 Move and widen all doors
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab2_4_EditFamilyInstance
 
 ADN Abc
@@ -129,7 +130,7 @@ ADN Abc
 Select and modify a wall and add framing columns
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab2_5_SelectAndMoveWallAndAddColumns
 
 ADN Abc
@@ -137,7 +138,7 @@ ADN Abc
 First lists all Standard Family Names and (unsuccessfully) their Category. Then lists them one-by-one with all children Types
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab3_1_StandardFamiliesAndTypes
 
 ADN Abc
@@ -145,7 +146,7 @@ ADN Abc
 Loads a whole Family with corresponding catalog file and also a single specified Symbol (Type) from another family
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab3_2_LoadStandardFamilies
 
 ADN Abc
@@ -153,7 +154,7 @@ ADN Abc
 First list all Windows Family Types (Symbols), then Type and Family for any Windows in the selection set
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab3_3_DetermineInstanceTypeAndFamily
 
 ADN Abc
@@ -161,7 +162,7 @@ ADN Abc
 Displays a form with all available Families and Types for the category of selected Instance
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab3_4_ChangeSelectedInstanceType
 
 ADN Abc
@@ -169,7 +170,7 @@ ADN Abc
 List all Wall and Floor Types/Families and then change Type/Family for the selected Walls and Floors
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab3_5_WallAndFloorTypes
 
 ADN Abc
@@ -177,7 +178,7 @@ ADN Abc
 Create a new family symbol or type by calling Duplicate()
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab3_6_DuplicateWallType
 
 ADN Abc
@@ -185,8 +186,8 @@ ADN Abc
 Delete a specific individual type from a family
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
-#C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraVb\bin\Debug\XtraVb.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+#C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraVb/bin/Debug/XtraVb.dll
 XtraCs.Lab3_7_DeleteFamilyType
 
 ADN Abc
@@ -194,7 +195,7 @@ ADN Abc
 List all parameters from the param collection and look for specific params
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_1_ElementParameters
 
 ADN Abc
@@ -202,7 +203,7 @@ ADN Abc
 Exports all parameter values for each model element to Excel: one sheet per category, one row per element
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_2_ExportParametersToExcel
 
 ADN Abc
@@ -210,7 +211,7 @@ ADN Abc
 Get-or-create shared parameters group, create shared parm definition within and bind it to Doors
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_3_1_CreateAndBindSharedParam
 
 ADN Abc
@@ -218,7 +219,7 @@ ADN Abc
 Exports one row per each door with its values (Id, Level, Tag and FireRating) to Excel
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_3_2_ExportSharedParamToExcel
 
 ADN Abc
@@ -226,7 +227,7 @@ ADN Abc
 Imports updated FireRating values for each door from Excel
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_3_3_ImportSharedParamFromExcel
 
 ADN Abc
@@ -234,7 +235,7 @@ ADN Abc
 Create and bind a visible and an invisible per-doc parameter
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_4_1_CreatePerDocParameters
 
 ADN Abc
@@ -242,7 +243,7 @@ ADN Abc
 Increment the invisible per-Doc Params and show the values before and after
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_4_2_IncrementPerDocParameters
 
 ADN Abc
@@ -250,7 +251,7 @@ Built-In Parameters Checker
 Uses reflection to check for all built-in params enumeration values on the selected element
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.BuiltInParamsChecker
 
 ADN Abc
@@ -258,7 +259,7 @@ ADN Abc
 Lists: all Groups details, all Group Types details and all 'Model' Family Group Types
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab5_1_GroupsAndGroupTypes
 
 ADN Abc
@@ -266,7 +267,7 @@ ADN Abc
 Offers user to change Type for any Group in the selection to any other Model Group Type
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab5_2_SwapGroupTypes
 
 ADN Abc
@@ -274,7 +275,7 @@ ADN Abc
 Lists all Rooms in the model, including the Boundary information
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab5_3_Rooms
 
 ADN Abc
@@ -282,7 +283,7 @@ ADN Abc
 Traverse and list all ribbon panel items
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab6_5_RibbonExplorer
 
 ADN Abc
@@ -290,7 +291,7 @@ ADN Abc
 Create a loft form using reference points and curve by points
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab7_1_CreateForm
 
 ADN Abc
@@ -298,7 +299,7 @@ ADN Abc
 Create a divided surface using reference of a face of the form
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab7_2_CreateDividedSurface
 
 ADN Abc
@@ -306,7 +307,7 @@ ADN Abc
 Change the tiling pattern of the divided surface using the built-in TilePattern enumeration
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\XtraCs\bin\Debug\XtraCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab7_3_ChangeTilePattern
 
 ##
@@ -317,7 +318,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Element Filters
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 #RevitCodingTips.CommandElementFilters
 #
 #ADN Tips
@@ -325,7 +326,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Namespaces, Alises, and Regions
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 #RevitCodingTips.CommandNamespaces
 #
 #ADN Tips
@@ -333,7 +334,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Version Checking - Create a wall according to the Revit application version
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 #RevitCodingTips.CommandVersionChecking
 #
 #ADN Tips
@@ -341,7 +342,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Error Handling
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 #RevitCodingTips.CommandErrorHandling
 #
 ##ADN Tips
@@ -349,7 +350,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 ##Transactions
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+##C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 ##RevitCodingTips.CommandTransaction
 #
 ##ADN Tips
@@ -357,7 +358,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 ##Additional Document Transaction
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+##C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 ##RevitCodingTips.CommandDocumentTransaction
 #
 #ADN Tips
@@ -365,7 +366,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Language Independence - Element Checking With Language Independent Built-in Category Name
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 #RevitCodingTips.CommandLanguageIndependent
 #
 #ADN Tips
@@ -373,7 +374,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Language Dependent
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 #RevitCodingTips.CommandLanguageDependent
 #
 #ADN Tips
@@ -381,7 +382,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Determine Language
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 #RevitCodingTips.CommandLanguageCheck
 #
 #ADN Tips
@@ -389,7 +390,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Data Caching - Build Data Cache
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 #RevitCodingTips.CommandBuildDataCache
 #
 #ADN Tips
@@ -397,7 +398,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Data Caching - Access Cached Data
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 #RevitCodingTips.CommandUseDataCache
 #
 #ADN Tips
@@ -405,7 +406,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Show how an external application can be incorporated into the journaling mechanism
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\SDK\Samples\Journaling\CS\bin\Debug\Journaling.dll
+#C:/a/lib/revit/2012/SDK/Samples/Journaling/CS/bin/Debug/Journaling.dll
 #Revit.SDK.Samples.Journaling.CS.Command
 #
 #ADN Tips
@@ -413,7 +414,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Assembly Information
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 #RevitCodingTips.CommandAssemblyInfo
 #
 #ADN Tips
@@ -421,7 +422,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Suspend Revit Model Updating
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 #RevitCodingTips.CommandSuspendUpdating
 #
 #ADN Tips
@@ -429,7 +430,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Language Comparison - List Wall Info with C#
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\cs\bin\Debug\RevitCodingTips.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/cs/bin/Debug/RevitCodingTips.dll
 #RevitCodingTips.CommandListWallInfo
 #
 #ADN Tips
@@ -437,7 +438,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Language Comparison - List Wall Info with VB
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\vb\bin\Debug\RevitCodingTips_vb.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/vb/bin/Debug/RevitCodingTips_vb.dll
 #RevitCodingTips_vb.CommandListWallInfo
 #
 #ADN Tips
@@ -445,7 +446,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Language Comparison - List Wall Info with Managed C++
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\debug\RevitCodingTips_cpp.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/debug/RevitCodingTips_cpp.dll
 #RevitCodingTips_cpp.CommandListWallInfo
 
 ##
@@ -456,7 +457,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Demonstrate point, vector and transform geometry types
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\geo\bin\Debug\RevitGeometry.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/geo/bin/Debug/RevitGeometry.dll
 #RevitGeometry.CmdXyzAndTransform
 #
 #ADN Geo
@@ -464,7 +465,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Demonstrate curve and line classes
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\geo\bin\Debug\RevitGeometry.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/geo/bin/Debug/RevitGeometry.dll
 #RevitGeometry.CmdCurve
 #
 #ADN Geo
@@ -472,7 +473,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Demonstrate creation of a circle
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\geo\bin\Debug\RevitGeometry.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/geo/bin/Debug/RevitGeometry.dll
 #RevitGeometry.CmdCircle
 #
 #ADN Geo
@@ -480,7 +481,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Demonstrate wall geometry analysis, face class, and normal vectors
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\geo\bin\Debug\RevitGeometry.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/geo/bin/Debug/RevitGeometry.dll
 #RevitGeometry.CmdWallFace
 #
 #ADN Geo
@@ -488,7 +489,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Demonstrate references and dimensioning, add dimensioning to architectural wall
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\geo\bin\Debug\RevitGeometry.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/geo/bin/Debug/RevitGeometry.dll
 #RevitGeometry.CmdAddDimensionForRacWall
 #
 #ADN Geo
@@ -496,7 +497,7 @@ XtraCs.Lab7_3_ChangeTilePattern
 #Analyse whether dimension is locked
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2012\adn\src\rac\tips\geo\bin\Debug\RevitGeometry.dll
+#C:/a/lib/revit/2012/adn/src/rac/tips/geo/bin/Debug/RevitGeometry.dll
 #RevitGeometry.CmdIsDimensionLocked
 
 #
@@ -507,11 +508,11 @@ ADN Rfa
 Family API lab 1 -- create rectangular column
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\3_Revit_Family_API\SourceCS\bin\Debug\FamilyCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
 FamilyCs.RvtCmd_FamilyCreateColumnRectangle
 
 # VB version:
-#C:\Revit_2012_API_Training\Labs\3_Revit_Family_API\\SourceVB\bin\Debug\FamilyVb.dll
+#C:/Revit_2012_API_Training/Labs/3_Revit_Family_API//SourceVB/bin/Debug/FamilyVb.dll
 #FamilyVb.RvtCmd_FamilyCreateColumnRectangle
 
 ADN Rfa
@@ -519,7 +520,7 @@ ADN Rfa
 Family API lab 2 -- create L-shaped column
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\3_Revit_Family_API\SourceCS\bin\Debug\FamilyCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
 FamilyCs.RvtCmd_FamilyCreateColumnLShape
 
 ADN Rfa
@@ -527,7 +528,7 @@ ADN Rfa
 Family API lab 3 -- create L-shaped column with formula and material
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\3_Revit_Family_API\SourceCS\bin\Debug\FamilyCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
 FamilyCs.RvtCmd_FamilyCreateColumnFormulaMaterial
 
 ADN Rfa
@@ -535,7 +536,7 @@ ADN Rfa
 Family API lab 4 -- create L-shaped column with visibility settings
 LargeImage:
 Image:
-C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\3_Revit_Family_API\SourceCS\bin\Debug\FamilyCs.dll
+C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
 FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 
 #ADN Rfa
@@ -543,7 +544,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Family API lab 5 -- create a nested family
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2018\adn\src\AdnRevitApiLabsXtra\3_Revit_Family_API\SourceCS\bin\Debug\FamilyCs.dll
+#C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
 #FamilyCs.RvtCmd_FamilyCreateNestedFamily
 
 ##
@@ -554,7 +555,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #About ADN RME API Samples
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rme\AdnRme\AdnRme\bin\Debug\AdnRme.dll
+#C:/a/lib/revit/2015/adn/src/rme/AdnRme/AdnRme/bin/Debug/AdnRme.dll
 #AdnRme.CmdAbout
 #
 #ADN Rme
@@ -562,7 +563,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Inspect electrical systems in model and reproduce system browser info using parameter data only
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rme\AdnRme\AdnRme\bin\Debug\AdnRme.dll
+#C:/a/lib/revit/2015/adn/src/rme/AdnRme/AdnRme/bin/Debug/AdnRme.dll
 #AdnRme.CmdElectricalSystemBrowser
 #
 ##ADN Rme
@@ -570,7 +571,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Inspect electrical systems in model and display full connection hierarchy tree structure
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2015\adn\src\rme\AdnRme\AdnRme\bin\Debug\AdnRme.dll
+##C:/a/lib/revit/2015/adn/src/rme/AdnRme/AdnRme/bin/Debug/AdnRme.dll
 ##AdnRme.CmdElectricalHierarchy
 ##
 ##ADN Rme
@@ -578,7 +579,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Inspect electrical systems in model and display full connection hierarchy tree structure
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2015\adn\src\rme\AdnRme\AdnRme\bin\Debug\AdnRme.dll
+##C:/a/lib/revit/2015/adn/src/rme/AdnRme/AdnRme/bin/Debug/AdnRme.dll
 ##AdnRme.CmdElectricalHierarchy2
 #
 #ADN Rme
@@ -586,7 +587,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Inspect electrical systems and connectors in model and display full hierarchy tree structure
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rme\AdnRme\AdnRme\bin\Debug\AdnRme.dll
+#C:/a/lib/revit/2015/adn/src/rme/AdnRme/AdnRme/bin/Debug/AdnRme.dll
 #AdnRme.CmdElectricalConnectors
 #
 #ADN Rme
@@ -594,7 +595,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Assign flow to terminals
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rme\AdnRme\AdnRme\bin\Debug\AdnRme.dll
+#C:/a/lib/revit/2015/adn/src/rme/AdnRme/AdnRme/bin/Debug/AdnRme.dll
 #AdnRme.CmdAssignFlowToTerminals
 #
 #ADN Rme
@@ -602,7 +603,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Change terminal sizes
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rme\AdnRme\AdnRme\bin\Debug\AdnRme.dll
+#C:/a/lib/revit/2015/adn/src/rme/AdnRme/AdnRme/bin/Debug/AdnRme.dll
 #AdnRme.CmdChangeSize
 #
 #ADN Rme
@@ -610,7 +611,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Populate CFM per SF variable on rooms
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rme\AdnRme\AdnRme\bin\Debug\AdnRme.dll
+#C:/a/lib/revit/2015/adn/src/rme/AdnRme/AdnRme/bin/Debug/AdnRme.dll
 #AdnRme.CmdPopulateCfmPerSf
 #
 #ADN Rme
@@ -618,7 +619,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Reset ADN RME API Demo
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rme\AdnRme\AdnRme\bin\Debug\AdnRme.dll
+#C:/a/lib/revit/2015/adn/src/rme/AdnRme/AdnRme/bin/Debug/AdnRme.dll
 #AdnRme.CmdResetDemo
 #
 #ADN Rme
@@ -626,7 +627,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #List unhosted elementes
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rme\AdnRme\AdnRme\bin\Debug\AdnRme.dll
+#C:/a/lib/revit/2015/adn/src/rme/AdnRme/AdnRme/bin/Debug/AdnRme.dll
 #AdnRme.CmdUnhostedElements
 #
 ###
@@ -637,7 +638,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Lab 1-1 - List all load grouping objects, i.e. load natures, cases, and combinations
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rst\labs\cs\bin\Debug\RstLabsCs.dll
+#C:/a/lib/revit/2015/adn/src/rst/labs/cs/bin/Debug/RstLabsCs.dll
 #RstLabs.Lab1_1_LoadGrouping
 #
 #ADN Rst
@@ -645,7 +646,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Lab 1-2 - Demonstrate access to load objects and list all point, line and area loads
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rst\labs\cs\bin\Debug\RstLabsCs.dll
+#C:/a/lib/revit/2015/adn/src/rst/labs/cs/bin/Debug/RstLabsCs.dll
 #RstLabs.Lab1_2_Loads
 #
 #ADN Rst
@@ -653,7 +654,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Lab 1-3 - More detailed info and modification of selected loads
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rst\labs\cs\bin\Debug\RstLabsCs.dll
+#C:/a/lib/revit/2015/adn/src/rst/labs/cs/bin/Debug/RstLabsCs.dll
 #RstLabs.Lab1_3_ModifyLoads
 #
 #ADN Rst
@@ -661,7 +662,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Lab 1-4 - List load symbols
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rst\labs\cs\bin\Debug\RstLabsCs.dll
+#C:/a/lib/revit/2015/adn/src/rst/labs/cs/bin/Debug/RstLabsCs.dll
 #RstLabs.Lab1_4_LoadTypes
 #
 #ADN Rst
@@ -669,7 +670,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Lab 1-5 - Create new point loads
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rst\labs\cs\bin\Debug\RstLabsCs.dll
+#C:/a/lib/revit/2015/adn/src/rst/labs/cs/bin/Debug/RstLabsCs.dll
 #RstLabs.Lab1_5_CreateNewPointLoads
 #
 #ADN Rst
@@ -677,7 +678,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Lab 2-1 - List all structural columns in the model
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rst\labs\cs\bin\Debug\RstLabsCs.dll
+#C:/a/lib/revit/2015/adn/src/rst/labs/cs/bin/Debug/RstLabsCs.dll
 #RstLabs.Lab2_1_ListStructuralColumns
 #
 #ADN Rst
@@ -685,7 +686,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Lab 2-2 - List all structural framing elements in the model
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rst\labs\cs\bin\Debug\RstLabsCs.dll
+#C:/a/lib/revit/2015/adn/src/rst/labs/cs/bin/Debug/RstLabsCs.dll
 #RstLabs.Lab2_2_ListStructuralFraming
 #
 #ADN Rst
@@ -693,7 +694,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Lab 2-3 - List all structural foundation elements in the model
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rst\labs\cs\bin\Debug\RstLabsCs.dll
+#C:/a/lib/revit/2015/adn/src/rst/labs/cs/bin/Debug/RstLabsCs.dll
 #RstLabs.Lab2_3_Foundations
 #
 #ADN Rst
@@ -701,7 +702,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Lab 2-4 - List all standard family instances with an analytical model
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rst\labs\cs\bin\Debug\RstLabsCs.dll
+#C:/a/lib/revit/2015/adn/src/rst/labs/cs/bin/Debug/RstLabsCs.dll
 #RstLabs.Lab2_4_StandardFamilyInstances
 #
 #ADN Rst
@@ -709,7 +710,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Lab 2-5 - Retrieve structural system family instances: wall, floor, continuous footing
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rst\labs\cs\bin\Debug\RstLabsCs.dll
+#C:/a/lib/revit/2015/adn/src/rst/labs/cs/bin/Debug/RstLabsCs.dll
 #RstLabs.Lab2_5_StructuralSystemFamilyInstances
 #
 #ADN Rst
@@ -717,7 +718,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Lab 3 - List analytical model for selected or all structural elements
 #LargeImage:
 #Image:
-#C:\a\lib\revit\2015\adn\src\rst\labs\cs\bin\Debug\RstLabsCs.dll
+#C:/a/lib/revit/2015/adn/src/rst/labs/cs/bin/Debug/RstLabsCs.dll
 #RstLabs.Lab3_ListSelectedAnalyticalModels
 #
 ##ADN Rst
@@ -725,7 +726,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Export to RstLink file (from Revit to Acad)
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\adn\src\rst\link\cs\RstLinkRevitClientCs\bin\RstLinkRevitClient.dll
+##C:/a/lib/revit/2012/adn/src/rst/link/cs/RstLinkRevitClientCs/bin/RstLinkRevitClient.dll
 ##RstLinkRevitClient.RsLinkExport
 ##
 ##ADN Rst
@@ -733,7 +734,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Import from RstLink result file (from Acad to Revit)
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\adn\src\rst\link\cs\RstLinkRevitClientCs\bin\RstLinkRevitClient.dll
+##C:/a/lib/revit/2012/adn/src/rst/link/cs/RstLinkRevitClientCs/bin/RstLinkRevitClient.dll
 ##RstLinkRevitClient.RsLinkImport
 ##
 ##ADN Rst
@@ -741,7 +742,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Export to RstLink file from Revit to Acad and automatically monitor and import changes dynamically
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\adn\src\rst\link\cs\RstLinkRevitClientCs\bin\RstLinkRevitClient.dll
+##C:/a/lib/revit/2012/adn/src/rst/link/cs/RstLinkRevitClientCs/bin/RstLinkRevitClient.dll
 ##RstLinkRevitClient.CmdLiveLink
 ##
 ##ADN Rst
@@ -749,7 +750,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Draws analytical model for selected or all elements in the viewer window
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\SDK\Samples\Viewers\AnalyticalViewer\VB.NET\bin\AnalyticalViewer.dll
+##C:/a/lib/revit/2012/SDK/Samples/Viewers/AnalyticalViewer/VB.NET/bin/AnalyticalViewer.dll
 ##Revit.SDK.Samples.AnalyticalViewer.VB.NET.AnalyticalViewer
 ##
 ##ADN Rst
@@ -757,7 +758,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Create configurable multi-story Beams Columns and Braces using simple dialog
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\SDK\Samples\CreateBeamsColumnsBraces\CS\bin\Debug\CreateBeamsColumnsBraces.dll
+##C:/a/lib/revit/2012/SDK/Samples/CreateBeamsColumnsBraces/CS/bin/Debug/CreateBeamsColumnsBraces.dll
 ##Revit.SDK.Samples.CreateBeamsColumnsBraces.CS.Command
 ##
 ##ADN Rst
@@ -765,7 +766,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Create bar set in a selected concrete element (beam or column) that does not have any reinforcement.
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\SDK\Samples\Reinforcement\CS\bin\Debug\Reinforcement.dll
+##C:/a/lib/revit/2012/SDK/Samples/Reinforcement/CS/bin/Debug/Reinforcement.dll
 ##Revit.SDK.Samples.Reinforcement.CS.Command
 ##
 ##ADN Rst
@@ -773,7 +774,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Show parameters of selected AreaReinforcement and allow user to modify
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\SDK\Samples\AreaReinParameters\CS\bin\Debug\AreaReinParameters.dll
+##C:/a/lib/revit/2012/SDK/Samples/AreaReinParameters/CS/bin/Debug/AreaReinParameters.dll
 ##Revit.SDK.Samples.AreaReinParameters.CS.Command
 ##
 ##ADN Rst
@@ -781,7 +782,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Show parameters of selected AreaReinforcement and allow user to modify
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\SDK\Samples\AreaReinParameters\CS\bin\Debug\AreaReinParameters.dll
+##C:/a/lib/revit/2012/SDK/Samples/AreaReinParameters/CS/bin/Debug/AreaReinParameters.dll
 ##Revit.SDK.Samples.AreaReinParameters.CS.RebarParas
 ##
 ##ADN Rst
@@ -789,7 +790,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Create a section view across the midpoint of the selected wall, floor or beam
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\SDK\Samples\CreateViewSection\CS\bin\Debug\CreateViewSection.dll
+##C:/a/lib/revit/2012/SDK/Samples/CreateViewSection/CS/bin/Debug/CreateViewSection.dll
 ##Revit.SDK.Samples.CreateViewSection.CS.Command
 ##
 ##ADN Rst
@@ -797,7 +798,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Create a new empty drafting view
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\SDK\Samples\CreateViewSection\CS\bin\Debug\CreateViewSection.dll
+##C:/a/lib/revit/2012/SDK/Samples/CreateViewSection/CS/bin/Debug/CreateViewSection.dll
 ##Revit.SDK.Samples.CreateViewSection.CS.CreateDraftingView
 ##
 ##ADN Rst
@@ -805,7 +806,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Add a dimension to a selected structure wall from its start to its end
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\SDK\Samples\CreateDimensions\CS\bin\Debug\CreateDimensions.dll
+##C:/a/lib/revit/2012/SDK/Samples/CreateDimensions/CS/bin/Debug/CreateDimensions.dll
 ##Revit.SDK.Samples.CreateDimensions.CS.Command
 ##
 ##ADN Rst
@@ -813,7 +814,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Tag beam's start and end
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\SDK\Samples\TagBeam\CS\bin\Debug\TagBeam.dll
+##C:/a/lib/revit/2012/SDK/Samples/TagBeam/CS/bin/Debug/TagBeam.dll
 ##Revit.SDK.Samples.TagBeam.CS.Command
 ##
 ##ADN Rst
@@ -821,7 +822,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Tag selected Rebar
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\SDK\Samples\TagBeam\CS\bin\Debug\TagBeam.dll
+##C:/a/lib/revit/2012/SDK/Samples/TagBeam/CS/bin/Debug/TagBeam.dll
 ##Revit.SDK.Samples.TagBeam.CS.TagRebar
 ##
 ##ADN Rst
@@ -829,6 +830,5 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 ##Create a new TextNote instance for selected Rebar
 ##LargeImage:
 ##Image:
-##C:\a\lib\revit\2012\SDK\Samples\TagBeam\CS\bin\Debug\TagBeam.dll
+##C:/a/lib/revit/2012/SDK/Samples/TagBeam/CS/bin/Debug/TagBeam.dll
 ##Revit.SDK.Samples.TagBeam.CS.CreateText
-#
