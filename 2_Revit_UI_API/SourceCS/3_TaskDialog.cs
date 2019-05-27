@@ -202,7 +202,7 @@ namespace UiCs
 
       //TaskDialog.Show( "Create house dialog", "The last action was: " + res.ToString()); 
 
-      // (2) pause the result and create a house with the method that use has chosen. 
+      // (2) parse the result and create a house with the method that use has chosen. 
       // 
       // Create a house interactively. 
       if( res == TaskDialogResult.CommandLink1 )

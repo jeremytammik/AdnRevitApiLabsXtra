@@ -217,7 +217,7 @@ namespace IntroCs
       foreach (Parameter param in e.GetOrderedParameters())
       {
         string name = param.Definition.Name;
-        // To get the value, we need to pause the param depending on the storage type
+        // To get the value, we need to parse the param depending on the storage type
         // see the helper function below
         string val = ParameterToString(param);
         s += "\r\n" + name + " = " + val;
@@ -238,9 +238,9 @@ namespace IntroCs
         return val;
       }
 
-      // To get to the parameter value, we need to pause it depending on its storage type
+      // To get to the parameter value, we need to parse it depending on its storage type
 
-      switch (param.StorageType)
+      switch( param.StorageType)
       {
         case StorageType.Double:
           double dVal = param.AsDouble();
