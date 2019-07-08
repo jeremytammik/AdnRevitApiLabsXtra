@@ -698,7 +698,8 @@ namespace XtraCs
       // Launch Excel (same as in Lab 4_2, so we really 
       // should have better created some utils...)
 
-      X.Application excel = new X.ApplicationClass();
+      //X.Application excel = new X.ApplicationClass(); // 2019
+      X.Application excel = new X.Application(); // 2020
       if( null == excel )
       {
         LabUtils.ErrorMsg( "Failed to get or start Excel." );

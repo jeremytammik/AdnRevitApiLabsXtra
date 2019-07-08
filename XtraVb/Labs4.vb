@@ -436,7 +436,8 @@ Namespace XtraVb
       Dim doc As Document = uiapp.ActiveUIDocument.Document
       Dim cat As Category = doc.Settings.Categories.Item(Lab4_3_1_CreateAndBindSharedParam.Target)
       ' Launch Excel (same as in Lab 4_2, so we really should have better created some utils...)
-      Dim excel As X.Application = New X.ApplicationClass()
+      'Dim excel As X.Application = New X.ApplicationClass() ' 2019
+      Dim excel As X.Application = New X.Application ' 2020
       If excel Is Nothing Then
         LabUtils.ErrorMsg("Failed to get or start Excel.")
         Return Result.Failed
