@@ -37,6 +37,7 @@
 # 2016-07-05 updated for Revit 2017, version 2017.0.0.0
 # 2017-09-20 updated for Revit 2018, version 2018.0.0.0
 # 2018-04-18 updated for Revit 2019, version 2019.0.0.0
+# 2019-07-08 updated for Revit 2020, version 2020.0.0.0
 #
 # This file is read by the Revit external application RvtSamples, which is
 # discussed in the class on the Revit SDK samples. From Revit 2009 onwards,
@@ -74,7 +75,7 @@ ADN Abc
 Basic sample that displays a message box from Revit!
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab1_1_HelloWorld
 
 ADN Abc
@@ -82,7 +83,7 @@ ADN Abc
 Lists the app, doc and view data; then the current selection set and finally simulates an error condition on return
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab1_2_CommandArguments
 
 ADN Abc
@@ -90,7 +91,7 @@ ADN Abc
 Create a little house consisting of four walls, a door, three windows, a floor and a room
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab2_0_CreateLittleHouse
 
 ADN Abc
@@ -98,7 +99,7 @@ ADN Abc
 Outputs info on each element to a text file line
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab2_1_Elements
 
 ADN Abc
@@ -106,7 +107,7 @@ ADN Abc
 Outputs info on each model-element instance to a mesage box
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab2_2_ModelElements
 
 ADN Abc
@@ -114,7 +115,7 @@ ADN Abc
 Outputs some info on each instance of walls and doors to a message box
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab2_3_ListWallsAndDoors
 
 ADN Abc
@@ -122,7 +123,7 @@ ADN Abc
 Move and widen all doors
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab2_4_EditFamilyInstance
 
 ADN Abc
@@ -130,7 +131,7 @@ ADN Abc
 Select and modify a wall and add framing columns
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab2_5_SelectAndMoveWallAndAddColumns
 
 ADN Abc
@@ -138,7 +139,7 @@ ADN Abc
 First lists all Standard Family Names and (unsuccessfully) their Category. Then lists them one-by-one with all children Types
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab3_1_StandardFamiliesAndTypes
 
 ADN Abc
@@ -146,7 +147,7 @@ ADN Abc
 Loads a whole Family with corresponding catalog file and also a single specified Symbol (Type) from another family
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab3_2_LoadStandardFamilies
 
 ADN Abc
@@ -154,7 +155,7 @@ ADN Abc
 First list all Windows Family Types (Symbols), then Type and Family for any Windows in the selection set
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab3_3_DetermineInstanceTypeAndFamily
 
 ADN Abc
@@ -162,7 +163,7 @@ ADN Abc
 Displays a form with all available Families and Types for the category of selected Instance
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab3_4_ChangeSelectedInstanceType
 
 ADN Abc
@@ -170,7 +171,7 @@ ADN Abc
 List all Wall and Floor Types/Families and then change Type/Family for the selected Walls and Floors
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab3_5_WallAndFloorTypes
 
 ADN Abc
@@ -178,7 +179,7 @@ ADN Abc
 Create a new family symbol or type by calling Duplicate()
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab3_6_DuplicateWallType
 
 ADN Abc
@@ -186,8 +187,8 @@ ADN Abc
 Delete a specific individual type from a family
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
-#C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraVb/bin/Debug/XtraVb.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+#C:/a/vs/AdnRevitApiLabsXtra/XtraVb/bin/Debug/XtraVb.dll
 XtraCs.Lab3_7_DeleteFamilyType
 
 ADN Abc
@@ -195,7 +196,7 @@ ADN Abc
 List all parameters from the param collection and look for specific params
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_1_ElementParameters
 
 ADN Abc
@@ -203,7 +204,7 @@ ADN Abc
 Exports all parameter values for each model element to Excel: one sheet per category, one row per element
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_2_ExportParametersToExcel
 
 ADN Abc
@@ -211,7 +212,7 @@ ADN Abc
 Get-or-create shared parameters group, create shared parm definition within and bind it to Doors
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_3_1_CreateAndBindSharedParam
 
 ADN Abc
@@ -219,7 +220,7 @@ ADN Abc
 Exports one row per each door with its values (Id, Level, Tag and FireRating) to Excel
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_3_2_ExportSharedParamToExcel
 
 ADN Abc
@@ -227,7 +228,7 @@ ADN Abc
 Imports updated FireRating values for each door from Excel
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_3_3_ImportSharedParamFromExcel
 
 ADN Abc
@@ -235,7 +236,7 @@ ADN Abc
 Create and bind a visible and an invisible per-doc parameter
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_4_1_CreatePerDocParameters
 
 ADN Abc
@@ -243,7 +244,7 @@ ADN Abc
 Increment the invisible per-Doc Params and show the values before and after
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab4_4_2_IncrementPerDocParameters
 
 ADN Abc
@@ -251,7 +252,7 @@ Built-In Parameters Checker
 Uses reflection to check for all built-in params enumeration values on the selected element
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.BuiltInParamsChecker
 
 ADN Abc
@@ -259,7 +260,7 @@ ADN Abc
 Lists: all Groups details, all Group Types details and all 'Model' Family Group Types
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab5_1_GroupsAndGroupTypes
 
 ADN Abc
@@ -267,7 +268,7 @@ ADN Abc
 Offers user to change Type for any Group in the selection to any other Model Group Type
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab5_2_SwapGroupTypes
 
 ADN Abc
@@ -275,7 +276,7 @@ ADN Abc
 Lists all Rooms in the model, including the Boundary information
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab5_3_Rooms
 
 ADN Abc
@@ -283,7 +284,7 @@ ADN Abc
 Traverse and list all ribbon panel items
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab6_5_RibbonExplorer
 
 ADN Abc
@@ -291,7 +292,7 @@ ADN Abc
 Create a loft form using reference points and curve by points
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab7_1_CreateForm
 
 ADN Abc
@@ -299,7 +300,7 @@ ADN Abc
 Create a divided surface using reference of a face of the form
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab7_2_CreateDividedSurface
 
 ADN Abc
@@ -307,7 +308,7 @@ ADN Abc
 Change the tiling pattern of the divided surface using the built-in TilePattern enumeration
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/XtraCs/bin/Debug/XtraCs.dll
 XtraCs.Lab7_3_ChangeTilePattern
 
 ##
@@ -508,7 +509,7 @@ ADN Rfa
 Family API lab 1 -- create rectangular column
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
 FamilyCs.RvtCmd_FamilyCreateColumnRectangle
 
 # VB version:
@@ -520,7 +521,7 @@ ADN Rfa
 Family API lab 2 -- create L-shaped column
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
 FamilyCs.RvtCmd_FamilyCreateColumnLShape
 
 ADN Rfa
@@ -528,7 +529,7 @@ ADN Rfa
 Family API lab 3 -- create L-shaped column with formula and material
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
 FamilyCs.RvtCmd_FamilyCreateColumnFormulaMaterial
 
 ADN Rfa
@@ -536,7 +537,7 @@ ADN Rfa
 Family API lab 4 -- create L-shaped column with visibility settings
 LargeImage:
 Image:
-C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
+C:/a/vs/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
 FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 
 #ADN Rfa
@@ -544,7 +545,7 @@ FamilyCs.RvtCmd_FamilyCreateColumnVisibility
 #Family API lab 5 -- create a nested family
 #LargeImage:
 #Image:
-#C:/a/lib/revit/2019/adn/src/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
+#C:/a/vs/AdnRevitApiLabsXtra/3_Revit_Family_API/SourceCS/bin/Debug/FamilyCs.dll
 #FamilyCs.RvtCmd_FamilyCreateNestedFamily
 
 ##
