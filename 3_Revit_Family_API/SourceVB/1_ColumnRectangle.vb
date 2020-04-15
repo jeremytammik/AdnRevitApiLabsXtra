@@ -1,6 +1,6 @@
 #Region "Copyright"
 ''
-'' (C) Copyright 2009-2020 by Autodesk, Inc.
+'' (C) Copyright 2009-2015 by Autodesk, Inc.
 ''
 '' Permission to use, copy, modify, and distribute this software in
 '' object code form for any purpose and without fee is hereby granted,
@@ -77,7 +77,7 @@
 ''' </summary>
 #End Region
 
-<Transaction(TransactionMode.Manual)>
+<Transaction(TransactionMode.Manual)> _
 Public Class RvtCmd_FamilyCreateColumnRectangle
   Implements IExternalCommand
 

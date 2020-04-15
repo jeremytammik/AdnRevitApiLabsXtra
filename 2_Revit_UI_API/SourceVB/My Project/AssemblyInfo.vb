@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("Revit API UI Labs for VB")>
-<Assembly: AssemblyDescription("Revit API UI Labs for VB")>
-<Assembly: AssemblyCompany("Autodesk Inc.")>
-<Assembly: AssemblyProduct("Revit API UI Labs for VB")>
-<Assembly: AssemblyCopyright("Copyright © 2009-2020 by Autodesk Inc.")>
-<Assembly: AssemblyTrademark("")>
+<Assembly: AssemblyTitle("Revit API UI Labs for VB")> 
+<Assembly: AssemblyDescription("Revit API UI Labs for VB")> 
+<Assembly: AssemblyCompany("Autodesk Inc.")> 
+<Assembly: AssemblyProduct("Revit API UI Labs for VB")> 
+<Assembly: AssemblyCopyright("Copyright © 2009-2015 Autodesk Inc.")> 
+<Assembly: AssemblyTrademark("")> 
 
-<Assembly: ComVisible(False)>
+<Assembly: ComVisible(False)> 
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("33e55dac-e8b7-4fb7-80fd-5ce4e6950fb2")>
+<Assembly: Guid("33e55dac-e8b7-4fb7-80fd-5ce4e6950fb2")> 
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("2020.0.0.0")>
-<Assembly: AssemblyFileVersion("2020.0.0.0")>
+<Assembly: AssemblyVersion("2016.0.0.6")> 
+<Assembly: AssemblyFileVersion("2016.0.0.6")> 

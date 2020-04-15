@@ -1,6 +1,6 @@
 ﻿#Region "Copyright"
 '
-' Copyright (C) 2009-2020 by Autodesk, Inc.
+' Copyright (C) 2009-2015 by Autodesk, Inc.
 '
 ' Permission to use, copy, modify, and distribute this software in
 ' object code form for any purpose and without fee is hereby granted,
@@ -84,17 +84,17 @@ Namespace Util
 
     ' Metric family names and types:
 
-    Public Const DoorFamilyName As String = "M_Single-Flush"
-    Public Const DoorTypeName As String = "0915 x 2134mm"
-    Public Const DoorTypeName2 As String = "0762 x 2032mm"
+   ' Public Const DoorFamilyName As String = "M_Single-Flush"
+   ' Public Const DoorTypeName As String = "0915 x 2134mm"
+   ' Public Const DoorTypeName2 As String = "0762 x 2032mm"
 
-    Public Const RoofTypeName As String = "Generic - 400mm"
+   ' Public Const RoofTypeName As String = "Generic - 400mm"
 
-    Public Const WallFamilyName As String = "Basic Wall"
-    Public Const WallTypeName As String = "Generic - 200mm"
+    'Public Const WallFamilyName As String = "Basic Wall"
+    'Public Const WallTypeName As String = "Generic - 200mm"
 
-    Public Const WindowFamilyName As String = "M_Fixed"
-    Public Const WindowTypeName As String = "0915 x 1830mm"
+    'Public Const WindowFamilyName As String = "M_Fixed"
+    'Public Const WindowTypeName As String = "0915 x 1830mm"
 
 #End If
 

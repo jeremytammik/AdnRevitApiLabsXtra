@@ -1,6 +1,6 @@
 ﻿#Region "Copyright"
 '
-' Copyright (C) 2009-2020 by Autodesk, Inc.
+' Copyright (C) 2009-2015 by Autodesk, Inc.
 '
 ' Permission to use, copy, modify, and distribute this software in
 ' object code form for any purpose and without fee is hereby granted,
@@ -47,7 +47,7 @@
 ''' 
 ''' cf. Developer Guide, Section 7: Selection (pp 89) 
 ''' </summary>
-<Transaction(TransactionMode.ReadOnly)>
+<Transaction(TransactionMode.ReadOnly)> _
 Public Class UISelection
   Implements IExternalCommand
 
@@ -55,8 +55,8 @@ Public Class UISelection
   Dim _uiApp As UIApplication
   Dim _uiDoc As UIDocument
 
-  Public Function Execute(ByVal commandData As ExternalCommandData,
-                          ByRef message As String,
+  Public Function Execute(ByVal commandData As ExternalCommandData, _
+                          ByRef message As String, _
                           ByVal elements As ElementSet) _
                           As Result _
                           Implements IExternalCommand.Execute
@@ -172,7 +172,7 @@ Public Class UISelection
   ''' </summary>
   Sub PickMethod_PickObjects()
 
-    Dim refs As IList(Of Reference) =
+    Dim refs As IList(Of Reference) = _
         _uiDoc.Selection.PickObjects(ObjectType.Element, "Select multiple elemens")
 
     ' put it in a List form. 
@@ -190,7 +190,7 @@ Public Class UISelection
   Sub PickMethod_PickElementByRectangle()
 
     ' Note: PickElementByRectangle returns the list of element. not reference. 
-    Dim elems As IList(Of Element) =
+    Dim elems As IList(Of Element) = _
         _uiDoc.Selection.PickElementsByRectangle("Select by rectangle")
 
     ' Show it
@@ -266,9 +266,9 @@ Public Class UISelection
 
   Sub PickPointOnElement()
 
-    Dim r As Reference =
-        _uiDoc.Selection.PickObject(
-            ObjectType.PointOnElement,
+    Dim r As Reference = _
+        _uiDoc.Selection.PickObject( _
+            ObjectType.PointOnElement, _
             "Select a point on element")
 
     Dim e As Element = _uiDoc.Document.GetElement(r)

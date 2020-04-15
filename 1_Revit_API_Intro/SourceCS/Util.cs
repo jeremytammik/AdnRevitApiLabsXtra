@@ -1,6 +1,6 @@
 ﻿#region Copyright
 //
-// Copyright (C) 2009-2020 by Autodesk, Inc.
+// Copyright (C) 2009-2015 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software in
 // object code form for any purpose and without fee is hereby granted,
@@ -70,9 +70,9 @@ namespace Util
     {
       return mmValue * _mmToFeet;
     }
-      
 
-#if USE_IMPERIAL_FAMILY_NAMES_AND_TYPES 
+
+#if USE_IMPERIAL_FAMILY_NAMES_AND_TYPES
 
     // Imperial family names and types:
 
@@ -90,21 +90,23 @@ namespace Util
 
 #else // if not USE_IMPERIAL_FAMILY_NAMES_AND_TYPES
 
-    // Metric family names and types:
+        // Metric family names and types:
 
-    public const string DoorFamilyName = "M_Single-Flush";
-    public const string DoorTypeName = "0915 x 2134mm";
-    public const string DoorTypeName2 = "0762 x 2032mm";
+          public const string DoorFamilyName = "M_Single-Flush";
+          public const string DoorTypeName = "0915 x 2134mm";
+          public const string DoorTypeName2 = "0762 x 2032mm";
 
-    public const string RoofTypeName = "Generic - 400mm";
+          public const string RoofTypeName = "Generic - 400mm";
 
-    public const string WallFamilyName = "Basic Wall";
-    public const string WallTypeName = "Generic - 200mm";
+          public const string WallFamilyName = "Basic Wall";
+          public const string WallTypeName = "Generic - 8\"";
 
-    public const string WindowFamilyName = "M_Fixed";
-    public const string WindowTypeName = "0915 x 1830mm";
+          public const string WindowFamilyName = "M_Fixed";
+          public const string WindowTypeName = "0915 x 1830mm"; 
+
+       
 
 #endif // USE_IMPERIAL_FAMILY_NAMES_AND_TYPES
 
-  }
+    }
 }
