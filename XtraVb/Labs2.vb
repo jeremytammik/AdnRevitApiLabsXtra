@@ -65,6 +65,7 @@ Namespace XtraVb
         Dim createDoc As Autodesk.Revit.Creation.Document = doc.Create
 
         Using t As New Transaction(doc)
+          t.Start("Create Little House")
           '
           ' determine the four corners of the rectangular house:
           '
