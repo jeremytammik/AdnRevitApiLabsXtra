@@ -62,10 +62,10 @@ namespace XtraCs
         string _name = param.Definition.Name;
         switch( param.StorageType )
         {
-          case Autodesk.Revit.Parameters.StorageType.Double:
+          case StorageType.Double:
             _parameters.Add( _name + " : " + param.AsDouble().ToString() );
             break;
-          case Autodesk.Revit.Parameters.StorageType.Integer:
+          case StorageType.Integer:
             if( param.Definition.ParameterType == ParameterType.YesNo )
             {
               if( param.AsInteger() == 0 ) _parameters.Add( _name + " : " + "false" );
@@ -76,15 +76,15 @@ namespace XtraCs
               _parameters.Add( _name + " : " + param.AsInteger().ToString() );
             }
             break;
-          case Autodesk.Revit.Parameters.StorageType.String:
+          case StorageType.String:
             _parameters.Add( _name + " : " + param.AsString() );
             break;
-          case Autodesk.Revit.Parameters.StorageType.ElementId:
+          case StorageType.ElementId:
             ElementId id = param.AsElementId();
             if( id.Value >= 0 ) _parameters.Add( _name + " : " + doc.GetElement( ref id ).Name );
             else _parameters.Add( _name + " : " + id.Value.ToString() );
             break;
-          case Autodesk.Revit.Parameters.StorageType.None:
+          case StorageType.None:
             _parameters.Add( _name + " : " + "none" );
             break;
         }
