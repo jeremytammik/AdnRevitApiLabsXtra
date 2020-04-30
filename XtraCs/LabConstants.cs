@@ -42,10 +42,10 @@ namespace XtraCs
     // Lab 3_2 and 3_3
     //public const string _libPath = @"C:\Documents and Settings\All Users\Application Data\Autodesk\RST 2009\Metric Library\";
     //private const string _libPath = @"C:\Documents and Settings\All Users\Application Data\Autodesk\RAC 2010\Metric Library\Structural\Framing\Steel\";
-    private const string _libPath = @"C:\Documents and Settings\All Users\Application Data\Autodesk\RAC 2011\Metric Library\Structural\Framing\Steel\";
+    private const string _libPath = @"C:\ProgramData\Autodesk\RVT 2019\Libraries\India\Structural Framing\Steel\";
 
     public const string WholeFamilyFileToLoad1 = _libPath + "M_C-Channel.rfa"; // has TXT catalog file
-    public const string WholeFamilyFileToLoad2 = _libPath + "M_Plate.rfa"; // no TXT catalog file
+    public const string WholeFamilyFileToLoad2 = @"C:\ProgramData\Autodesk\RVT 2019\Libraries\India\Structural Connections\Mounting Parts\Fastening Plates\" + "M_Plate with Anchors.rfa"; // no TXT catalog file
 
     public const string FamilyFileToLoadSingleSymbol = _libPath + "M_L-Angle.rfa";
     public const string SymbolName = "L152x102x12.7";

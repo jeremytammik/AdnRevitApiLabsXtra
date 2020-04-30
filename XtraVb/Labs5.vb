@@ -243,7 +243,7 @@ Namespace XtraVb
             'For Each boundary As BoundarySegmentArray In boundaries ' 2011
             For Each boundary As IList(Of BoundarySegment) In boundaries ' 2012
               iB += 1
-              s += " Boundary " + iB + ":" + vbCrLf
+              s += " Boundary " + iB.ToString() + ":" + vbCrLf
               Dim iSeg As Integer = 0
               For Each segment As BoundarySegment In boundary
                 iSeg += 1
@@ -255,7 +255,7 @@ Namespace XtraVb
                   Dim line As Line = TryCast(crv, Line)
                   Dim ptS As XYZ = line.GetEndPoint(0)
                   Dim ptE As XYZ = line.GetEndPoint(1)
-                  s += " Segment " + iSeg + " is a LINE: " _
+                  s += " Segment " + iSeg.ToString() + " is a LINE: " _
                       + LabUtils.PointString(ptS) + " ; " _
                       + LabUtils.PointString(ptE) + vbCrLf
                 ElseIf TypeOf crv Is Arc Then
@@ -263,7 +263,7 @@ Namespace XtraVb
                   Dim ptS As XYZ = arc.GetEndPoint(0)
                   Dim ptE As XYZ = arc.GetEndPoint(1)
                   Dim r As Double = arc.Radius
-                  s += " Segment " + iSeg + " is an ARC:" _
+                  s += " Segment " + iSeg.ToString() + " is an ARC:" _
                       + LabUtils.PointString(ptS) + " ; " _
                       + LabUtils.PointString(ptE) + " ; R=" _
                       + LabUtils.RealString(r) + vbCrLf

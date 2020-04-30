@@ -65,6 +65,8 @@ Namespace XtraVb
         Dim createDoc As Autodesk.Revit.Creation.Document = doc.Create
 
         Using t As New Transaction(doc)
+            t.Start("transaction name")
+          
           '
           ' determine the four corners of the rectangular house:
           '
@@ -205,7 +207,7 @@ Namespace XtraVb
           ' 
           ' the argument to set_SlopeAngle is NOT an angle, it is
           ' really a slope, i.e. relation of height to distance,
-          ' e.g. 0.5 = 6” / 12”, 0.75  = 9” / 12”, etc.
+          ' e.g. 0.5 = 6ï¿½ / 12ï¿½, 0.75  = 9ï¿½ / 12ï¿½, etc.
           '
           'Dim slopeAngle As Double = 30 * LabConstants.DegreesToRadians
           Dim slope As Double = 0.3
@@ -229,7 +231,7 @@ Namespace XtraVb
 #End Region
 
 #Region "Lab2_1_Elements"
-  ' Cf. C:\a\doc\revit\2011\constellation\get_all_elements.txt
+  ' Cf. C:\a\doc\revit\2019\constellation\get_all_elements.txt
 
   ''' <summary>
   ''' List all document elements.

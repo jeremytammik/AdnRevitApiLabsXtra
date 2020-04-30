@@ -220,7 +220,7 @@ Namespace XtraVb
 
       ' Launch/Get Excel via COM Interop:
 
-      Dim excel As New X.Application()
+      Dim excel As New X.Application 
 
       If excel Is Nothing Then
         LabUtils.ErrorMsg("Failed to get or start Excel.")
@@ -281,8 +281,8 @@ Namespace XtraVb
           worksheet.Cells(1, column) = paramName
           column += 1
         Next
-        worksheet.get_Range("A1", "Z1").Font.Bold = True
-        worksheet.get_Range("A1", "Z1").EntireColumn.AutoFit()
+           worksheet.Range("A1", "Z1").Font.Bold = True '2019
+           worksheet.Range("A1", "Z1").EntireColumn.AutoFit() '2019
         Dim row As Integer = 2
         For Each e As Element In elementSet
           ' first column is the element id, which we display as an integer
@@ -401,6 +401,7 @@ Namespace XtraVb
       ' bind the param
       Try
         Using t As New Transaction(doc)
+          t.Start("transaction name")
           Dim binding As Binding = app.Create.NewInstanceBinding(catSet)
           ' We could check if already bound, but looks like Insert will just ignore it in such case
           ' You can also specify the parameter group here:
@@ -436,7 +437,7 @@ Namespace XtraVb
       Dim doc As Document = uiapp.ActiveUIDocument.Document
       Dim cat As Category = doc.Settings.Categories.Item(Lab4_3_1_CreateAndBindSharedParam.Target)
       ' Launch Excel (same as in Lab 4_2, so we really should have better created some utils...)
-      'Dim excel As X.Application = New X.ApplicationClass() ' 2019
+      'Dim excel As X.Application = New X.Application() ' 2019
       Dim excel As X.Application = New X.Application() ' 2020
       If excel Is Nothing Then
         LabUtils.ErrorMsg("Failed to get or start Excel.")
@@ -445,18 +446,17 @@ Namespace XtraVb
       excel.Visible = True
       Dim workbook As X.Workbook = excel.Workbooks.Add(Missing.Value)
       Dim worksheet As X.Worksheet
-      'while( 1 < workbook.Sheets.Count )
-      '{
-      ' worksheet = workbook.Sheets.get_Item( 0 ) as X.Worksheet;
-      ' worksheet.Delete();
-      '}
+      'While (1 < workbook.Sheets.Count)
+      'worksheet = workbook.Sheets.Item(0) '2019
+      'worksheet.Delete()
+      'End While
       worksheet = TryCast(excel.ActiveSheet, X.Worksheet)
       worksheet.Name = "Revit " + cat.Name
       worksheet.Cells(1, 1) = "ID"
       worksheet.Cells(1, 2) = "Level"
       worksheet.Cells(1, 3) = "Tag"
       worksheet.Cells(1, 4) = LabConstants.SharedParamsDefFireRating
-      worksheet.get_Range("A1", "Z1").Font.Bold = True
+      worksheet.Range("A1", "Z1").Font.Bold= True '2019
 
       Dim elems As List(Of Element) = LabUtils.GetTargetInstances(doc, Lab4_3_1_CreateAndBindSharedParam.Target)
 
@@ -539,6 +539,7 @@ Namespace XtraVb
       Dim worksheet As X.Worksheet = TryCast(workbook.ActiveSheet, X.Worksheet)
 
       Using t As New Transaction(doc)
+        t.Start("transaction name")
         '
         ' Starting from row 2, loop the rows and extract Id and FireRating param.
         '

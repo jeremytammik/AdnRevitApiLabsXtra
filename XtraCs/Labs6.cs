@@ -342,8 +342,8 @@ namespace XtraCs
           //e.OverrideResult( (int) WinForms.DialogResult.Yes );
           //Debug.Print( "Dialog id is {0}\r\nMessage is {1}",
           //  msgArgs.HelpId, msgArgs.Message ); // Revit 2016
-
-          e.OverrideResult( (int) WinForms.DialogResult.Yes );
+       
+        	e.OverrideResult((int)TaskDialogResult.Yes);//2019
           Debug.Print( "Dialog id is {0}\r\nMessage is {1}",
             msgArgs.DialogId, msgArgs.Message ); // Revit 2017
         }
@@ -353,8 +353,8 @@ namespace XtraCs
           //if( e.HelpId == 1002 ) // Element property dialog's HelpId is 1002 in Revit 2016 and earlier
 
           if( e.DialogId.Equals( "1002" ) ) // What is the corresponding Element property dialog DialogId?
-          {
-            e.OverrideResult( (int) WinForms.DialogResult.No );
+          {           
+          	e.OverrideResult((int)TaskDialogResult.No);//2019
             Debug.Print(
               "We just dismissed the element property dialog "
               + "and set the return value to No." );

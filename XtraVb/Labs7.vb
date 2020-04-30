@@ -165,7 +165,7 @@ Namespace XtraVb
             '  Dim geoObject As GeometryObject = geoObjectArray.Item(j)
 
             Dim geoObject As GeometryObject
-            For Each geoObject In elements ' 2013
+            For Each geoObject In element ' 2013
               Dim solid As Solid = TryCast(geoObject, Solid)
               For Each face As Face In solid.Faces
                 If face.Reference IsNot Nothing Then

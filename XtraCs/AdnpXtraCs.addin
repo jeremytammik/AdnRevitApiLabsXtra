@@ -3,7 +3,7 @@
 
   AdnpXtraCs.addin - Revit API introduction labs manifest file
 
-  Copyright (C) 2010-2017 Autodesk Inc. All rights reserved.
+  Copyright (C) 2010-2020 Autodesk Inc. All rights reserved.
 
   Register Revit API introduction lab external applications and commands.
   
@@ -11,12 +11,12 @@
   following locations:
 
   - In a non-user specific location in "application data":
-    - For Windows XP - "C:\Documents and Settings\All Users\Application Data\Autodesk\Revit\Addins\2011"
-    - For Vista/Windows 7 - C:\ProgramData\Autodesk\Revit\Addins\2011
+    - For Windows XP - "C:\Documents and Settings\All Users\Application Data\Autodesk\Revit\Addins\2019"
+    - For Vista/Windows 7 - C:\ProgramData\Autodesk\Revit\Addins\2019
 
   - In a user specific location in "application data":
-    - For Windows XP - "C:\Documents and Settings\<user>\Application Data\Autodesk\Revit\Addins\2011"
-    - For Vista/Windows 7 - C:\Users\<user>\AppData\Roaming\Autodesk\Revit\Addins\2011
+    - For Windows XP - "C:\Documents and Settings\<user>\Application Data\Autodesk\Revit\Addins\2019"
+    - For Vista/Windows 7 - C:\Users\<user>\AppData\Roaming\Autodesk\Revit\Addins\2019
 
   You can create a personal ClientId GUID using the Microsoft GuidGen tool, e.g.
   "C:\Program Files\Microsoft Visual Studio 9.0\Common7\Tools\guidgen.exe" or

@@ -157,7 +157,7 @@ namespace XtraCs
       bool rc;
 
       using( Transaction t = new Transaction( doc ) )
-      {
+      { t.Start("transaction name");
         #region 3.2.a Load an entire RFA family file:
 
         // Load a whole Family

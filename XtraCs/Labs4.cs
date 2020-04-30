@@ -62,10 +62,10 @@ namespace XtraCs
         string _name = param.Definition.Name;
         switch( param.StorageType )
         {
-          case Autodesk.Revit.Parameters.StorageType.Double:
+          case Autodesk.Revit.DB.StorageType.Double://2019
             _parameters.Add( _name + " : " + param.AsDouble().ToString() );
             break;
-          case Autodesk.Revit.Parameters.StorageType.Integer:
+          case Autodesk.Revit.DB.StorageType.Integer://2019
             if( param.Definition.ParameterType == ParameterType.YesNo )
             {
               if( param.AsInteger() == 0 ) _parameters.Add( _name + " : " + "false" );
@@ -76,15 +76,15 @@ namespace XtraCs
               _parameters.Add( _name + " : " + param.AsInteger().ToString() );
             }
             break;
-          case Autodesk.Revit.Parameters.StorageType.String:
+          case Autodesk.Revit.DB.StorageType.String://2019
             _parameters.Add( _name + " : " + param.AsString() );
             break;
-          case Autodesk.Revit.Parameters.StorageType.ElementId:
+          case Autodesk.Revit.DB.StorageType.ElementId://2019
             ElementId id = param.AsElementId();
             if( id.Value >= 0 ) _parameters.Add( _name + " : " + doc.GetElement( ref id ).Name );
             else _parameters.Add( _name + " : " + id.Value.ToString() );
             break;
-          case Autodesk.Revit.Parameters.StorageType.None:
+          case Autodesk.Revit.DB.StorageType.None://2019
             _parameters.Add( _name + " : " + "none" );
             break;
         }
@@ -803,14 +803,13 @@ namespace XtraCs
         LabConstants.SharedParamsGroupAPI, LabConstants.SharedParamsDefFireRating );
 
       // Let user select the Excel file.
-
       WinForms.OpenFileDialog dlg = new WinForms.OpenFileDialog();
       dlg.Title = "Select source Excel file from which to update Revit shared parameters";
       dlg.Filter = "Excel spreadsheet files (*.xls;*.xlsx)|*.xls;*.xlsx|All files (*)|*";
-      if( WinForms.DialogResult.OK != dlg.ShowDialog() )
-      {
-        return Result.Cancelled;
-      }
+      if (DialogResult.OK != dlg.ShowDialog())
+         {
+            return Result.Cancelled;
+         }
 
       // Launch/Get Excel via COM Interop:
 
