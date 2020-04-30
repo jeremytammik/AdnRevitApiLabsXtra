@@ -206,7 +206,7 @@ Namespace XtraVb
           ' 
           ' the argument to set_SlopeAngle is NOT an angle, it is
           ' really a slope, i.e. relation of height to distance,
-          ' e.g. 0.5 = 6” / 12”, 0.75  = 9” / 12”, etc.
+          ' e.g. 0.5 = 6/12, 0.75 = 9/12, etc.
           '
           'Dim slopeAngle As Double = 30 * LabConstants.DegreesToRadians
           Dim slope As Double = 0.3
