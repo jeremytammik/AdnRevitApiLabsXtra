@@ -61,6 +61,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Office.Interop.Excel">
       <HintPath>Z:\a\src\rvt\RevitSdkSamples\SDK\Samples\Massing\PointCurveCreation\CS\bin\Debug\Microsoft.Office.Interop.Excel.dll</HintPath>
