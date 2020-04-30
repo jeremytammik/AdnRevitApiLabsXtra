@@ -230,7 +230,7 @@ Namespace XtraVb
 #End Region
 
 #Region "Lab2_1_Elements"
-  ' Cf. C:\a\doc\revit\2011\constellation\get_all_elements.txt
+  ' Cf. C:\a\doc\revit\get_all_elements.txt
 
   ''' <summary>
   ''' List all document elements.
