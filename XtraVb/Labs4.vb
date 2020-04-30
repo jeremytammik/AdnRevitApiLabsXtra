@@ -540,6 +540,7 @@ Namespace XtraVb
       Dim worksheet As X.Worksheet = TryCast(workbook.ActiveSheet, X.Worksheet)
 
       Using t As New Transaction(doc)
+        t.Start("Import Updated Parameter Data")
         '
         ' Starting from row 2, loop the rows and extract Id and FireRating param.
         '
