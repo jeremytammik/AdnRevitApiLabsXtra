@@ -11,12 +11,12 @@
   following locations:
 
   - In a non-user specific location in "application data":
-    - For Windows XP - "C:\Documents and Settings\All Users\Application Data\Autodesk\Revit\Addins\2011"
-    - For Vista/Windows 7 - C:\ProgramData\Autodesk\Revit\Addins\2011
+    - For Windows XP - "C:\Documents and Settings\All Users\Application Data\Autodesk\Revit\Addins\[release_number]"
+    - For Vista/Windows 7 - C:\ProgramData\Autodesk\Revit\Addins\[release_number]
 
   - In a user specific location in "application data":
-    - For Windows XP - "C:\Documents and Settings\<user>\Application Data\Autodesk\Revit\Addins\2011"
-    - For Vista/Windows 7 - C:\Users\<user>\AppData\Roaming\Autodesk\Revit\Addins\2011
+    - For Windows XP - "C:\Documents and Settings\<user>\Application Data\Autodesk\Revit\Addins\[release_number]"
+    - For Vista/Windows 7 - C:\Users\<user>\AppData\Roaming\Autodesk\Revit\Addins\[release_number]
 
   You can create a personal ClientId GUID using the Microsoft GuidGen tool, e.g.
   "C:\Program Files\Microsoft Visual Studio 9.0\Common7\Tools\guidgen.exe" or
