@@ -155,6 +155,7 @@ Namespace XtraVb
       Dim rc As Boolean
 
       Using t As New Transaction(doc)
+        t.Start("Load Family")
 
         '#region 3.2.a Load an entire RFA family file:
 

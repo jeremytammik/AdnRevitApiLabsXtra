@@ -401,6 +401,7 @@ Namespace XtraVb
       ' bind the param
       Try
         Using t As New Transaction(doc)
+          t.Start("Create Shared Parameter Instance Binding")
           Dim binding As Binding = app.Create.NewInstanceBinding(catSet)
           ' We could check if already bound, but looks like Insert will just ignore it in such case
           ' You can also specify the parameter group here:
