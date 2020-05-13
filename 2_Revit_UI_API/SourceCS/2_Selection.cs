@@ -34,6 +34,7 @@ using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
 using Util;
 using System.Collections;
+using System.Linq;
 #endregion
 
 namespace UiCs
@@ -61,6 +62,7 @@ namespace UiCs
       // Get access to the top most objects. (we may not use them all in this specific lab.) 
       _uiApp = commandData.Application;
       _uiDoc = _uiApp.ActiveUIDocument;
+      Document doc = _uiDoc.Document;
 
       // (1) pre-seleceted element is under UIDocument.Selection.Elemens. Classic method. 
       // You can also modify this selection set. 
@@ -76,22 +78,13 @@ namespace UiCs
       // 'This property is deprecated in Revit 2015. 
       // Use GetElementIds() and SetElementIds instead.'
 
-      /// Following part is modified code for Revit 2015
-      /// 
-
       ICollection<ElementId> selectedElementIds = _uiDoc.Selection.GetElementIds();
 
       // Display current number of selected elements
+
       TaskDialog.Show("Revit", "Number of selected elements: " + selectedElementIds.Count.ToString());
 
-      // We need to re-write the following function 
-
-      ShowElementList(selectedElementIds, "Pre-selection: ");
-
-
-      /// End of modified code for Revit 2015     
-
-
+      ShowElementList( doc, selectedElementIds, "Pre-selection: ");
 
       try
       {
@@ -188,15 +181,17 @@ namespace UiCs
       IList<Reference> refs = _uiDoc.Selection.PickObjects(ObjectType.Element, "Select multiple elemens");
 
       // Put it in a List form. 
-      IList<Element> elems = new List<Element>();
+      //IList<Element> elems = new List<Element>();
+      IList<ElementId> ids = new List<ElementId>();
       foreach (Reference r in refs)
       {
         //elems.Add( r.Element ); // 2011 Warning: 'Autodesk.Revit.DB.Reference.Element' is obsolete: 
         // 'Property will be removed. Use Document.GetElement(Reference) instead'
-        elems.Add(_uiDoc.Document.GetElement(r)); // 2012
+        //elems.Add(_uiDoc.Document.GetElement(r)); // 2012
+        ids.Add(r.ElementId); // 2021
       }
 
-      ShowElementList(elems, "Pick Objects: ");
+      ShowElementList( _uiDoc.Document, ids, "Pick Objects: ");
     }
 
     /// <summary>
@@ -268,7 +263,7 @@ namespace UiCs
       Reference r = _uiDoc.Selection.PickObject(ObjectType.Edge, "Select an edge");
       Element e = _uiDoc.Document.GetElement(r);
       //Edge oEdge = r.GeometryObject as Edge; // 2011
-      Face oEdge = e.GetGeometryObjectFromReference(r) as Face; // 2012
+      Edge oEdge = e.GetGeometryObjectFromReference(r) as Edge; // 2012
 
       // Show it. 
       string msg = "";
@@ -379,10 +374,7 @@ namespace UiCs
       }
     }
 
-    #region "Helper Function"
-    //==================================================================== 
-    // Helper Functions 
-    //==================================================================== 
+    #region Helper Functions
 
     /// <summary>
     /// Helper function to display info from a list of elements passed onto. 
@@ -407,17 +399,17 @@ namespace UiCs
     //  TaskDialog.Show("Revit UI Lab", s);
     //}
 
-    /// Changing this in Revit 2015  
-    /// 
-    public void ShowElementList(IEnumerable elemIds, string header)
+    public void ShowElementList(
+      IEnumerable<Element> elems, 
+      string header )
     {
       string s = "\n\n - Class - Category - Name (or Family: Type Name) - Id - " + "\r\n";
 
       int count = 0;
-      foreach (ElementId eId in elemIds)
+      foreach (Element e in elems)
       {
         count++;
-        Element e = _uiDoc.Document.GetElement(eId);
+        //Element e = _uiDoc.Document.GetElement(eId);
         s += ElementToString(e);
       }
 
@@ -426,16 +418,26 @@ namespace UiCs
       TaskDialog.Show("Revit UI Lab", s);
     }
 
-    /// end of Changing in Revit 2015
+    public void ShowElementList(
+      Document doc,
+      IEnumerable<ElementId> ids,
+      string header )
+    {
+      List<Element> elems = new List<Element>( 
+        ids.Select<ElementId, Element>(
+          id => doc.GetElement( id ) ) );
 
-    /// <summary>
-    /// Helper function: summarize an element information as a line of text, 
-    /// which is composed of: class, category, name and id. 
-    /// Name will be "Family: Type" if a given element is ElementType. 
-    /// Intended for quick viewing of list of element, for example. 
-    /// (Same as Revit Intro Lab3.) 
-    /// </summary>
-    public string ElementToString(Element e)
+      ShowElementList( elems, header );
+    }
+
+      /// <summary>
+      /// Helper function: summarize an element information as a line of text, 
+      /// which is composed of: class, category, name and id. 
+      /// Name will be "Family: Type" if a given element is ElementType. 
+      /// Intended for quick viewing of list of element, for example. 
+      /// (Same as Revit Intro Lab3.) 
+      /// </summary>
+      public string ElementToString(Element e)
     {
       if (e == null)
       {
@@ -558,11 +560,11 @@ namespace UiCs
       _uiDoc = _uiApp.ActiveUIDocument;
       _doc = _uiDoc.Document;
 
-      using (Transaction transaction = new Transaction(_doc))
+      //using (Transaction transaction = new Transaction(_doc))
       {
-        transaction.Start("Create House");
+        //transaction.Start("Create House");
         CreateHouseInteractive(_uiDoc);
-        transaction.Commit();
+        //transaction.Commit();
       }
 
       return Result.Succeeded;
