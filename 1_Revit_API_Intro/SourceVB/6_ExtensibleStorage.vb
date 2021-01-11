@@ -1,6 +1,6 @@
 ﻿#Region "Copyright"
 '
-' Copyright (C) 2009-2020 by Autodesk, Inc.
+' Copyright (C) 2009-2021 by Autodesk, Inc.
 '
 ' Permission to use, copy, modify, and distribute this software in
 ' object code form for any purpose and without fee is hereby granted,
@@ -125,12 +125,13 @@ Friend Class ExtensibleStorage
 
     ' Create field1
 
-    Dim fieldBuilder1 As FieldBuilder = _
-      builder.AddSimpleField("SocketLocation", GetType(XYZ)).SetUnitType(UnitType.UT_Length)
+    Dim fieldBuilder1 As FieldBuilder =
+      builder.AddSimpleField("SocketLocation", GetType(XYZ)) '.SetUnitType(UnitType.UT_Length)
 
     ' Set unit type
 
-    fieldBuilder1.SetUnitType(UnitType.UT_Length)
+    ' fieldBuilder1.SetUnitType(UnitType.UT_Length) ' 2020
+    fieldBuilder1.SetSpec(SpecTypeId.Length) ' 2021
 
     ' Add documentation (optional)
 
@@ -149,7 +150,8 @@ Friend Class ExtensibleStorage
 
     Dim ent As New Entity(schema)
     Dim socketLocation As Field = schema.GetField("SocketLocation")
-    ent.Set(Of XYZ)(socketLocation, New XYZ(2, 0, 0), DisplayUnitType.DUT_METERS)
+    'ent.Set(Of XYZ)(socketLocation, New XYZ(2, 0, 0), DisplayUnitType.DUT_METERS) ' 2020
+    ent.Set(Of XYZ)(socketLocation, New XYZ(2, 0, 0), UnitTypeId.Meters) ' 2021
 
     Dim socketNumber As Field = schema.GetField("SocketNumber")
     ent.Set(Of String)(socketNumber, "200")
@@ -189,9 +191,11 @@ Friend Class ExtensibleStorage
 
     Dim wallSchemaEnt As Entity = wall.GetEntity(schema.Lookup(_guid))
 
-    Dim wallSocketPos As XYZ = wallSchemaEnt.Get(Of XYZ)( _
-      schema.Lookup(_guid).GetField("SocketLocation"), _
-      DisplayUnitType.DUT_METERS)
+    Dim wallSocketPos As XYZ = wallSchemaEnt.Get(Of XYZ)(
+      Schema.Lookup(_guid).GetField("SocketLocation"),
+      UnitTypeId.Meters) ' 2021
+
+    ' DisplayUnitType.DUT_METERS) ' 2020
 
     s = "SocketLocation: " + Format.PointString(wallSocketPos)
 
