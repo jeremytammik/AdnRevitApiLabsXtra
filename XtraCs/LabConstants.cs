@@ -1,7 +1,7 @@
 #region Header
 // Revit API .NET Labs
 //
-// Copyright (C) 2007-2020 by Autodesk, Inc.
+// Copyright (C) 2007-2021 by Autodesk, Inc.
 //
 // Permission to use, copy, modify, and distribute this software
 // for any purpose and without fee is hereby granted, provided
