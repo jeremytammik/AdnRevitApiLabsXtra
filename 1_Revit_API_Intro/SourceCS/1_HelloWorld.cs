@@ -41,8 +41,8 @@ using Autodesk.Revit.ApplicationServices; // This is for Revit Application
 namespace IntroCs
 {
   /// <summary>
-  /// Hello World #1 - A minimum Revit external command
-  /// with all namespaces fully qualified.
+  /// Hello World #1 - A minimal `hello, world` Revit 
+  /// external command with all namespaces fully qualified.
   /// </summary>
   [Autodesk.Revit.Attributes.Transaction(
     Autodesk.Revit.Attributes.TransactionMode.Manual )]
@@ -62,8 +62,8 @@ namespace IntroCs
   }
 
   /// <summary>
-  /// Hello World #2 - simplified without full namespace
-  /// and using ReadOnly attribute.
+  /// Hello World #2 - simplified without full 
+  /// namespace and using ReadOnly attribute.
   /// </summary>
   [Transaction( TransactionMode.ReadOnly )]
   public class HelloWorldSimple : IExternalCommand
