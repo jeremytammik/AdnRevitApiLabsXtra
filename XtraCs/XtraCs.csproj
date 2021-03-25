@@ -153,7 +153,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="README.md" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="AdnpXtraCs.addin" />
     <Content Include="Images\ImgCommandArguments.png" />
